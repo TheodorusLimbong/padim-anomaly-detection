@@ -12,3 +12,12 @@ def get_augmentation_transform():
             hue=0.1
         )
     ])
+if __name__ == "__main__":
+    from PIL import Image
+
+    img = Image.open("dataset/mvtec_anomaly_detection/bottle/train/good/000.png")
+
+    aug = get_augmentation_transform()
+    aug_img = aug(img)
+
+    print("Augmentation applied successfully")
