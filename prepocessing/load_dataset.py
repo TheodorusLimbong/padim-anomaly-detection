@@ -40,3 +40,15 @@ def load_mvtec_paths(root_dir, category="bottle", phase="train"):
                     mask_paths.append(mask_path)
 
     return img_paths, labels, mask_paths
+if __name__ == "__main__":
+    root_dir = "dataset/mvtec_anomaly_detection"
+
+    img_paths, labels, masks = load_mvtec_paths(
+        root_dir=root_dir,
+        category="bottle",
+        phase="train"
+    )
+
+    print("Total images:", len(img_paths))
+    print("Sample path:", img_paths[0])
+    print("Label:", labels[0])
