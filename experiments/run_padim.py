@@ -17,3 +17,15 @@ def run():
 
 if __name__ == "__main__":
     run()
+
+from preprocessing.dataloader import get_dataloader
+
+train_loader = get_dataloader(
+    root_dir="dataset/mvtec_anomaly_detection",
+    phase="train"
+)
+
+test_loader = get_dataloader(
+    root_dir="dataset/mvtec_anomaly_detection",
+    phase="test"
+)
