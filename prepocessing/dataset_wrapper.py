@@ -52,3 +52,18 @@ class MVTecDataset(Dataset):
             "mask": mask,
             "path": img_path
         }
+
+if __name__ == "__main__":
+    dataset = MVTecDataset(
+        root_dir="dataset/mvtec_anomaly_detection",
+        category="bottle",
+        phase="train"
+    )
+
+    print("Dataset size:", len(dataset))
+
+    sample = dataset[0]
+
+    print("Image shape:", sample["image"].shape)
+    print("Label:", sample["label"])
+    print("Mask:", sample["mask"])
