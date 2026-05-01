@@ -1,15 +1,22 @@
-from torchvision import transforms
-from PIL import Image
 import os
+from typing import List
+from PIL import Image
+from torchvision import transforms
 
 
-def get_normalize_transform():
-    return transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225]
-    )
+IMAGENET_MEAN: List[float] = [0.485, 0.456, 0.406]
+IMAGENET_STD: List[float] = [0.229, 0.224, 0.225]
 
 
+def get_normalize_transform() -> transforms.Normalize:
+    """
+    Normalize image tensor using ImageNet statistics.
+    Required for pretrained CNN (ResNet/MoCo).
+    """
+    return transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD)
+
+
+# ================= TEST =================
 if __name__ == "__main__":
     img_path = "dataset/mvtec_anomaly_detection/bottle/train/good/000.png"
 
@@ -21,7 +28,7 @@ if __name__ == "__main__":
 
     # ===== PIPELINE =====
     transform = transforms.Compose([
-        transforms.Resize((244, 244)),
+        transforms.Resize((256, 256)),
         transforms.ToTensor(),
         get_normalize_transform()
     ])
@@ -30,7 +37,9 @@ if __name__ == "__main__":
 
     # ===== OUTPUT =====
     print("===== NORMALIZE TEST =====")
-    print("Shape :", tensor.shape)  # [3, 256, 256]
-    print("Min   :", tensor.min().item())
-    print("Max   :", tensor.max().item())
-    print("Mean  :", tensor.mean().item())
+    print(f"Shape : {tensor.shape}")          # [3, 256, 256]
+    print(f"Min   : {tensor.min().item():.4f}")
+    print(f"Max   : {tensor.max().item():.4f}")
+    print(f"Mean  : {tensor.mean().item():.4f}")
+    print(f"Std   : {tensor.std().item():.4f}")
+    print(f"Dtype : {tensor.dtype}")
