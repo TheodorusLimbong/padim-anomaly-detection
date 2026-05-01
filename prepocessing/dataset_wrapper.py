@@ -2,7 +2,6 @@ from torch.utils.data import Dataset
 from PIL import Image
 import os
 from torchvision import transforms
-
 from .load_dataset import load_mvtec_paths
 from .build_transform import build_transform
 
