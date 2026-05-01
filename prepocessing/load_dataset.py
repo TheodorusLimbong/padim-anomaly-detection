@@ -1,5 +1,6 @@
 import os
-from typing import List, Tuple
+from typing import List, Tuple, Optional
+
 
 VALID_EXTENSIONS = (".png", ".jpg", ".jpeg", ".bmp")
 
@@ -8,82 +9,78 @@ def is_image_file(filename: str) -> bool:
     return filename.lower().endswith(VALID_EXTENSIONS)
 
 
+def _validate_path(path: str, name: str) -> None:
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"[ERROR] {name} not found: {path}")
+
+
+def _load_images_from_folder(folder_path: str) -> List[str]:
+    return [
+        os.path.join(folder_path, f)
+        for f in sorted(os.listdir(folder_path))
+        if is_image_file(f)
+    ]
+
+
 def load_mvtec_paths(
     root_dir: str,
     category: str = "bottle",
     phase: str = "train"
-) -> Tuple[List[str], List[int], List[str]]:
+) -> Tuple[List[str], List[int], List[Optional[str]]]:
 
-    img_paths = []
-    labels = []
-    mask_paths = []
+    img_paths: List[str] = []
+    labels: List[int] = []
+    mask_paths: List[Optional[str]] = []
 
-    # ================= BASE PATH =================
     base_path = os.path.join(root_dir, category)
-
-    if not os.path.exists(base_path):
-        raise FileNotFoundError(f"[ERROR] Category not found: {base_path}")
+    _validate_path(base_path, "Category folder")
 
     # ================= TRAIN =================
     if phase == "train":
-        train_good_path = os.path.join(base_path, "train", "good")
+        train_path = os.path.join(base_path, "train", "good")
+        _validate_path(train_path, "Train good folder")
 
-        if not os.path.exists(train_good_path):
-            raise FileNotFoundError(f"[ERROR] Train good folder not found: {train_good_path}")
+        images = _load_images_from_folder(train_path)
 
-        for img_name in sorted(os.listdir(train_good_path)):
-            if not is_image_file(img_name):
-                continue
-
-            img_paths.append(os.path.join(train_good_path, img_name))
-            labels.append(0)
-            mask_paths.append(None)
+        img_paths.extend(images)
+        labels.extend([0] * len(images))
+        mask_paths.extend([None] * len(images))
 
     # ================= TEST =================
     elif phase == "test":
         test_path = os.path.join(base_path, "test")
         gt_path = os.path.join(base_path, "ground_truth")
 
-        if not os.path.exists(test_path):
-            raise FileNotFoundError(f"[ERROR] Test folder not found: {test_path}")
+        _validate_path(test_path, "Test folder")
 
-        defect_types = sorted(os.listdir(test_path))
-
-        for defect in defect_types:
-            defect_folder = os.path.join(test_path, defect)
+        for defect_type in sorted(os.listdir(test_path)):
+            defect_folder = os.path.join(test_path, defect_type)
 
             if not os.path.isdir(defect_folder):
                 continue
 
-            for img_name in sorted(os.listdir(defect_folder)):
-                if not is_image_file(img_name):
-                    continue
+            images = _load_images_from_folder(defect_folder)
 
-                img_full_path = os.path.join(defect_folder, img_name)
-                img_paths.append(img_full_path)
+            for img_path in images:
+                img_paths.append(img_path)
 
-                # ===== NORMAL =====
-                if defect == "good":
+                if defect_type == "good":
                     labels.append(0)
                     mask_paths.append(None)
-
-                # ===== ANOMALY =====
                 else:
                     labels.append(1)
 
-                    mask_file = img_name.replace(".png", "_mask.png")
-                    mask_full_path = os.path.join(gt_path, defect, mask_file)
+                    img_name = os.path.basename(img_path)
+                    mask_name = img_name.replace(".png", "_mask.png")
+                    mask_path = os.path.join(gt_path, defect_type, mask_name)
 
-                    if os.path.exists(mask_full_path):
-                        mask_paths.append(mask_full_path)
-                    else:
-                        mask_paths.append(None)
+                    mask_paths.append(mask_path if os.path.exists(mask_path) else None)
 
     else:
         raise ValueError("phase must be 'train' or 'test'")
 
-    if len(img_paths) == 0:
-        raise RuntimeError("[ERROR] No images found — check dataset path!")
+    if not img_paths:
+        raise RuntimeError("[ERROR] No images found — check dataset structure.")
 
     return img_paths, labels, mask_paths
 
@@ -95,19 +92,19 @@ if __name__ == "__main__":
     print("\n===== TRAIN CHECK =====")
     train_imgs, train_labels, _ = load_mvtec_paths(root_dir, "bottle", "train")
 
-    print("Total:", len(train_imgs))
-    print("Anomaly:", sum(train_labels))
+    print(f"Total images : {len(train_imgs)}")
+    print(f"Normal count : {sum(train_labels)}")
 
     print("\n===== TEST CHECK =====")
     test_imgs, test_labels, test_masks = load_mvtec_paths(root_dir, "bottle", "test")
 
-    print("Total:", len(test_imgs))
-    print("Normal:", sum(1 for l in test_labels if l == 0))
-    print("Anomaly:", sum(1 for l in test_labels if l == 1))
+    print(f"Total images : {len(test_imgs)}")
+    print(f"Normal count : {sum(1 for l in test_labels if l == 0)}")
+    print(f"Anomaly count: {sum(1 for l in test_labels if l == 1)}")
 
-    # sample anomaly
-    for i, l in enumerate(test_labels):
-        if l == 1:
+    # Sample anomaly
+    for i, label in enumerate(test_labels):
+        if label == 1:
             print("\nSample anomaly:")
             print("Image:", test_imgs[i])
             print("Mask :", test_masks[i])
