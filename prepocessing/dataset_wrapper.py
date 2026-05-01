@@ -2,8 +2,8 @@ from torch.utils.data import Dataset
 from PIL import Image
 import os
 from torchvision import transforms
-from .load_dataset import load_mvtec_paths
-from .build_transform import build_transform
+from prepocessing.load_dataset import load_mvtec_paths
+from prepocessing.build_transform import build_transform
 
 
 class MVTecDataset(Dataset):
@@ -13,7 +13,6 @@ class MVTecDataset(Dataset):
         category="bottle",
         phase="train",
         img_size=256,
-        use_augmentation=True
     ):
         self.img_paths, self.labels, self.mask_paths = load_mvtec_paths(
             root_dir, category, phase
@@ -22,7 +21,6 @@ class MVTecDataset(Dataset):
         self.transform = build_transform(
             img_size=img_size,
             is_train=(phase == "train"),
-            use_augmentation=use_augmentation
         )
 
         self.img_size = img_size
