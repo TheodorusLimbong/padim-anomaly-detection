@@ -1,5 +1,5 @@
 from torch.utils.data import DataLoader
-from preprocessing.dataset_wrapper import MVTecDataset
+from dataset_wrapper import MVTecDataset
 
 
 def get_dataloader(root_dir, phase="train", batch_size=8):

@@ -2,8 +2,7 @@ import os
 import torch
 from PIL import Image
 from torchvision import transforms
-
-from prepocessing.augmentation.augmentation import get_augmentation_transform
+from augmentation import get_augmentation_transform
 
 
 def save_image(img, path):
