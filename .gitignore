@@ -1,2 +1,4 @@
 dataset/mvtec_anomaly_detection/
 dataset_augmented
+.opencode
+agents.md
