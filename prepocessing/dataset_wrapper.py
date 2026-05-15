@@ -37,7 +37,7 @@ class MVTecDataset(Dataset):
             if mask_path is not None:
                 mask = Image.open(mask_path).convert("L")
                 mask = transforms.Resize(
-                    (256, 256),
+                    (224, 224),
                     interpolation=InterpolationMode.NEAREST 
                 )(mask)
                 mask = transforms.ToTensor()(mask)

@@ -1,6 +1,203 @@
-progress 
-in prepocessing its done.
-maybe do review and comparing to actual thesis to make sure.
+# Sistem Inspeksi Visual Berbasis Patch-Based Self-Supervised Learning untuk Deteksi Anomali Botol Industri
 
-12 may 2026
-feature extraction in the way
+## Ringkasan Proyek
+
+Implementasi deteksi anomali visual pada dataset **MVTec AD kategori bottle** menggunakan **ResNet-50** dengan **MoCo v2 Self-Supervised Learning** sebagai backbone, dan **Patch Distribution Modeling (PaDiM)** sebagai metode deteksi anomali.
+
+Penelitian ini membandingkan dua pendekatan:
+1. **SSL tanpa PaDiM** — K-Nearest Neighbor (KNN) dengan Euclidean distance sebagai baseline
+2. **SSL + PaDiM** — Gaussian multivariat + Mahalanobis Distance untuk pemodelan distribusi fitur normal
+
+---
+
+## Pipeline (Urutan Eksekusi)
+
+```
+Dataset MVTec AD (bottle)
+        │
+        ▼
+  Preprocessing
+  ├── Load dataset (train = normal only, test = normal + anomaly)
+  ├── Resize ke 224×224 px (sesuai input ResNet-50)
+  ├── Normalisasi pixel (mean/std ImageNet)
+  ├── Data augmentation (flip, rotation, color jitter, noise)
+  └── Pembagian dataset (one-class learning)
+        │
+        ▼
+  Ekstraksi Fitur
+  ├── Load backbone ResNet-50 + MoCo v2 (frozen, no fine-tuning)
+  ├── Multi-layer feature extraction (layer1 + layer2 + layer3)
+  ├── Interpolasi ke resolusi yang sama
+  ├── Concatenation antar layer
+  └── Reshape ke patch embeddings [B, H*W, C]
+        │
+        ├──────────────────────────────────────┐
+        ▼                                      ▼
+  SSL + PaDiM                            SSL tanpa PaDiM
+  ├── Hitung mean + cov per patch        ├── Buat feature bank
+  ├── Regularisasi + inverse cov         ├── 1-NN Euclidean distance
+  ├── Mahalanobis Distance               └── Anomaly score = min distance
+  └── Anomaly map [7×7] → upsampled [224×224]
+        │                                      │
+        └──────────────┬───────────────────────┘
+                       ▼
+            Evaluasi & Perbandingan
+            ├── AUROC (Image-Level + Pixel-Level)
+            ├── Precision, Recall, F1-Score
+            ├── Threshold percentile (95%)
+            └── Analisis stabilitas & sensitivitas
+                       │
+                       ▼
+              Dashboard Streamlit
+              ├── Upload citra
+              ├── Inferensi (PaDiM / KNN)
+              ├── Anomaly score
+              ├── Anomaly map + heatmap overlay
+              └── Hasil klasifikasi (Normal/Anomali)
+```
+
+---
+
+## Perubahan yang Sudah Dilakukan (Fase 1 — Core Pipeline)
+
+### 1. Konfigurasi Disatukan — `src/config.py`
+
+**Sebelum**: Dua file config terpisah dengan nilai berbeda:
+- `src/config.py`: IMAGE_SIZE=224, BATCH_SIZE=32
+- `feature extractor/config.py`: IMAGE_SIZE=256, BATCH_SIZE=8
+
+**Sesudah**: `src/config.py` menjadi **single source of truth** dengan:
+- `IMAGE_SIZE = 224` — sesuai proposal (ResNet-50 input 224×224 → feature map 7×7)
+- `BATCH_SIZE = 16` — kompromi memory vs speed
+- `SELECTED_LAYERS = ["layer1", "layer2", "layer3"]` — multi-layer feature extraction
+
+`feature extractor/config.py` sekarang mengimpor dari `src.config`, menghilangkan duplikasi.
+
+### 2. Backbone MoCo v2 — `feature extractor/models/backbone.py`
+
+**Sebelum**: `resnet50(weights="IMAGENET1K_V1")` — supervised ImageNet pretrained
+
+**Sesudah**: Menggunakan **MoCo v2 self-supervised pretrained weights** dari Facebook Research:
+- Download otomatis via `torch.hub.load_state_dict_from_url` dari `https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_200ep/moco_v2_200ep_pretrain.pth.tar`
+- Ekstraksi encoder query (`module.encoder_q.`) dari checkpoint MoCo
+- Semua parameter **frozen** (tidak di fine-tune) — sesuai proposal section 3.4.2/3.4.4
+- Struktur output: dictionary 4 layer (`layer1` s.d. `layer4`) dengan feature map hierarkis
+
+**Verifikasi**: Zero missing keys setelah loading — semua bobot ResNet-50 terisi dari MoCo v2.
+
+### 3. Preprocessing Fix Ukuran — `prepocessing/`
+
+Tiga file diperbaiki agar konsisten menggunakan 224×224:
+- `build_transform.py`: default `img_size` dari 256 → 224
+- `resize.py`: default `img_size` dari 256 → 224
+- `dataset_wrapper.py`: resize mask (ground truth) dari (256,256) → (224,224)
+
+### 4. PaDiM Statistics Lengkap — `anomaly detection/padim.py`
+
+Fungsi yang ditambahkan:
+- **`compute_statistics(features)`** — Menghitung mean vector [C, P] dan covariance matrix [C, C, P] untuk setiap patch position dari data training. `features` shape: [N, C, H, W] (yang diperoleh dari feature extractor).
+
+- **`compute_cov_inv(cov, reg=1e-6)`** — Menghitung inverse covariance matrix dengan regularisasi untuk numerical stability. Regularisasi `reg * I` ditambahkan ke covariance sebelum inverse untuk mencegah singular matrix saat jumlah sampel terbatas.
+
+- **`save_statistics(mean, cov_inv, save_path, file_name)`** — Menyimpan mean dan inverse covariance ke file `.pt` untuk digunakan pada saat inference/testing.
+
+- **`load_statistics(load_path, file_name)`** — Memuat kembali statistics yang telah disimpan.
+
+### 5. Mahalanobis Distance & Anomaly Map — `anomaly detection/mahalanobis.py`
+
+Fungsi:
+- **`compute_patch_scores(embedding, mean, cov_inv)`** — Menghitung Mahalanobis Distance untuk setiap patch embedding pada satu citra uji. Formula: `M(x) = sqrt((x-μ)ᵀ Σ⁻¹ (x-μ))`. Output: score vector [P] (jumlah patch).
+
+- **`compute_anomaly_map(test_embedding, mean, cov_inv)`** — Menyusun patch scores kembali ke bentuk spasial [H, W] = [7, 7] (untuk input 224×224), lalu menghitung image-level anomaly score dengan **max pooling** (nilai maksimum dari seluruh patch — sesuai proposal 3.4.11).
+
+- **`upsample_anomaly_map(anomaly_map, target_size)`** — Meng-upsample anomaly map dari 7×7 ke ukuran citra input (224×224) menggunakan bilinear interpolation, sehingga anomaly map bisa di-overlay dengan citra asli.
+
+### 6. Inference Pipeline — `anomaly detection/inference.py`
+
+Fungsi:
+- **`compute_padim_scores(test_features, mean, cov_inv)`** — Pipeline inference untuk metode PaDiM. Menerima test features [N, P, C], mengulangi compute_anomaly_map untuk setiap citra, mengembalikan image scores [N] dan daftar anomaly maps yang sudah di-upsample.
+
+- **`compute_knn_scores(test_features, feature_bank)`** — Pipeline inference untuk metode KNN baseline. Sama seperti PaDiM tetapi menggunakan Euclidean distance ke feature bank.
+
+### 7. KNN Baseline — `anomaly detection/knn_baseline.py`
+
+Fungsi:
+- **`build_feature_bank(train_features)`** — Membangun feature bank dari seluruh patch embeddings data training. Input [N, P, C] → output [N×P, C], yaitu kumpulan semua patch dari semua citra normal.
+
+- **`compute_knn_anomaly_score(test_embedding, feature_bank, k=1)`** — Untuk setiap patch pada citra uji, hitung Euclidean distance ke seluruh patch di feature bank, ambil nilai minimum sebagai anomaly score patch tersebut. Sesuai proposal 3.4.8: "Nilai jarak minimum antara patch embedding citra uji dan fitur normal digunakan sebagai patch anomaly score."
+
+---
+
+## Penjelasan Detail Setiap Modul
+
+### `src/config.py`
+Pusat konfigurasi. Mengatur path dataset, ukuran gambar, batch size, layer yang digunakan, device (CPU/CUDA), dan path output. Semua modul lain merujuk ke sini.
+
+### `prepocessing/`
+Menangani persiapan data:
+- **`load_dataset.py`** — Membaca path citra dan mask dari struktur folder MVTec AD (train/good, test/{defect_type}, ground_truth/{defect}).
+- **`dataset_wrapper.py`** — `MVTecDataset` class: memuat citra dan mask, menerapkan transform, mengembalikan dictionary sample untuk digunakan DataLoader.
+- **`dataset_loader.py`** — Factory function untuk membuat DataLoader dari MVTecDataset.
+- **`build_transform.py`** — Menyusun pipeline transformasi: resize → (augmentasi untuk train) → ToTensor → normalisasi ImageNet.
+- **`resize.py`** — Transform resize ke ukuran seragam (224×224).
+- **`normalization.py`** — Normalisasi pixel menggunakan mean & std dataset ImageNet ([0.485, 0.456, 0.406] dan [0.229, 0.224, 0.225]).
+- **`augmentation/augmentation.py`** — Augmentasi online untuk training: RandomHorizontalFlip, RandomRotation (10°), ColorJitter, Gaussian noise.
+
+### `feature extractor/`
+Ekstraksi fitur menggunakan backbone CNN:
+- **`models/backbone.py`** — `ResNet50Backbone` class. Membungkus ResNet-50 (tanpa FC layer), memuat MoCo v2 weights, mengembalikan dictionary feature map per layer.
+- **`models/hook_feature.py`** — `FeatureExtractor` class. Mengambil layer terpilih, meng-interpolasi ke resolusi yang sama, concatenate, mengembalikan embedding [B, C_total, H, W].
+- **`utils/feature_utils.py`** — `reshape_embedding`: mengubah format [B, C, H, W] → [B, H×W, C] (patch embeddings).
+- **`utils/save_utils.py`** — `save_features`: menyimpan tensor fitur ke file `.pt`.
+- **`extract_feature.py`** — Script utama: load dataset → load model → ekstraksi fitur → simpan ke `output/features/train_features.pt`.
+
+### `anomaly detection/`
+Implementasi metode deteksi anomali:
+- **`padim.py`** — Statistik PaDiM: mean, covariance, inverse covariance, save/load.
+- **`mahalanobis.py`** — Mahalanobis Distance per patch, pembentukan anomaly map, upsampling.
+- **`knn_baseline.py`** — KNN baseline: feature bank, Euclidean distance 1-NN.
+- **`inference.py`** — Pipeline scoring: `compute_padim_scores` dan `compute_knn_scores`.
+
+### `evaluation/metrics.py`
+Metrik evaluasi:
+- **`compute_auroc`** — Menghitung AUROC score menggunakan sklearn.
+
+### `experiments/run_padim.py`
+Script runner eksperimen (akan diperbaiki di Fase 2).
+
+---
+
+## Catatan Penting
+
+- **Nama folder mengandung spasi**: `prepocessing/`, `feature extractor/`, `anomaly detection/`. Python import dari direktori ini memerlukan `sys.path` manipulation atau pemanggilan dengan path absolut.
+- **Dataset** MVTec AD kategori `bottle` berada di `dataset/mvtec_anomaly_detection/bottle/` (gitignored). Hardcoded hanya kategori bottle.
+- **MoCo v2 weights** didownload otomatis dari Facebook Research ke cache torch saat pertama kali `ResNet50Backbone(pretrained=True)` dipanggil.
+
+---
+
+## Cara Menjalankan
+
+```powershell
+# 1. Preprocessing (cek distribusi dataset)
+python prepocessing/run_prepocessing.py
+
+# 2. Ekstraksi fitur training
+python "feature extractor/extract_feature.py"
+
+# 3. Generate augmented dataset (opsional)
+python prepocessing/augmentation/augmented_dataset.py
+
+# 4. Eksperimen (setelah Fase 2 selesai)
+python experiments/run_padim.py
+```
+
+---
+
+## Progress Saat Ini
+
+| Fase | Status |
+|------|--------|
+| Fase 1: Core Pipeline (Config fix, backbone MoCo v2, preprocessing fix, PaDiM lengkap, KNN baseline) | **✅ Selesai** |
+| Fase 2: Evaluasi & Eksperimen (Metrics lengkap, threshold, experiment runner) | ⏳ Belum |
+| Fase 3: Dashboard Streamlit | ⏳ Belum |
+| Fase 4: Analisis & Dokumentasi | ⏳ Belum |

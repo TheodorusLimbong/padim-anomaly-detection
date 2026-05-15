@@ -4,7 +4,7 @@ from augmentation.augmentation import get_augmentation_transform
 from normalization import get_normalize_transform
 
 
-def build_transform(img_size=256, is_train=True):
+def build_transform(img_size=224, is_train=True):
 
     if is_train:
         return transforms.Compose([
