@@ -2,3 +2,5 @@ dataset/mvtec_anomaly_detection/
 dataset_augmented
 .opencode
 agents.md
+.vscode
+src/_pycache__/
