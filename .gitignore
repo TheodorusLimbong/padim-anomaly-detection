@@ -4,3 +4,4 @@ dataset_augmented
 agents.md
 .vscode
 src/_pycache__/
+output/

@@ -131,7 +131,7 @@ Fungsi:
 ## Penjelasan Detail Setiap Modul
 
 ### `src/config.py`
-Pusat konfigurasi. Mengatur path dataset, ukuran gambar, batch size, layer yang digunakan, device (CPU/CUDA), dan path output. Semua modul lain merujuk ke sini.
+Pusat konfigurasi. Mengatur path dataset, ukuran gambar, batch size, layer yang digunakan, device (CPU/CUDA), path output, dan parameter PaDiM (`PADIM_N_DIMS = 100`). Semua modul lain merujuk ke sini.
 
 ### `prepocessing/`
 Menangani persiapan data:
@@ -153,17 +153,34 @@ Ekstraksi fitur menggunakan backbone CNN:
 
 ### `anomaly detection/`
 Implementasi metode deteksi anomali:
-- **`padim.py`** — Statistik PaDiM: mean, covariance, inverse covariance, save/load.
+- **`padim.py`** — Statistik PaDiM: `reduce_dim` (random channel selection), `compute_statistics` (mean + covariance), `compute_cov_inv` (regularized inverse), `save_statistics`, `load_statistics`.
 - **`mahalanobis.py`** — Mahalanobis Distance per patch, pembentukan anomaly map, upsampling.
-- **`knn_baseline.py`** — KNN baseline: feature bank, Euclidean distance 1-NN.
+- **`knn_baseline.py`** — KNN baseline: `build_feature_bank`, `compute_knn_anomaly_score` (chunked + vectorized Euclidean distance menggunakan formula `||a-b||² = ||a||² + ||b||² - 2·a·b` untuk efisiensi memori).
 - **`inference.py`** — Pipeline scoring: `compute_padim_scores` dan `compute_knn_scores`.
 
 ### `evaluation/metrics.py`
-Metrik evaluasi:
-- **`compute_auroc`** — Menghitung AUROC score menggunakan sklearn.
+Metrik evaluasi (Fase 2.1):
+- **`compute_auroc(y_true, y_score)`** — Image-level AUROC (sklearn wrapper)
+- **`compute_precision_recall_f1(y_true, y_pred)`** — Precision, Recall, F1-Score (binary)
+- **`compute_pixel_auroc(anomaly_maps, ground_truth_masks)`** — Pixel-level AUROC — flatten semua pixel anomaly maps vs ground truth
+- **`find_optimal_threshold(y_true, y_scores, method, percentile)`** — Threshold: `percentile` (95th percentile normal scores per proposal 3.6.7) atau `f1` (max F1-score)
+- **`compute_image_level_metrics(y_true, y_scores, threshold)`** — Comprehensive metrics: AUROC + Precision + Recall + F1 dalam satu dict
 
 ### `experiments/run_padim.py`
-Script runner eksperimen (akan diperbaiki di Fase 2).
+Experiment runner end-to-end (Fase 2.2). Menjalankan pipeline lengkap:
+1. Load backbone ResNet-50 + MoCo v2 (frozen)
+2. Ekstraksi fitur TRAIN (209 images) → simpan
+3. **Dimensionality reduction** (1792 → 100 channel, random selection sesuai PaDiM paper)
+4. Compute PaDiM statistics (mean + cov_inv) → simpan
+5. Build feature bank KNN → simpan
+6. Ekstraksi fitur TEST (83 images) → simpan
+7. **PaDiM inference** — Mahalanobis distance + anomaly map
+8. **KNN inference** — Euclidean distance dengan chunked vectorized computation
+9. Evaluasi: AUROC + Precision + Recall + F1 + Pixel AUROC untuk kedua metode
+10. Simpan semua hasil ke folder **timestamped** (`output/experiments/run_YYYYMMDD_HHMMSS/`)
+11. Cetak tabel perbandingan PaDiM vs KNN
+
+Setiap run membuat folder baru, tidak menimpa run sebelumnya.
 
 ---
 
@@ -181,13 +198,13 @@ Script runner eksperimen (akan diperbaiki di Fase 2).
 # 1. Preprocessing (cek distribusi dataset)
 python prepocessing/run_prepocessing.py
 
-# 2. Ekstraksi fitur training
+# 2. Ekstraksi fitur training (optional — already done by run_padim.py)
 python "feature extractor/extract_feature.py"
 
 # 3. Generate augmented dataset (opsional)
 python prepocessing/augmentation/augmented_dataset.py
 
-# 4. Eksperimen (setelah Fase 2 selesai)
+# 4. Eksperimen end-to-end (full pipeline + evaluasi komparatif)
 python experiments/run_padim.py
 ```
 
@@ -198,6 +215,8 @@ python experiments/run_padim.py
 | Fase | Status |
 |------|--------|
 | Fase 1: Core Pipeline (Config fix, backbone MoCo v2, preprocessing fix, PaDiM lengkap, KNN baseline) | **✅ Selesai** |
-| Fase 2: Evaluasi & Eksperimen (Metrics lengkap, threshold, experiment runner) | ⏳ Belum |
+| Fase 2.1: Metrics (Precision, Recall, F1, Pixel AUROC, threshold percentile) | **✅ Selesai** |
+| Fase 2.2: Experiment runner (run_padim.py end-to-end, dim reduction, chunked KNN) | **✅ Selesai** |
+| Fase 2.3: Run eksperimen komparatif (PaDiM vs KNN — jalankan `python experiments/run_padim.py`) | ⏳ Belum dijalankan |
 | Fase 3: Dashboard Streamlit | ⏳ Belum |
 | Fase 4: Analisis & Dokumentasi | ⏳ Belum |
