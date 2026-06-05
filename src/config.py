@@ -21,12 +21,12 @@ NUM_WORKERS = 4
 # =========================
 # FEATURE EXTRACTION
 # =========================
-SELECTED_LAYERS = ["layer3"]
+SELECTED_LAYERS = ["layer1", "layer2", "layer3"]
 
 # =========================
 # PADIM
 # =========================
-PADIM_N_DIMS = 100
+PADIM_N_DIMS = 550
 
 # =========================
 # OUTPUT
@@ -36,7 +36,7 @@ FEATURE_OUTPUT_PATH = "output/features"
 # =========================
 # SEED
 # =========================
-SEED = 42
+SEED = 1024
 
 # =========================
 # CREATE OUTPUT DIR

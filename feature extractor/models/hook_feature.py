@@ -2,6 +2,24 @@ import torch
 import torch.nn.functional as F
 
 
+def embedding_concat(x, y):
+    """Align multi-resolution features via unfold+fold (PaDiM original)."""
+    B, C1, H1, W1 = x.size()
+    _, C2, H2, W2 = y.size()
+    s = int(H1 / H2)
+
+    x = F.unfold(x, kernel_size=s, dilation=1, stride=s)
+    x = x.view(B, C1, -1, H2, W2)
+
+    z = torch.zeros(B, C1 + C2, x.size(2), H2, W2, device=x.device)
+    for i in range(x.size(2)):
+        z[:, :, i, :, :] = torch.cat((x[:, :, i, :, :], y), 1)
+
+    z = z.view(B, -1, H2 * W2)
+    z = F.fold(z, kernel_size=s, output_size=(H1, W1), stride=s)
+    return z
+
+
 class FeatureExtractor:
     def __init__(self, model, selected_layers):
         self.model = model
@@ -11,23 +29,8 @@ class FeatureExtractor:
         with torch.no_grad():
             outputs = self.model(images)
 
-        features = []
+        features = outputs[self.selected_layers[0]]
+        for layer_name in self.selected_layers[1:]:
+            features = embedding_concat(features, outputs[layer_name])
 
-        target_size = outputs[self.selected_layers[0]].shape[-2:]
-
-        for layer_name in self.selected_layers:
-            feature = outputs[layer_name]
-
-            if feature.shape[-2:] != target_size:
-                feature = F.interpolate(
-                    feature,
-                    size=target_size,
-                    mode="bilinear",
-                    align_corners=False
-                )
-
-            features.append(feature)
-
-        embedding = torch.cat(features, dim=1)
-
-        return embedding
+        return features

@@ -42,7 +42,7 @@ def compute_statistics(features, n_dims=None):
     return mean, cov
 
 
-def compute_cov_inv(cov, reg=1e-6):
+def compute_cov_inv(cov, reg=0.01):
     """
     Compute regularized inverse covariance matrix.
     

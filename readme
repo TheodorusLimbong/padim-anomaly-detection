@@ -217,20 +217,38 @@ python experiments/run_padim.py
 | Fase 1: Core Pipeline (Config fix, backbone MoCo v2, preprocessing fix, PaDiM lengkap, KNN baseline) | **✅ Selesai** |
 | Fase 2.1: Metrics (Precision, Recall, F1, Pixel AUROC, threshold percentile) | **✅ Selesai** |
 | Fase 2.2: Experiment runner (run_padim.py end-to-end, dim reduction, chunked KNN) | **✅ Selesai** |
-| Fase 2.3: Run eksperimen komparatif (PaDiM vs KNN — layer3 only, 196 patches) | **✅ Selesai** |
+| Fase 2.3: Run eksperimen komparatif (PaDiM vs KNN — aligned with paper) | **✅ Selesai** |
 | Fase 3: Dashboard Streamlit | ⏳ Belum |
 | Fase 4: Analisis & Dokumentasi | ⏳ Belum |
 
-### 📊 Hasil Eksperimen Terakhir (06 Jun 2026 — run_20260605_135201)
+### 📊 Hasil Eksperimen Terbaru (05 Jun 2026 — run_20260605_142327)
 
-Config: `layer3` only → 14×14 = 196 patches, dim reduction 1024→100
+Config: `layer1+layer2+layer3` → 56×56 = **3136 patches**, dim reduction 1792→550, `embedding_concat`, reg=0.01, Gaussian smoothing σ=4, min-max normalization.
 
-| Metrik | PaDiM | KNN |
-|--------|-------|-----|
-| AUROC | 1.0000 | 0.9968 |
-| Precision | 0.9844 | 0.9844 |
-| Recall | 1.0000 | 1.0000 |
-| F1 | 0.9921 | 0.9921 |
-| Pixel AUROC | 0.9680 | 0.9795 |
+| Metrik | **PaDiM** 🏆 | KNN |
+|--------|-------------|-----|
+| AUROC | **0.9976** | 0.9937 |
+| Precision | 0.9841 | 0.9839 |
+| Recall | 0.9841 | 0.9683 |
+| F1 | **0.9841** | 0.9760 |
+| Pixel AUROC | **0.9834** 🚀 | 0.9811 |
+| n_train | 209 | 209 |
+| n_test | 83 (63 anomaly) | 83 (63 anomaly) |
 
-**Catatan**: Performa tetap excellent di kategori bottle. Pixel AUROC sedikit turun (dibanding 3136 patches) karena granularity anomaly map berkurang, tapi image-level AUROC tetap sempurna.
+**Capaian:** Implementasi sudah ~90% sesuai paper Defard et al. (2020). PaDiM unggul di semua metrik dibanding KNN baseline. Pixel AUROC naik **+1.5%** (0.968→0.983) berkat 3136 patches + Gaussian smoothing.
+
+### 📓 Notebook Visualisasi Komparatif
+
+`notebooks/padim_vs_knn_visualization.ipynb` — 9 sections visualisasi komparatif PaDiM vs KNN:
+
+1. **Feature Space 2D (PCA)** — Pemisahan normal vs anomaly dalam 2D
+2. **Covariance Matrix** — Visualisasi korelasi channel (diabaikan KNN)
+3. **Euclidean vs Mahalanobis Contours** — Perbedaan decision boundary
+4. **Anomaly Maps Side-by-Side** — 4 samples: PaDiM raw, smooth σ=4, KNN, GT
+5. **Score Distribution** — Box plot, separation gap vs overlap
+6. **ROC Curves** — Image-level + Pixel-level
+7. **Step-by-Step Calculation** — Angka real 1 patch normal vs anomaly
+8. **Computational Complexity** — Time benchmark + storage comparison
+9. **Confusion Matrix + Final Summary**
+
+**Caveat:** Notebook menggunakan `os.chdir(BASE)` dengan absolute path karena `from src.config import DATASET_PATH` menggunakan relative path `./dataset/...`.
