@@ -5,3 +5,4 @@ agents.md
 .vscode
 src/_pycache__/
 output/
+.readme

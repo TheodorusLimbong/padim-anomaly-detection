@@ -21,7 +21,7 @@ NUM_WORKERS = 4
 # =========================
 # FEATURE EXTRACTION
 # =========================
-SELECTED_LAYERS = ["layer1", "layer2", "layer3"]
+SELECTED_LAYERS = ["layer3"]
 
 # =========================
 # PADIM

@@ -217,6 +217,20 @@ python experiments/run_padim.py
 | Fase 1: Core Pipeline (Config fix, backbone MoCo v2, preprocessing fix, PaDiM lengkap, KNN baseline) | **✅ Selesai** |
 | Fase 2.1: Metrics (Precision, Recall, F1, Pixel AUROC, threshold percentile) | **✅ Selesai** |
 | Fase 2.2: Experiment runner (run_padim.py end-to-end, dim reduction, chunked KNN) | **✅ Selesai** |
-| Fase 2.3: Run eksperimen komparatif (PaDiM vs KNN — jalankan `python experiments/run_padim.py`) | ⏳ Belum dijalankan |
+| Fase 2.3: Run eksperimen komparatif (PaDiM vs KNN — layer3 only, 196 patches) | **✅ Selesai** |
 | Fase 3: Dashboard Streamlit | ⏳ Belum |
 | Fase 4: Analisis & Dokumentasi | ⏳ Belum |
+
+### 📊 Hasil Eksperimen Terakhir (06 Jun 2026 — run_20260605_135201)
+
+Config: `layer3` only → 14×14 = 196 patches, dim reduction 1024→100
+
+| Metrik | PaDiM | KNN |
+|--------|-------|-----|
+| AUROC | 1.0000 | 0.9968 |
+| Precision | 0.9844 | 0.9844 |
+| Recall | 1.0000 | 1.0000 |
+| F1 | 0.9921 | 0.9921 |
+| Pixel AUROC | 0.9680 | 0.9795 |
+
+**Catatan**: Performa tetap excellent di kategori bottle. Pixel AUROC sedikit turun (dibanding 3136 patches) karena granularity anomaly map berkurang, tapi image-level AUROC tetap sempurna.
