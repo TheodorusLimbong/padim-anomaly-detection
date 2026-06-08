@@ -120,9 +120,10 @@ def run():
     save_statistics(mean, cov_inv, exp_dir, "padim_stats.pt", dim_indices)
     print(f"  Mean: {mean.shape}, Cov_inv: {cov_inv.shape}")
 
-    # --- Feature bank (KNN — full dims, no reduction) ---
-    train_patches = reshape_embedding(train_raw)
-    feature_bank = build_feature_bank(train_patches)
+    # --- Feature bank (KNN — same dim reduction as PaDiM for fair comparison) ---
+    train_reduced_knn = train_raw[:, dim_indices, :, :].contiguous()
+    train_patches_knn = reshape_embedding(train_reduced_knn)
+    feature_bank = build_feature_bank(train_patches_knn)
     torch.save(feature_bank, os.path.join(exp_dir, "feature_bank.pt"))
     print(f"  Feature bank: {feature_bank.shape}")
 
@@ -153,8 +154,9 @@ def run():
     test_patches_padim = reshape_embedding(test_reduced)
     torch.save(test_patches_padim, os.path.join(exp_dir, "test_features_padim.pt"))
 
-    # Full patches for KNN
-    test_patches_knn = reshape_embedding(test_raw).to(device)
+    # Same dim reduction for KNN (fair comparison)
+    test_reduced_knn = test_raw[:, dim_indices, :, :].contiguous()
+    test_patches_knn = reshape_embedding(test_reduced_knn).to(device)
     torch.save(test_patches_knn.cpu(), os.path.join(exp_dir, "test_features_knn.pt"))
 
     n_anom = sum(test_labels)
@@ -206,7 +208,7 @@ def run():
         d["n_train"] = train_raw.shape[0]
         d["n_test"] = test_raw.shape[0]
         d["n_dims_padim"] = PADIM_N_DIMS
-        d["n_dims_knn"] = train_raw.shape[1]
+        d["n_dims_knn"] = PADIM_N_DIMS
         d["n_anomalies"] = n_anom
         d["category"] = category
 

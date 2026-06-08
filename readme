@@ -218,10 +218,12 @@ python experiments/run_padim.py
 | Fase 2.1: Metrics (Precision, Recall, F1, Pixel AUROC, threshold percentile) | **✅ Selesai** |
 | Fase 2.2: Experiment runner (run_padim.py end-to-end, dim reduction, chunked KNN) | **✅ Selesai** |
 | Fase 2.3: Run eksperimen komparatif (PaDiM vs KNN — aligned with paper) | **✅ Selesai** |
+| Fase 2.4: Notebook visualisasi komparatif (9 sections, PCA to confusion matrix) | **✅ Selesai** |
+| Fase 2.5: Optimasi inference PaDiM (24.5× speedup, GPU batch + einsum) | **✅ Selesai** |
 | Fase 3: Dashboard Streamlit | ⏳ Belum |
 | Fase 4: Analisis & Dokumentasi | ⏳ Belum |
 
-### 📊 Hasil Eksperimen Terbaru (05 Jun 2026 — run_20260605_142327)
+### 📊 Hasil Eksperimen Terbaru (05 Jun 2026 — run_20260605_230738)
 
 Config: `layer1+layer2+layer3` → 56×56 = **3136 patches**, dim reduction 1792→550, `embedding_concat`, reg=0.01, Gaussian smoothing σ=4, min-max normalization.
 
@@ -231,11 +233,16 @@ Config: `layer1+layer2+layer3` → 56×56 = **3136 patches**, dim reduction 1792
 | Precision | 0.9841 | 0.9839 |
 | Recall | 0.9841 | 0.9683 |
 | F1 | **0.9841** | 0.9760 |
-| Pixel AUROC | **0.9834** 🚀 | 0.9811 |
+| Pixel AUROC | **0.9838** 🚀 | 0.9811 |
+| Inference time (83 img) | **19.3 s** 🚀 | 155 s |
+| Inference per image | **0.23 s** 🚀 | 1.86 s |
+| Dimensi fitur | 550 | 1792 (tidak di-reduce) |
 | n_train | 209 | 209 |
 | n_test | 83 (63 anomaly) | 83 (63 anomaly) |
 
-**Capaian:** Implementasi sudah ~90% sesuai paper Defard et al. (2020). PaDiM unggul di semua metrik dibanding KNN baseline. Pixel AUROC naik **+1.5%** (0.968→0.983) berkat 3136 patches + Gaussian smoothing.
+**Capaian:** PaDiM unggul di SEMUA metrik — akurasi maupun kecepatan. Optimasi inference membawa speedup **24.5×** (5.71s → 0.23s per image) via batched einsum + GPU Gaussian blur.
+
+**Catatan penting:** KNN masih menggunakan full 1792 dimensi vs PaDiM 550 — ini membuat perbandingan tidak seimbang. Lihat analisis di AGENTS.md.
 
 ### 📓 Notebook Visualisasi Komparatif
 
@@ -252,3 +259,19 @@ Config: `layer1+layer2+layer3` → 56×56 = **3136 patches**, dim reduction 1792
 9. **Confusion Matrix + Final Summary**
 
 **Caveat:** Notebook menggunakan `os.chdir(BASE)` dengan absolute path karena `from src.config import DATASET_PATH` menggunakan relative path `./dataset/...`.
+
+### ⚡ Optimasi Inference PaDiM (Fase 2.5)
+
+Dua bottleneck utama yang dioptimasi:
+
+| Bottleneck | Sebelum | Sesudah |
+|-----------|---------|---------|
+| **Loop per patch** (mahalanobis.py) | 3136 iterasi Python/image (260.288 total) | `torch.bmm` batch — 1 operasi |
+| **Gaussian blur + CPU transfer** (inference.py) | scipy CPU + .numpy()/.from_numpy() | `F.conv2d` GPU langsung |
+| **Device** | CPU (data tidak di-move ke GPU) | Auto GPU jika CUDA tersedia |
+
+**Hasil benchmark (RTX 3060 6GB, 83 test images):**
+- Sebelum: 5.71 s/image, 474 s total
+- Sesudah: 0.23 s/image, 19.3 s total
+- Speedup: **24.5×**
+- Metrik不改 tetap identik (AUROC 0.9976, Pixel AUROC 0.9838)
