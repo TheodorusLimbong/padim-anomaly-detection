@@ -6,11 +6,14 @@ from datetime import datetime
 import torch
 from torch.utils.data import DataLoader
 
-# Setup sys.path
-repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, repo_root)
+# Setup sys.path — point to experimental/v1/
+exp_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, exp_root)
 for d in ["prepocessing", "feature extractor", "anomaly detection", "evaluation"]:
-    sys.path.insert(0, os.path.join(repo_root, d))
+    sys.path.insert(0, os.path.join(exp_root, d))
+
+# Project root for output (save to main project's output/ folder)
+project_root = os.path.dirname(os.path.dirname(exp_root))
 
 from src.config import (
     DATASET_PATH, IMAGE_SIZE, BATCH_SIZE, NUM_WORKERS,
@@ -39,7 +42,7 @@ def save_json(data, filepath):
 def print_table(padim_metrics, knn_metrics):
     sep = "-" * 60
     print("\n" + "=" * 60)
-    print("EXPERIMENT SUMMARY")
+    print("EXPERIMENT SUMMARY (experimental/v1 — no augmentation)")
     print("=" * 60)
     print(f"{'Metric':<20} {'PaDiM':<15} {'KNN (K=' + str(KNN_K) + ')':<15}")
     print(sep)
@@ -54,11 +57,12 @@ def print_table(padim_metrics, knn_metrics):
 
 
 def run():
-    # --- Experiment directory (timestamped) ---
+    # --- Experiment directory (timestamped) in project root ---
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    exp_dir = os.path.join(repo_root, "output", "experiments", f"run_{timestamp}")
+    exp_dir = os.path.join(project_root, "output", "experiments", f"run_{timestamp}")
     os.makedirs(exp_dir, exist_ok=True)
     print(f"[INFO] Experiment directory: {exp_dir}")
+    print("[INFO] Pipeline: experimental/v1 (no augmentation)")
 
     # --- Save config snapshot ---
     config_dict = {
@@ -71,6 +75,7 @@ def run():
         "knn_k": KNN_K,
         "device": DEVICE,
         "seed": SEED,
+        "pipeline": "experimental_v1_no_aug",
     }
     save_json(config_dict, os.path.join(exp_dir, "config.json"))
 
@@ -224,6 +229,7 @@ def run():
         "timestamp": timestamp,
         "exp_dir": exp_dir,
         "config": config_dict,
+        "pipeline": "experimental_v1_no_aug",
         "padim": padim_metrics,
         "knn": knn_metrics,
     }

@@ -6,15 +6,18 @@ from datetime import datetime
 import torch
 from torch.utils.data import DataLoader
 
-# Setup sys.path
-repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, repo_root)
+# Setup sys.path — point to experimental/v2/
+exp_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, exp_root)
 for d in ["prepocessing", "feature extractor", "anomaly detection", "evaluation"]:
-    sys.path.insert(0, os.path.join(repo_root, d))
+    sys.path.insert(0, os.path.join(exp_root, d))
+
+# Project root for output (save to main project's output/ folder)
+project_root = os.path.dirname(os.path.dirname(exp_root))
 
 from src.config import (
     DATASET_PATH, IMAGE_SIZE, BATCH_SIZE, NUM_WORKERS,
-    SELECTED_LAYERS, DEVICE, SEED, PADIM_N_DIMS, KNN_K,
+    SELECTED_LAYERS, DEVICE, SEED, PADIM_N_DIMS,
 )
 from dataset_wrapper import MVTecDataset
 from models.backbone import ResNet50Backbone
@@ -30,6 +33,8 @@ from metrics import (
     compute_pro_score,
 )
 
+KNN_K = 5
+
 
 def save_json(data, filepath):
     with open(filepath, "w") as f:
@@ -39,9 +44,9 @@ def save_json(data, filepath):
 def print_table(padim_metrics, knn_metrics):
     sep = "-" * 60
     print("\n" + "=" * 60)
-    print("EXPERIMENT SUMMARY")
+    print(f"EXPERIMENT SUMMARY (experimental/v2 — KNN K={KNN_K}, with augmentation)")
     print("=" * 60)
-    print(f"{'Metric':<20} {'PaDiM':<15} {'KNN (K=' + str(KNN_K) + ')':<15}")
+    print(f"{'Metric':<20} {'PaDiM':<15} {'KNN (K=5)':<15}")
     print(sep)
     for key in padim_metrics:
         padim_val = padim_metrics[key]
@@ -54,11 +59,12 @@ def print_table(padim_metrics, knn_metrics):
 
 
 def run():
-    # --- Experiment directory (timestamped) ---
+    # --- Experiment directory (timestamped) in project root ---
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    exp_dir = os.path.join(repo_root, "output", "experiments", f"run_{timestamp}")
+    exp_dir = os.path.join(project_root, "output", "experiments", f"run_{timestamp}")
     os.makedirs(exp_dir, exist_ok=True)
     print(f"[INFO] Experiment directory: {exp_dir}")
+    print(f"[INFO] Pipeline: experimental/v2 (with augmentation, KNN K={KNN_K})")
 
     # --- Save config snapshot ---
     config_dict = {
@@ -71,6 +77,7 @@ def run():
         "knn_k": KNN_K,
         "device": DEVICE,
         "seed": SEED,
+        "pipeline": "experimental_v2_aug_k5",
     }
     save_json(config_dict, os.path.join(exp_dir, "config.json"))
 
@@ -213,9 +220,9 @@ def run():
         d["n_test"] = test_raw.shape[0]
         d["n_dims_padim"] = PADIM_N_DIMS
         d["n_dims_knn"] = PADIM_N_DIMS
-        d["knn_k"] = KNN_K
         d["n_anomalies"] = n_anom
         d["category"] = category
+        d["knn_k"] = KNN_K
 
     # Print & save
     print_table(padim_metrics, knn_metrics)
@@ -224,6 +231,7 @@ def run():
         "timestamp": timestamp,
         "exp_dir": exp_dir,
         "config": config_dict,
+        "pipeline": "experimental_v2_aug_k5",
         "padim": padim_metrics,
         "knn": knn_metrics,
     }

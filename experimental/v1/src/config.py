@@ -29,11 +29,6 @@ SELECTED_LAYERS = ["layer1", "layer2", "layer3"]
 PADIM_N_DIMS = 550
 
 # =========================
-# KNN
-# =========================
-KNN_K = 5
-
-# =========================
 # OUTPUT
 # =========================
 FEATURE_OUTPUT_PATH = "output/features"
