@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.nn as nn
 from torchvision.models import resnet50
@@ -6,6 +7,11 @@ MOCO_URL = (
     "https://dl.fbaipublicfiles.com/moco/"
     "moco_checkpoints/moco_v2_200ep/"
     "moco_v2_200ep_pretrain.pth.tar"
+)
+
+MODELS_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "models"
 )
 
 
@@ -29,10 +35,15 @@ class ResNet50Backbone(nn.Module):
             self._load_moco_weights()
 
     def _load_moco_weights(self):
-        print("[INFO] Loading MoCo v2 pretrained weights...")
-        checkpoint = torch.hub.load_state_dict_from_url(
-            MOCO_URL, map_location="cpu"
-        )
+        local_path = os.path.join(MODELS_DIR, "moco_v2_200ep_pretrain.pth.tar")
+        if os.path.exists(local_path):
+            print(f"[INFO] Loading MoCo v2 from local: {local_path}")
+            checkpoint = torch.load(local_path, map_location="cpu")
+        else:
+            print("[INFO] Downloading MoCo v2 pretrained weights...")
+            checkpoint = torch.hub.load_state_dict_from_url(
+                MOCO_URL, map_location="cpu"
+            )
         state_dict = checkpoint["state_dict"]
 
         new_state_dict = {}

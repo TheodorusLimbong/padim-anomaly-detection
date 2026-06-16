@@ -1,0 +1,265 @@
+import sys
+import os
+import json
+import argparse
+from datetime import datetime
+
+import torch
+from torch.utils.data import DataLoader
+from torchvision import transforms
+
+# Setup sys.path
+repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, repo_root)
+for d in ["prepocessing", "feature extractor", "anomaly detection", "evaluation"]:
+    sys.path.insert(0, os.path.join(repo_root, d))
+
+from src.config import (
+    DATASET_PATH, IMAGE_SIZE, BATCH_SIZE, NUM_WORKERS,
+    SELECTED_LAYERS, DEVICE, SEED, PADIM_N_DIMS, KNN_K,
+)
+from dataset_wrapper import MVTecDataset
+from models.backbone import ResNet50Backbone
+from models.hook_feature import FeatureExtractor
+from utils.feature_utils import reshape_embedding
+from padim import reduce_dim, compute_statistics, compute_cov_inv, save_statistics
+from knn_baseline import build_feature_bank
+from inference import compute_padim_scores, compute_knn_scores
+from metrics import (
+    find_optimal_threshold,
+    compute_image_level_metrics,
+    compute_pixel_auroc,
+    compute_pro_score,
+)
+from resize import get_resize_transform
+from normalization import get_normalize_transform
+
+
+def save_json(data, filepath):
+    with open(filepath, "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def print_table(padim_metrics, knn_metrics, n_train, no_aug):
+    tag = "no-aug" if no_aug else "aug"
+    sep = "-" * 60
+    print("\n" + "=" * 60)
+    print(f"EXPERIMENT SUMMARY — N={n_train}, {tag}")
+    print("=" * 60)
+    print(f"{'Metric':<20} {'PaDiM':<15} {'KNN (K=' + str(KNN_K) + ')':<15}")
+    print(sep)
+    for key in padim_metrics:
+        padim_val = padim_metrics[key]
+        knn_val = knn_metrics[key]
+        if isinstance(padim_val, (int, float)):
+            print(f"{key:<20} {padim_val:<15.4f} {knn_val:<15.4f}")
+        else:
+            print(f"{key:<20} {str(padim_val):<15} {str(knn_val):<15}")
+    print("=" * 60)
+
+
+def run():
+    parser = argparse.ArgumentParser(description="PaDiM vs KNN — subset experiment")
+    parser.add_argument("--n-train", type=int, default=209, help="number of training images to use")
+    parser.add_argument("--no-aug", action="store_true", help="disable augmentation during training")
+    args = parser.parse_args()
+
+    n_train = args.n_train
+    no_aug = args.no_aug
+    n_dims = PADIM_N_DIMS
+
+    # --- Experiment directory ---
+    exp_subdir = f"{n_train}_{'aug' if not no_aug else 'noaug'}"
+    exp_dir = os.path.join(repo_root, "output", "experiments", "subset", exp_subdir)
+    os.makedirs(exp_dir, exist_ok=True)
+    print(f"[INFO] Experiment directory: {exp_dir}")
+    print(f"[INFO] Config: n_train={n_train}, augmentation={not no_aug}")
+
+    # --- Save config snapshot ---
+    config_dict = {
+        "dataset_path": DATASET_PATH,
+        "image_size": IMAGE_SIZE,
+        "batch_size": BATCH_SIZE,
+        "num_workers": NUM_WORKERS,
+        "selected_layers": SELECTED_LAYERS,
+        "padim_n_dims": n_dims,
+        "knn_k": KNN_K,
+        "device": DEVICE,
+        "seed": SEED,
+        "n_train": n_train,
+        "augmentation": not no_aug,
+    }
+    save_json(config_dict, os.path.join(exp_dir, "config.json"))
+
+    device = torch.device(DEVICE)
+    print(f"[INFO] Using device: {device}")
+
+    torch.manual_seed(SEED)
+
+    # Dataset paths
+    dataset_root = os.path.dirname(DATASET_PATH)
+    category = os.path.basename(DATASET_PATH)
+
+    # =============================
+    # 1. FEATURE EXTRACTION
+    # =============================
+
+    print("[INFO] Loading ResNet-50 + MoCo v2 backbone (frozen)...")
+    model = ResNet50Backbone(pretrained=True).to(device)
+    model.eval()
+    extractor = FeatureExtractor(model=model, selected_layers=SELECTED_LAYERS)
+
+    # --- TRAIN ---
+    train_dataset = MVTecDataset(root_dir=dataset_root, category=category, phase="train")
+
+    # Override transform if no augmentation
+    if no_aug:
+        print("[INFO] Augmentation disabled for training")
+        train_dataset.transform = transforms.Compose([
+            get_resize_transform(IMAGE_SIZE),
+            transforms.ToTensor(),
+            get_normalize_transform()
+        ])
+
+    train_loader = DataLoader(
+        train_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS,
+    )
+
+    print("[INFO] Extracting train features...")
+    train_raw_list = []
+    for batch in train_loader:
+        images = batch["image"].to(device)
+        embedding = extractor.extract(images)
+        train_raw_list.append(embedding.cpu())
+
+    train_raw = torch.cat(train_raw_list, dim=0)
+    if n_train < train_raw.shape[0]:
+        print(f"[INFO] Slicing train features: {train_raw.shape[0]} -> {n_train}")
+        train_raw = train_raw[:n_train]
+    torch.save(train_raw, os.path.join(exp_dir, "train_raw.pt"))
+    print(f"  Shape: {train_raw.shape}")
+
+    # --- Dimension reduction (PaDiM) ---
+    print(f"[INFO] Reducing dimensions: {train_raw.shape[1]} -> {n_dims}")
+    train_reduced, dim_indices = reduce_dim(train_raw, n_dims=n_dims, seed=SEED)
+    torch.save(dim_indices, os.path.join(exp_dir, "dim_indices.pt"))
+    print(f"  Reduced shape: {train_reduced.shape}")
+
+    # --- PaDiM statistics ---
+    print("[INFO] Computing PaDiM statistics (mean + cov_inv)...")
+    mean, cov = compute_statistics(train_reduced)
+    cov_inv = compute_cov_inv(cov)
+    save_statistics(mean, cov_inv, exp_dir, "padim_stats.pt", dim_indices)
+    print(f"  Mean: {mean.shape}, Cov_inv: {cov_inv.shape}")
+
+    # --- Feature bank (KNN) ---
+    train_reduced_knn = train_raw[:, dim_indices, :, :].contiguous()
+    train_patches_knn = reshape_embedding(train_reduced_knn)
+    feature_bank = build_feature_bank(train_patches_knn)
+    torch.save(feature_bank, os.path.join(exp_dir, "feature_bank.pt"))
+    print(f"  Feature bank: {feature_bank.shape}")
+
+    # --- TEST ---
+    test_dataset = MVTecDataset(root_dir=dataset_root, category=category, phase="test")
+    test_loader = DataLoader(
+        test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS,
+    )
+
+    print("[INFO] Extracting test features...")
+    test_raw_list = []
+    test_labels = []
+    test_gt_masks = []
+
+    for batch in test_loader:
+        images = batch["image"].to(device)
+        embedding = extractor.extract(images)
+        test_raw_list.append(embedding.cpu())
+        test_labels.extend(batch["label"].tolist())
+        for mask_tensor in batch.get("mask", []):
+            test_gt_masks.append(mask_tensor.squeeze(0))
+
+    test_raw = torch.cat(test_raw_list, dim=0)
+    print(f"  Test raw shape: {test_raw.shape}")
+
+    # Apply same dim indices
+    test_reduced = test_raw[:, dim_indices, :, :].contiguous()
+    test_patches_padim = reshape_embedding(test_reduced)
+    torch.save(test_patches_padim, os.path.join(exp_dir, "test_features_padim.pt"))
+
+    test_reduced_knn = test_raw[:, dim_indices, :, :].contiguous()
+    test_patches_knn = reshape_embedding(test_reduced_knn).to(device)
+    torch.save(test_patches_knn.cpu(), os.path.join(exp_dir, "test_features_knn.pt"))
+
+    n_anom = sum(test_labels)
+    print(f"  Labels: {n_anom} anomalies / {len(test_labels)} total")
+
+    # =============================
+    # 2. INFERENCE
+    # =============================
+
+    print("[INFO] Running PaDiM inference...")
+    padim_scores, padim_maps = compute_padim_scores(
+        test_patches_padim, mean, cov_inv, img_size=IMAGE_SIZE,
+    )
+    torch.save(padim_scores, os.path.join(exp_dir, "padim_scores.pt"))
+    print(f"  Scores shape: {padim_scores.shape}")
+
+    print(f"[INFO] Running KNN (K={KNN_K}) inference...")
+    knn_scores, knn_maps = compute_knn_scores(
+        test_patches_knn, feature_bank, k=KNN_K, img_size=IMAGE_SIZE,
+    )
+    torch.save(knn_scores, os.path.join(exp_dir, "knn_scores.pt"))
+    print(f"  Scores shape: {knn_scores.shape}")
+
+    # =============================
+    # 3. EVALUATION
+    # =============================
+
+    print("[INFO] Computing metrics...")
+
+    padim_thresh = find_optimal_threshold(
+        test_labels, padim_scores.tolist(), method="percentile", percentile=95,
+    )
+    knn_thresh = find_optimal_threshold(
+        test_labels, knn_scores.tolist(), method="percentile", percentile=95,
+    )
+
+    padim_metrics = compute_image_level_metrics(
+        test_labels, padim_scores.tolist(), padim_thresh,
+    )
+    padim_metrics["pixel_auroc"] = compute_pixel_auroc(padim_maps, test_gt_masks)
+    padim_metrics["pro_score"] = compute_pro_score(padim_maps, test_gt_masks)
+
+    knn_metrics = compute_image_level_metrics(
+        test_labels, knn_scores.tolist(), knn_thresh,
+    )
+    knn_metrics["pixel_auroc"] = compute_pixel_auroc(knn_maps, test_gt_masks)
+    knn_metrics["pro_score"] = compute_pro_score(knn_maps, test_gt_masks)
+
+    # Add metadata
+    for d in (padim_metrics, knn_metrics):
+        d["n_train"] = train_raw.shape[0]
+        d["n_test"] = test_raw.shape[0]
+        d["n_dims_padim"] = n_dims
+        d["n_dims_knn"] = n_dims
+        d["knn_k"] = KNN_K
+        d["n_anomalies"] = n_anom
+        d["category"] = category
+
+    # Print & save
+    print_table(padim_metrics, knn_metrics, n_train, no_aug)
+
+    results = {
+        "timestamp": datetime.now().strftime("%Y%m%d_%H%M%S"),
+        "exp_dir": exp_dir,
+        "config": config_dict,
+        "padim": padim_metrics,
+        "knn": knn_metrics,
+    }
+    save_json(results, os.path.join(exp_dir, "metrics.json"))
+    print(f"\n[INFO] Results saved to: {exp_dir}")
+    print("[INFO] Done.")
+
+
+if __name__ == "__main__":
+    run()

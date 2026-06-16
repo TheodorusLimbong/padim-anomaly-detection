@@ -6,3 +6,4 @@ agents.md
 src/_pycache__/
 output/
 .readme
+models/*.pth.tar
