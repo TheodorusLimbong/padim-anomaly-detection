@@ -236,6 +236,7 @@ def load_experiment_data(exp_name, device):
         metrics = json.load(f)
 
     padim_min, padim_max = None, None
+    padim_map_min, padim_map_max = None, None
     test_feat_path = os.path.join(exp_dir, "test_features_padim.pt")
     if os.path.exists(test_feat_path):
         test_feat = torch.load(test_feat_path, map_location="cpu")
@@ -255,6 +256,12 @@ def load_experiment_data(exp_name, device):
             kernel = _gaussian_kernel(4, device=device)
             maps = F.conv2d(maps, kernel, padding=kernel.shape[-1] // 2)
             raw_img_scores_list.append(maps.view(len(batch), -1).max(dim=1)[0])
+            if padim_map_min is None:
+                padim_map_min = maps.min().item()
+                padim_map_max = maps.max().item()
+            else:
+                padim_map_min = min(padim_map_min, maps.min().item())
+                padim_map_max = max(padim_map_max, maps.max().item())
 
         raw_img_scores = torch.cat(raw_img_scores_list)
         padim_min = raw_img_scores.min().item()
@@ -272,6 +279,8 @@ def load_experiment_data(exp_name, device):
         "threshold_knn": metrics.get("knn", {}).get("threshold"),
         "padim_min": padim_min,
         "padim_max": padim_max,
+        "padim_map_min": padim_map_min,
+        "padim_map_max": padim_map_max,
         "metrics": metrics,
     }
 

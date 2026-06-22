@@ -50,8 +50,15 @@ if uploaded is not None:
         st.image(pil_image, caption="Original", use_container_width=True)
 
     with col2:
+        map_raw = result["padim"]["map_raw"]
+        pmin = exp_data.get("padim_map_min")
+        pmax = exp_data.get("padim_map_max")
+        if pmax is not None and pmax > pmin:
+            map_norm = (map_raw - pmin) / (pmax - pmin)
+        else:
+            map_norm = normalize_map(map_raw)
         fig, ax = plt.subplots(figsize=(4, 4))
-        ax.imshow(normalize_map(result["padim"]["map_raw"]), cmap="jet", vmin=0, vmax=1)
+        ax.imshow(np.clip(map_norm, 0, 1), cmap="jet", vmin=0, vmax=1)
         s = result["padim"]["score_norm"] if result["padim"]["score_norm"] is not None else result["padim"]["score"]
         ax.set_title(f"PaDiM\n{s:.4f}", fontsize=11)
         ax.axis("off")
