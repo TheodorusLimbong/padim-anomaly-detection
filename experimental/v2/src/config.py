@@ -27,6 +27,7 @@ SELECTED_LAYERS = ["layer1", "layer2", "layer3"]
 # PADIM
 # =========================
 PADIM_N_DIMS = 550
+GAUSS_SIGMA = 4
 
 # =========================
 # OUTPUT

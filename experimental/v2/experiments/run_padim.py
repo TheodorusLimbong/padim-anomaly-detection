@@ -17,7 +17,7 @@ project_root = os.path.dirname(os.path.dirname(exp_root))
 
 from src.config import (
     DATASET_PATH, IMAGE_SIZE, BATCH_SIZE, NUM_WORKERS,
-    SELECTED_LAYERS, DEVICE, SEED, PADIM_N_DIMS,
+    SELECTED_LAYERS, DEVICE, SEED, PADIM_N_DIMS, GAUSS_SIGMA,
 )
 from dataset_wrapper import MVTecDataset
 from models.backbone import ResNet50Backbone
@@ -75,6 +75,7 @@ def run():
         "selected_layers": SELECTED_LAYERS,
         "padim_n_dims": PADIM_N_DIMS,
         "knn_k": KNN_K,
+        "gauss_sigma": GAUSS_SIGMA,
         "device": DEVICE,
         "seed": SEED,
         "pipeline": "experimental_v2_aug_k5",
@@ -177,7 +178,7 @@ def run():
 
     print("[INFO] Running PaDiM inference...")
     padim_scores, padim_maps = compute_padim_scores(
-        test_patches_padim, mean, cov_inv, img_size=IMAGE_SIZE,
+        test_patches_padim, mean, cov_inv, img_size=IMAGE_SIZE, sigma=GAUSS_SIGMA,
     )
     torch.save(padim_scores, os.path.join(exp_dir, "padim_scores.pt"))
     print(f"  Scores shape: {padim_scores.shape}")

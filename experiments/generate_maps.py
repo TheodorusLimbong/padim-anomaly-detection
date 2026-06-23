@@ -5,7 +5,7 @@ for d in ["prepocessing", "feature extractor", "anomaly detection", "evaluation"
 
 import torch
 from torch.utils.data import DataLoader
-from src.config import IMAGE_SIZE, BATCH_SIZE, KNN_K, DATASET_PATH
+from src.config import IMAGE_SIZE, BATCH_SIZE, KNN_K, DATASET_PATH, GAUSS_SIGMA
 from dataset_wrapper import MVTecDataset
 from inference import compute_padim_scores, compute_knn_scores
 
@@ -50,7 +50,7 @@ def main():
         if not has_padim:
             print(f"  Generating PaDiM maps...")
             _, padim_maps = compute_padim_scores(
-                test_patches_padim, stats["mean"], stats["cov_inv"], img_size=IMAGE_SIZE,
+                test_patches_padim, stats["mean"], stats["cov_inv"], img_size=IMAGE_SIZE, sigma=GAUSS_SIGMA,
             )
             torch.save(padim_maps, os.path.join(exp_dir, "padim_maps.pt"))
             print(f"  PaDiM done: {len(padim_maps)} maps")

@@ -235,6 +235,7 @@ def load_experiment_data(exp_name, device):
     with open(os.path.join(exp_dir, "metrics.json")) as f:
         metrics = json.load(f)
 
+    sigma = metrics.get("config", {}).get("gauss_sigma", 4)
     padim_min, padim_max = None, None
     padim_map_min, padim_map_max = None, None
     test_feat_path = os.path.join(exp_dir, "test_features_padim.pt")
@@ -253,7 +254,7 @@ def load_experiment_data(exp_name, device):
             scores = torch.sqrt(scores.clamp(min=0))
             maps = scores.view(-1, 1, 56, 56)
             maps = F.interpolate(maps, size=(224, 224), mode="bilinear", align_corners=False)
-            kernel = _gaussian_kernel(4, device=device)
+            kernel = _gaussian_kernel(sigma, device=device)
             maps = F.conv2d(maps, kernel, padding=kernel.shape[-1] // 2)
             raw_img_scores_list.append(maps.view(len(batch), -1).max(dim=1)[0])
             if padim_map_min is None:
@@ -281,6 +282,7 @@ def load_experiment_data(exp_name, device):
         "padim_max": padim_max,
         "padim_map_min": padim_map_min,
         "padim_map_max": padim_map_max,
+        "gauss_sigma": sigma,
         "metrics": metrics,
     }
 
@@ -321,7 +323,8 @@ def infer_single_image(pil_image, extractor, exp_data, device):
 
     padim_map = patch_scores.view(1, 1, 56, 56)
     padim_map = F.interpolate(padim_map, size=(224, 224), mode="bilinear", align_corners=False)
-    kernel = _gaussian_kernel(4, device=device)
+    sigma = exp_data.get("gauss_sigma", 4)
+    kernel = _gaussian_kernel(sigma, device=device)
     padim_map = F.conv2d(padim_map, kernel, padding=kernel.shape[-1] // 2)
     padim_score = padim_map.max().item()
     padim_time = _time.perf_counter() - t_p0
@@ -338,8 +341,8 @@ def infer_single_image(pil_image, extractor, exp_data, device):
 
     padim_norm = None
     padim_pred = None
-    if exp_data["padim_min"] is not None and exp_data["padim_max"] is not None:
-        pmin, pmax = exp_data["padim_min"], exp_data["padim_max"]
+    if exp_data["padim_map_min"] is not None and exp_data["padim_map_max"] is not None:
+        pmin, pmax = exp_data["padim_map_min"], exp_data["padim_map_max"]
         if pmax > pmin:
             padim_norm = (padim_score - pmin) / (pmax - pmin)
         if padim_norm is not None and exp_data["threshold_padim"] is not None:

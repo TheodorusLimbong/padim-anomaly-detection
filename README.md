@@ -53,9 +53,9 @@ Preprocessing → Feature Extraction (3 layers) → Dim Reduction 1792→550 →
 
 **Key insights:** Data efficiency gap hanya terlihat dengan augmentasi (gap melebar 0.021→0.037). Tanpa augmentasi KNN sangat robust — feature bank yang bersih membuat Euclidean distance tetap diskriminatif meski reference berkurang.
 
-### Dashboard
+### Dashboard (Live Inference — Updated 23 Jun 2026)
 
-Streamlit dashboard untuk demo sidang — 5 tabs: Overview, Metric Comparison, Anomaly Maps, ROC Curves, Error Analysis.
+Streamlit dashboard untuk live inference — upload gambar, langsung inferensi PaDiM + KNN, anomaly maps, score, prediksi. PaDiM map dinormalisasi menggunakan global pixel min-max dari seluruh test set (bukan per-image) untuk menghindari false positive di pojok gambar normal.
 
 ```powershell
 streamlit run dashboard/app.py
@@ -70,6 +70,7 @@ streamlit run dashboard/app.py
 | K=5 fix melebarkan gap | AUROC gap 0.0159→0.0214 setelah K bug fix |
 | Gap recall paling besar | Recall PaDiM 0.984 vs KNN 0.921 (+0.063) — PaDiM lebih sensitif |
 | Data efficiency hanya valid dgn aug | Tanpa augmentasi, KNN sama robust-nya dengan PaDiM terhadap pengurangan data |
+| Global normalization fix (23 Jun) | Dashboard PaDiM map ganti dari per-image ke global min-max — corner artifact hilang |
 
 ## Quick Start
 
@@ -108,6 +109,7 @@ streamlit run dashboard/app.py                       # dashboard
 - Preprocessing uses `Resize(224)` instead of paper's `Resize(256)→CenterCrop(224)`
 - Data augmentation active during training (not in original PaDiM paper)
 - Gaussian smoothing (σ=4) only applied to PaDiM, not KNN
+- Gaussian blur applied AFTER bilinear upsample (224px), not before (56px)
 - Only `bottle` category configured
 - PRO-score metric implemented (run_20260609_142730)
 - Notebook still refers to old experiment run
