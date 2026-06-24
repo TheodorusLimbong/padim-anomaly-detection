@@ -53,9 +53,13 @@ Preprocessing → Feature Extraction (3 layers) → Dim Reduction 1792→550 →
 
 **Key insights:** Data efficiency gap hanya terlihat dengan augmentasi (gap melebar 0.021→0.037). Tanpa augmentasi KNN sangat robust — feature bank yang bersih membuat Euclidean distance tetap diskriminatif meski reference berkurang.
 
-### Dashboard (Live Inference — Updated 23 Jun 2026)
+### Dashboard (Live Inference — Updated 24 Jun 2026)
 
 Streamlit dashboard untuk live inference — upload gambar, langsung inferensi PaDiM + KNN, anomaly maps, score, prediksi. PaDiM map dinormalisasi menggunakan global pixel min-max dari seluruh test set (bukan per-image) untuk menghindari false positive di pojok gambar normal.
+
+**Optimasi CPU (einsum→bmm):** PaDiM ~0.4-0.8s on CPU (sebelumnya ~3-8s). KNN ~45-50s dengan pre-computed bank norms + chunk 30K. Sequential display: PaDiM tampil duluan, KNN menyusul.
+
+**GAUSS_SIGMA config:** Disimpan di `src/config.py`, experiment, dan dashboard — konsisten antar run. Feature bank tetap di CPU (peak GPU ~3.8 GB).
 
 ```powershell
 streamlit run dashboard/app.py
@@ -71,6 +75,9 @@ streamlit run dashboard/app.py
 | Gap recall paling besar | Recall PaDiM 0.984 vs KNN 0.921 (+0.063) — PaDiM lebih sensitif |
 | Data efficiency hanya valid dgn aug | Tanpa augmentasi, KNN sama robust-nya dengan PaDiM terhadap pengurangan data |
 | Global normalization fix (23 Jun) | Dashboard PaDiM map ganti dari per-image ke global min-max — corner artifact hilang |
+| Score normalization fix (24 Jun) | Dashboard PaDiM score normalize pakai pixel-level global min-max — threshold cocok dengan experiment |
+| GAUSS_SIGMA config (24 Jun) | Sigma disimpan di config.json, dibaca dashboard — konsisten antara experiment dan dashboard |
+| CPU optimization (24 Jun) | einsum→bmm (PaDiM ~0.4-0.8s CPU), precompute bank norms, KNN chunk 30K, sequential display |
 
 ## Quick Start
 

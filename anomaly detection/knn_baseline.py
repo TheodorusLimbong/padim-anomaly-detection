@@ -13,7 +13,7 @@ def build_feature_bank(train_features):
     return feature_bank
 
 
-def compute_knn_anomaly_score(test_embedding, feature_bank, k=1, chunk_size=20000):
+def compute_knn_anomaly_score(test_embedding, feature_bank, k=1, chunk_size=20000, bank_norm_sq=None):
     """
     Compute anomaly score per patch using K-NN Euclidean distance (chunked + vectorized).
 
@@ -24,6 +24,7 @@ def compute_knn_anomaly_score(test_embedding, feature_bank, k=1, chunk_size=2000
     feature_bank: [M, C]  all training patch embeddings
     k: number of nearest neighbors (default 5)
     chunk_size: max number of bank entries processed at once
+    bank_norm_sq: [M] pre-computed squared norms of feature_bank (optional)
 
     returns: patch_scores [P]  average distance to K nearest neighbors
     """
@@ -42,9 +43,12 @@ def compute_knn_anomaly_score(test_embedding, feature_bank, k=1, chunk_size=2000
         chunk = feature_bank[start:end].to(device)
 
         dots = test_embedding @ chunk.T
-        bank_norm_sq = (chunk ** 2).sum(dim=1, keepdim=True).T
+        if bank_norm_sq is not None:
+            bank_norm = bank_norm_sq[start:end].to(device).unsqueeze(0)
+        else:
+            bank_norm = (chunk ** 2).sum(dim=1, keepdim=True).T
 
-        dist_sq = test_norm_sq + bank_norm_sq - 2 * dots
+        dist_sq = test_norm_sq + bank_norm - 2 * dots
         dist_sq = torch.clamp(dist_sq, min=0)
         dist = dist_sq.sqrt()
 

@@ -9,7 +9,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dashboard.utils import (
     list_experiments, load_model, load_experiment_data,
-    infer_single_image, normalize_map,
+    preprocess_and_extract, infer_padim, infer_knn, normalize_map,
 )
 from PIL import Image
 
@@ -41,8 +41,8 @@ uploaded = st.file_uploader("Pilih gambar", type=["png", "jpg", "jpeg", "bmp"])
 if uploaded is not None:
     pil_image = Image.open(uploaded).convert("RGB")
 
-    with st.spinner("Menjalankan inference..."):
-        result = infer_single_image(pil_image, extractor, exp_data, device)
+    with st.spinner("Feature extraction..."):
+        patches = preprocess_and_extract(pil_image, extractor, exp_data, device)
 
     col1, col2, col3 = st.columns(3)
 
@@ -50,7 +50,10 @@ if uploaded is not None:
         st.image(pil_image, caption="Original", use_container_width=True)
 
     with col2:
-        map_raw = result["padim"]["map_raw"]
+        with st.spinner("PaDiM inference..."):
+            padim = infer_padim(patches, exp_data, device)
+
+        map_raw = padim["map_raw"]
         pmin = exp_data.get("padim_map_min")
         pmax = exp_data.get("padim_map_max")
         if pmax is not None and pmax > pmin:
@@ -59,35 +62,38 @@ if uploaded is not None:
             map_norm = normalize_map(map_raw)
         fig, ax = plt.subplots(figsize=(4, 4))
         ax.imshow(np.clip(map_norm, 0, 1), cmap="jet", vmin=0, vmax=1)
-        s = result["padim"]["score_norm"] if result["padim"]["score_norm"] is not None else result["padim"]["score"]
+        s = padim["score_norm"] if padim["score_norm"] is not None else padim["score"]
         ax.set_title(f"PaDiM\n{s:.4f}", fontsize=11)
         ax.axis("off")
         st.pyplot(fig)
         plt.close(fig)
-        pred = result["padim"]["is_anomaly"]
+        pred = padim["is_anomaly"]
         if pred is True:
             st.markdown('<p style="background:#d32f2f;color:white;text-align:center;padding:4px;border-radius:4px;font-weight:bold">🔴 ANOMALY</p>', unsafe_allow_html=True)
         elif pred is False:
             st.markdown('<p style="background:#388e3c;color:white;text-align:center;padding:4px;border-radius:4px;font-weight:bold">✅ NORMAL</p>', unsafe_allow_html=True)
         else:
-            st.markdown(f'<p style="background:#757575;color:white;text-align:center;padding:4px;border-radius:4px">Score: {result["padim"]["score"]:.4f}</p>', unsafe_allow_html=True)
-        st.caption(f"⏱ {result['padim']['time']:.3f}s")
+            st.markdown(f'<p style="background:#757575;color:white;text-align:center;padding:4px;border-radius:4px">Score: {padim["score"]:.4f}</p>', unsafe_allow_html=True)
+        st.caption(f"⏱ {padim['time']:.3f}s")
 
     with col3:
+        with st.spinner("KNN inference..."):
+            knn = infer_knn(patches, exp_data, device)
+
         fig, ax = plt.subplots(figsize=(4, 4))
-        ax.imshow(normalize_map(result["knn"]["map_raw"]), cmap="jet", vmin=0, vmax=1)
-        ax.set_title(f"KNN\n{result['knn']['score']:.4f}", fontsize=11)
+        ax.imshow(normalize_map(knn["map_raw"]), cmap="jet", vmin=0, vmax=1)
+        ax.set_title(f"KNN\n{knn['score']:.4f}", fontsize=11)
         ax.axis("off")
         st.pyplot(fig)
         plt.close(fig)
-        pred = result["knn"]["is_anomaly"]
+        pred = knn["is_anomaly"]
         if pred is True:
             st.markdown('<p style="background:#d32f2f;color:white;text-align:center;padding:4px;border-radius:4px;font-weight:bold">🔴 ANOMALY</p>', unsafe_allow_html=True)
         elif pred is False:
             st.markdown('<p style="background:#388e3c;color:white;text-align:center;padding:4px;border-radius:4px;font-weight:bold">✅ NORMAL</p>', unsafe_allow_html=True)
         else:
-            st.markdown(f'<p style="background:#757575;color:white;text-align:center;padding:4px;border-radius:4px">Score: {result["knn"]["score"]:.4f}</p>', unsafe_allow_html=True)
-        st.caption(f"⏱ {result['knn']['time']:.3f}s")
+            st.markdown(f'<p style="background:#757575;color:white;text-align:center;padding:4px;border-radius:4px">Score: {knn["score"]:.4f}</p>', unsafe_allow_html=True)
+        st.caption(f"⏱ {knn['time']:.3f}s")
 
     st.divider()
     m = exp_data["metrics"]
@@ -103,8 +109,8 @@ if uploaded is not None:
             "n_train": m["padim"]["n_train"],
             "PaDiM threshold": exp_data["threshold_padim"],
             "KNN threshold": exp_data["threshold_knn"],
-            "PaDiM time (s)": round(result["padim"]["time"], 3),
-            "KNN time (s)": round(result["knn"]["time"], 3),
+            "PaDiM time (s)": round(padim["time"], 3),
+            "KNN time (s)": round(knn["time"], 3),
         })
 else:
     st.info("Upload gambar untuk deteksi anomali.")

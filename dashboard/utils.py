@@ -175,14 +175,44 @@ EXPERIMENTS_BASE = os.path.join(
 )
 
 
+_gauss_kernel_cache = {}
+
 def _gaussian_kernel(sigma, kernel_size=None, device="cpu", dtype=torch.float32):
     if kernel_size is None:
         kernel_size = int(2 * round(3 * sigma) + 1)
+    key = (sigma, kernel_size, str(device), str(dtype))
+    cached = _gauss_kernel_cache.get(key)
+    if cached is not None:
+        return cached
     x = torch.arange(-(kernel_size // 2), kernel_size // 2 + 1, device=device, dtype=dtype)
     gauss_1d = torch.exp(-0.5 * (x / sigma) ** 2)
     gauss_1d = gauss_1d / gauss_1d.sum()
     kernel_2d = gauss_1d[:, None] * gauss_1d[None, :]
-    return kernel_2d.expand(1, 1, kernel_size, kernel_size)
+    kernel = kernel_2d.expand(1, 1, kernel_size, kernel_size)
+    _gauss_kernel_cache[key] = kernel
+    return kernel
+
+
+def _batch_mahalanobis(delta, cov_inv_p):
+    """
+    Batched Mahalanobis via bmm (MKL-optimized, faster than einsum on CPU).
+
+    B=1: pure bmm (no extra memory).
+    B>1: falls back to einsum (avoids expand+reshape OOM).
+
+    delta: [B, P, C]  — deviation from mean
+    cov_inv_p: [P, C, C]  — pre-permuted inverse covariance
+
+    returns: [B, P]  — squared Mahalanobis distance
+    """
+    B, P, C = delta.shape
+    if B == 1:
+        d = delta.squeeze(0).unsqueeze(1)  # [P, 1, C]
+        step1 = torch.bmm(d, cov_inv_p)    # [P,1,C] @ [P,C,C] → [P,1,C]
+        step2 = torch.bmm(step1, d.permute(0, 2, 1))  # [P,1,C] @ [P,C,1] → [P,1,1]
+        return step2.view(1, P)
+    else:
+        return torch.einsum("bpc,pcd,bpd->bp", delta, cov_inv_p, delta)
 
 
 def _setup_paths():
@@ -231,26 +261,29 @@ def load_experiment_data(exp_name, device):
     mean, cov_inv, _ = load_statistics(exp_dir)
     dim_indices = torch.load(os.path.join(exp_dir, "dim_indices.pt"), map_location="cpu")
     feature_bank = torch.load(os.path.join(exp_dir, "feature_bank.pt"), map_location="cpu")
+    feature_bank_norm_sq = (feature_bank ** 2).sum(dim=1)
 
     with open(os.path.join(exp_dir, "metrics.json")) as f:
         metrics = json.load(f)
 
     sigma = metrics.get("config", {}).get("gauss_sigma", 4)
+
+    cov_inv_d = cov_inv.to(device)
+    cov_inv_p = cov_inv_d.permute(2, 0, 1).contiguous()
+
     padim_min, padim_max = None, None
     padim_map_min, padim_map_max = None, None
     test_feat_path = os.path.join(exp_dir, "test_features_padim.pt")
     if os.path.exists(test_feat_path):
         test_feat = torch.load(test_feat_path, map_location="cpu")
         mean_d = mean.to(device)
-        cov_inv_d = cov_inv.to(device)
         test_feat = test_feat.to(device)
-        cov_inv_p = cov_inv_d.permute(2, 0, 1).contiguous()
         raw_img_scores_list = []
 
         for i in range(0, len(test_feat), 16):
             batch = test_feat[i:i+16]
             delta = batch - mean_d.T.unsqueeze(0)
-            scores = torch.einsum("bpc,pcd,bpd->bp", delta, cov_inv_p, delta)
+            scores = _batch_mahalanobis(delta, cov_inv_p)
             scores = torch.sqrt(scores.clamp(min=0))
             maps = scores.view(-1, 1, 56, 56)
             maps = F.interpolate(maps, size=(224, 224), mode="bilinear", align_corners=False)
@@ -267,15 +300,17 @@ def load_experiment_data(exp_name, device):
         raw_img_scores = torch.cat(raw_img_scores_list)
         padim_min = raw_img_scores.min().item()
         padim_max = raw_img_scores.max().item()
-        del test_feat, mean_d, cov_inv_d, cov_inv_p, raw_img_scores
+        del test_feat, mean_d, raw_img_scores
         if device == "cuda":
             torch.cuda.empty_cache()
 
     return {
         "mean": mean.to(device),
         "cov_inv": cov_inv.to(device),
+        "cov_inv_p": cov_inv_p,
         "dim_indices": dim_indices.to(device),
         "feature_bank": feature_bank,
+        "feature_bank_norm_sq": feature_bank_norm_sq,
         "threshold_padim": metrics.get("padim", {}).get("threshold"),
         "threshold_knn": metrics.get("knn", {}).get("threshold"),
         "padim_min": padim_min,
@@ -287,57 +322,50 @@ def load_experiment_data(exp_name, device):
     }
 
 
-def infer_single_image(pil_image, extractor, exp_data, device):
+def preprocess_and_extract(pil_image, extractor, exp_data, device):
+    """Preprocess → feature extraction → dim reduction → patches [1, P, C]."""
     import torch.nn.functional as F
-
     _setup_paths()
-    from knn_baseline import compute_knn_anomaly_score
     from prepocessing.resize import get_resize_transform
     from prepocessing.normalization import get_normalize_transform
-
-    t0 = _time.perf_counter()
 
     img_tensor = transforms.Compose([
         get_resize_transform(224),
         transforms.ToTensor(),
         get_normalize_transform()
     ])(pil_image).unsqueeze(0).to(device)
-    t1 = _time.perf_counter()
 
-    embedding = extractor.extract(img_tensor)
-    t2 = _time.perf_counter()
+    with torch.no_grad():
+        embedding = extractor.extract(img_tensor)
 
     dim_idx = exp_data["dim_indices"]
     reduced = embedding[:, dim_idx, :, :].contiguous()
     b, c, h, w = reduced.shape
     patches = reduced.permute(0, 2, 3, 1).reshape(b, h * w, c)
-    t3 = _time.perf_counter()
+    return patches
 
-    # PaDiM
-    t_p0 = _time.perf_counter()
-    mean, cov_inv = exp_data["mean"], exp_data["cov_inv"]
-    cov_inv_p = cov_inv.permute(2, 0, 1).contiguous()
-    delta = patches - mean.T.unsqueeze(0)
-    patch_scores = torch.einsum("bpc,pcd,bpd->bp", delta, cov_inv_p, delta)
-    patch_scores = torch.sqrt(patch_scores.clamp(min=0))
 
-    padim_map = patch_scores.view(1, 1, 56, 56)
-    padim_map = F.interpolate(padim_map, size=(224, 224), mode="bilinear", align_corners=False)
-    sigma = exp_data.get("gauss_sigma", 4)
-    kernel = _gaussian_kernel(sigma, device=device)
-    padim_map = F.conv2d(padim_map, kernel, padding=kernel.shape[-1] // 2)
-    padim_score = padim_map.max().item()
-    padim_time = _time.perf_counter() - t_p0
+def infer_padim(patches, exp_data, device):
+    """PaDiM: Mahalanobis (bmm) → upsample → Gaussian blur → score + prediction."""
+    import torch.nn.functional as F
 
-    # KNN
-    t_k0 = _time.perf_counter()
-    k = exp_data["metrics"].get("config", {}).get("knn_k", 5)
-    patch_scores_knn = compute_knn_anomaly_score(patches.squeeze(0), exp_data["feature_bank"], k=k)
+    t0 = _time.perf_counter()
+    mean = exp_data["mean"]
+    cov_inv_p = exp_data["cov_inv_p"]
 
-    knn_map = patch_scores_knn.view(1, 1, 56, 56)
-    knn_map = F.interpolate(knn_map, size=(224, 224), mode="bilinear", align_corners=False)
-    knn_score = knn_map.max().item()
-    knn_time = _time.perf_counter() - t_k0
+    with torch.no_grad():
+        delta = patches - mean.T.unsqueeze(0)
+        patch_scores = _batch_mahalanobis(delta, cov_inv_p)
+        patch_scores = torch.sqrt(patch_scores.clamp(min=0))
+
+        padim_map = patch_scores.view(1, 1, 56, 56)
+        padim_map = F.interpolate(padim_map, size=(224, 224), mode="bilinear", align_corners=False)
+        sigma = exp_data.get("gauss_sigma", 4)
+        kernel = _gaussian_kernel(sigma, device=device)
+        padim_map = F.conv2d(padim_map, kernel, padding=kernel.shape[-1] // 2)
+        padim_score = padim_map.max().item()
+
+    padim_time = _time.perf_counter() - t0
 
     padim_norm = None
     padim_pred = None
@@ -348,14 +376,43 @@ def infer_single_image(pil_image, extractor, exp_data, device):
         if padim_norm is not None and exp_data["threshold_padim"] is not None:
             padim_pred = bool(padim_norm >= exp_data["threshold_padim"])
 
+    return {
+        "score": padim_score,
+        "score_norm": padim_norm,
+        "map_raw": padim_map.squeeze().cpu().numpy(),
+        "time": padim_time,
+        "is_anomaly": padim_pred,
+    }
+
+
+def infer_knn(patches, exp_data, device):
+    """KNN: chunked Euclidean → upsample → score + prediction."""
+    import torch.nn.functional as F
+    _setup_paths()
+    from knn_baseline import compute_knn_anomaly_score
+
+    t0 = _time.perf_counter()
+    k = exp_data["metrics"].get("config", {}).get("knn_k", 5)
+
+    with torch.no_grad():
+        patch_scores_knn = compute_knn_anomaly_score(
+            patches.squeeze(0), exp_data["feature_bank"], k=k,
+            chunk_size=30000, bank_norm_sq=exp_data["feature_bank_norm_sq"],
+        )
+
+        knn_map = patch_scores_knn.view(1, 1, 56, 56)
+        knn_map = F.interpolate(knn_map, size=(224, 224), mode="bilinear", align_corners=False)
+        knn_score = knn_map.max().item()
+
+    knn_time = _time.perf_counter() - t0
+
     knn_pred = None
     if exp_data["threshold_knn"] is not None:
         knn_pred = bool(knn_score >= exp_data["threshold_knn"])
 
     return {
-        "padim": {"score": padim_score, "score_norm": padim_norm, "map_raw": padim_map.squeeze().cpu().numpy(), "time": padim_time, "is_anomaly": padim_pred},
-        "knn": {"score": knn_score, "map_raw": knn_map.squeeze().cpu().numpy(), "time": knn_time, "is_anomaly": knn_pred},
-        "preprocess_time": t1 - t0,
-        "feature_time": t2 - t1,
-        "dim_time": t3 - t2,
+        "score": knn_score,
+        "map_raw": knn_map.squeeze().cpu().numpy(),
+        "time": knn_time,
+        "is_anomaly": knn_pred,
     }
