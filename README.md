@@ -2,6 +2,10 @@
 
 Academic implementation of **PaDiM** (Patch Distribution Modeling Framework) anomaly detection on **MVTec AD (bottle)** using **ResNet-50 + MoCo v2** backbone, compared against **KNN Euclidean** baseline.
 
+## Inline Code Documentation (16 Jul 2026)
+
+Semua file penting sudah ditambahkan komentar penjelasan (cara jalankan + penjelasan fungsi). Lihat `AGENTS.md` untuk detail mapping diagram arsitektur → file kode.
+
 ## Pipeline
 
 Preprocessing → Feature Extraction (3 layers) → Dim Reduction 1792→550 → PaDiM Statistics → Mahalanobis Distance → Evaluation
@@ -61,9 +65,44 @@ Streamlit dashboard untuk live inference — upload gambar, langsung inferensi P
 
 **GAUSS_SIGMA config:** Disimpan di `src/config.py`, experiment, dan dashboard — konsisten antar run. Feature bank tetap di CPU (peak GPU ~3.8 GB).
 
+**Multi-image upload:** Support upload banyak gambar sekaligus, proses satu persatu (sequential), hasil stack vertikal.
+
+**EVT/POT Threshold (branch terpisah):** Extreme Value Theory untuk threshold estimation — lebih robust dari percentile 95. Fit GPD ke tail distribusi, set threshold untuk desired FPR 1%.
+
 ```powershell
 streamlit run dashboard/app.py
 ```
+
+### Proposal Revision Status (7 Jul 2026)
+
+**7 perubahan BAB III — TERVERIFIKASI:** Dimensionality Reduction (baru), renumber 3.4.7→3.4.12, hapus cross-reference, Feature Bank [655.424,550], Mean+Cov_inv, Global min-max, K=5.
+
+**5 poin koreksi dosen:**
+| Poin | Status |
+|------|:------:|
+| 1. Dataset rinci (sumber, jumlah, variabel) | ✅ 70% — perlu sub-bab Variabel Penelitian |
+| 2. Metodologi terstruktur | ✅ 90% — minor duplicate numbering 3.1 |
+| 3. Latar belakang diperkuat | ✅ 95% — terkuat (data 70-90% human error) |
+| 4. Arsitektur detail + diagram | ⚠️ 60% — perlu diagram input→proses→output |
+| 5. Rumusan masalah spesifik & selaras | ✅ 85% — 1:1 aligned, minor verb RM1 |
+
+**Sisa BAB IV:** 6 placeholder (Tabel 4.X–4.V, Gambar 4.Y–4.10) belum diisi.
+
+### BAB 4 & 5 Progress (7 Jul 2026)
+
+| Sub-bab | Status | Konten |
+|---------|:------:|--------|
+| 4.1 Karakteristik Dataset | ✅ | Dataset distribution barchart |
+| 4.2 Hasil Preprocessing | ✅ | Resize & augmentation panels |
+| 4.3 Hasil Ekstraksi Fitur | ✅ | Feature maps + dim reduction |
+| **4.4 Hasil Deteksi Anomali** | **✅** | **∼1.400 kata, 5 tabel, 3 gambar** |
+| **4.5 Evaluasi Kinerja Deteksi** | **✅** | **∼1.500 kata, 5 tabel, 4 gambar** |
+| **4.6 Analisis Komparatif** | **✅** | **4.6.1 Gaussian smoothing ✅, 4.6.2 Timing benchmark ✅** |
+| 4.7 Visualisasi Dashboard | ⏳ | Belum |
+| **5.1 Kesimpulan** | **✅** | **3 paragraf, jawab 5 rumusan masalah** |
+| **5.2 Saran** | **✅** | **4 poin: ekspansi, SOTA, dataset riil, dashboard** |
+
+Semua gambar di `output/figures/` (13 file total).
 
 ### Key Takeaways
 
@@ -78,6 +117,7 @@ streamlit run dashboard/app.py
 | Score normalization fix (24 Jun) | Dashboard PaDiM score normalize pakai pixel-level global min-max — threshold cocok dengan experiment |
 | GAUSS_SIGMA config (24 Jun) | Sigma disimpan di config.json, dibaca dashboard — konsisten antara experiment dan dashboard |
 | CPU optimization (24 Jun) | einsum→bmm (PaDiM ~0.4-0.8s CPU), precompute bank norms, KNN chunk 30K, sequential display |
+| **Timing benchmark (1 Jul)** | **PaDiM GPU 0,016s, KNN GPU 4,837s (302×) — script dashboard-accurate `scripts/benchmark_timing.py`** |
 
 ## Quick Start
 
@@ -110,6 +150,79 @@ streamlit run dashboard/app.py                       # dashboard
 ├── src/                    # Config
 └── output/experiments/     # Experiment results (timestamped runs + subset/)
 ```
+
+## Architecture Blueprint (25 Jun 2026)
+
+`diagram_layout_blueprint.txt` berisi layout diagram arsitektur untuk revisi proposal BAB III. Diagram mencakup 7 fase: Mulai → Data Collection → Pre-processing → Feature Extraction → Split (KNN vs PaDiM) → Perbandingan Kinerja → Selesai.
+
+### Koreksi dari diagram asli (draw.io XML analysis):
+
+| Koreksi | Detail | Ref Kode |
+|---------|--------|:--------:|
+| Dim Reduction → Reshape | Dim reduction di 4D `[N,1792,56,56]` dulu, baru reshape ke patch `[N,3136,550]` | `run_padim.py:115-128` |
+| Upsample → Gaussian | Upsample 56→224 dulu, baru blur σ=4 (known bug, blm difix) | `inference.py:62-64` |
+| KNN tanpa smoothing | Tidak ada Gaussian blur di KNN sama sekali | `inference.py:99-111` |
+| Augmentasi default ON | Hanya v1 yang non-aug; diagram asli tulis [OPSIONAL] | `build_transform.py:9-13` |
+
+### Rekomendasi revisi teks proposal BAB III:
+1. Layer1 [256,56×56] + Layer2 [512,28×28→56×56] + Layer3 [1024,14×14→56×56] → [1792,56×56]
+2. Dim reduction 1792→550 channel random select
+3. Perbaiki dimensi patch dari `[N,49,2048]` → `[N,3136,550]`
+4. Gaussian smoothing σ=4 setelah upsample (catat sebagai known issue)
+5. Global min-max normalization pixel-level
+
+### Figures (`output/figures/`)
+
+| File | Untuk | Keterangan | Status |
+|------|:-----:|:-----------|:------:|
+| `distribusi_dataset_barchart.png` | 4.1 | Bar chart train vs test | ⏳ Belum dibuat |
+| `hasil_preprocessing.png` | 4.2.1 | Original → Resize → Normalized | ⏳ Belum dibuat |
+| `hasil_augmentasi.png` | 4.2.2 | 5 panel augmentasi (3+2 layout) | ✅ 13 Jul 2026 |
+| `feature_maps_table.png` | 4.3.1-4.3.2 | Multi-layer feature maps | ⏳ Belum dibuat |
+| `feature_maps_multi_layer.png` | 4.3.1-4.3.2 | Detail per-channel | ⏳ Belum dibuat |
+| `dim_reduction_illustration.png` | 4.3.3 | 1792→550 selection | ⏳ Belum dibuat |
+| `distribusi_skor_padim.png` | 4.4.1 | Barchart distribusi PaDiM | ⏳ Belum dibuat |
+| `distribusi_skor_knn.png` | 4.4.2 | Barchart distribusi KNN | ⏳ Belum dibuat |
+| `boxplot_perbandingan.png` | 4.4.3 | Boxplot 4 kelas × 2 metode | ⏳ Belum dibuat |
+| `roc_curve_imagelevel.png` | 4.5.1 | ROC Curve PaDiM vs KNN | ⏳ Belum dibuat |
+| `anomaly_maps_comparison.png` | 4.5.2 | 4×4 grid anomaly maps | ⏳ Belum dibuat |
+| `threshold_tradeoff.png` | 4.5.3 | TPR vs FPR trade-off P90–P99 | ⏳ Belum dibuat |
+| `timing_barchart.png` | 4.6.2 | 2-panel barchart PaDiM vs KNN GPU/CPU | ⏳ Belum dibuat |
+| `lampiran_dataset.png` | Lampiran | 2×5 grid sampel dataset MVTec AD bottle | ⏳ Belum dibuat |
+
+### Augmentation Figure (13 Jul 2026)
+
+`scripts/gen_augmentation_figure.py` — generate `hasil_augmentasi.png` dengan layout 3 baris atas + 2 baris bawah:
+- (a) Original, (b) RandomHorizontalFlip, (c) RandomRotation, (d) ColorJitter, (e) AddGaussianNoise
+
+### Citation Verification (18 Jul 2026)
+
+Referensi dapus BAB 1 diverifikasi dari PDF asli:
+
+| Referensi | Temuan |
+|-----------|--------|
+| **Prasetyowati (2025)** | Paper tentang **gelas plastik** (bukan botol kaca), DPMO Grade A=62.633,91 (sigma 3,03), Grade B=130.961,47 (sigma 2,63). **Angka 7.813/16.343 tidak ada di paper.** Tahun 2025, bukan 2026. |
+| **Imaroh & Mustofa (2022)** | 550.962 defect/3 bulan ✅. Rp 711.816.014 = **Saving Cost** (penghematan dari reduksi 10%), **bukan kerugian biaya**. Defect mencakup banyak jenis, bukan hanya "cacat visual dan kegagalan forming". |
+
+### Proposal Document Analysis (13 Jul 2026)
+
+5 penyimpangan dari teori/code ditemukan di proposal:
+| # | Penyimpangan | Status |
+|:-:|-------------|:------:|
+| 1 | 3.4.5: "layer konvolusi terakhir" (1 layer) → kode pakai 3 layers | ✅ Diperbaiki |
+| 2 | 3.7.1: duplikasi judul "Modul Proses Inferensi" 2x | ❌ Belum |
+| 3 | Gambar 4.1 dipakai 2x (barchart + sample images) | ❌ Belum |
+| 4 | Section 3.5 hilang (skip dari 3.4.12 langsung ke 3.6) | ❌ Belum |
+| 5 | K=5 vs paper K=1 — perlu catatan | ❌ Belum |
+
+### Code Restructuring Plan (Proposed 13 Jul 2026)
+
+| Fase | Tindakan | Risiko |
+|:----:|----------|:------:|
+| **1** | Hapus dead code + folder kosong + file draft | ✅ Aman |
+| **2** | Rename `prepocessing/` → `preprocessing/`, cleanup config | 🟡 Sedang |
+| **3** | Merge `feature extractor/` + `anomaly detection/` + `evaluation/` ke `src/` | 🔴 Berat |
+| **4** | Tambah `__init__.py`, hapus whitespace | ✅ Kosmetik |
 
 ## Known Issues
 

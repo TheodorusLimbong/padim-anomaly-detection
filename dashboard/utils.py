@@ -1,3 +1,7 @@
+# Cara jalankan: (di-import oleh dashboard/app.py)
+# Utilitas dashboard: load_model(backbone), load_experiment_data(mean+cov+feature_bank),
+# infer_single_image(PaDiM + KNN sequential), normalisasi map, kernel cache
+
 import os, json, sys
 import torch
 import numpy as np
@@ -165,8 +169,10 @@ def compute_roc_curve(labels, scores, n_thresh=1000):
 
 
 # ============================================================
-# Live Inference
+# LIVE INFERENCE — Dashboard Utils
 # ============================================================
+# Fungsi-fungsi di bawah ini dipanggil oleh dashboard/app.py secara realtime.
+# Alur: upload gambar -> preprocess -> feature extraction -> PaDiM + KNN -> display
 import time as _time
 
 EXPERIMENTS_BASE = os.path.join(
@@ -178,6 +184,7 @@ EXPERIMENTS_BASE = os.path.join(
 _gauss_kernel_cache = {}
 
 def _gaussian_kernel(sigma, kernel_size=None, device="cpu", dtype=torch.float32):
+    """Buat Gaussian kernel 2D dengan caching (biar gak bikin ulang tiap gambar)."""
     if kernel_size is None:
         kernel_size = int(2 * round(3 * sigma) + 1)
     key = (sigma, kernel_size, str(device), str(dtype))
@@ -195,21 +202,22 @@ def _gaussian_kernel(sigma, kernel_size=None, device="cpu", dtype=torch.float32)
 
 def _batch_mahalanobis(delta, cov_inv_p):
     """
-    Batched Mahalanobis via bmm (MKL-optimized, faster than einsum on CPU).
+    Mahalanobis batch pakai bmatmul (lebih cepat dari einsum di CPU).
+    
+    Rumus: delta @ cov_inv_p @ delta.T
+    
+    B=1 (di dashboard): pakai bmm murni, optimal utk CPU (MKL parallel batch 3136)
+    B>1 (di batch experiment): fallback ke einsum biar gak OOM
 
-    B=1: pure bmm (no extra memory).
-    B>1: falls back to einsum (avoids expand+reshape OOM).
-
-    delta: [B, P, C]  — deviation from mean
-    cov_inv_p: [P, C, C]  — pre-permuted inverse covariance
-
-    returns: [B, P]  — squared Mahalanobis distance
+    delta: [B, 3136, 550] = patch test - mean
+    cov_inv_p: [3136, 550, 550] = cov_inv sudah dipermute
+    returns: [B, 3136] = Mahalanobis squared distance per patch
     """
     B, P, C = delta.shape
     if B == 1:
-        d = delta.squeeze(0).unsqueeze(1)  # [P, 1, C]
-        step1 = torch.bmm(d, cov_inv_p)    # [P,1,C] @ [P,C,C] → [P,1,C]
-        step2 = torch.bmm(step1, d.permute(0, 2, 1))  # [P,1,C] @ [P,C,1] → [P,1,1]
+        d = delta.squeeze(0).unsqueeze(1)  # [3136, 1, 550]
+        step1 = torch.bmm(d, cov_inv_p)    # [3136,1,550] @ [3136,550,550] -> [3136,1,550]
+        step2 = torch.bmm(step1, d.permute(0, 2, 1))  # [3136,1,550] @ [3136,550,1] -> [3136,1,1]
         return step2.view(1, P)
     else:
         return torch.einsum("bpc,pcd,bpd->bp", delta, cov_inv_p, delta)
@@ -224,6 +232,7 @@ def _setup_paths():
 
 
 def list_experiments():
+    """Daftar semua experiment folder di output/experiments/, diurutkan dari terbaru."""
     rows = []
     if not os.path.exists(EXPERIMENTS_BASE):
         return rows
@@ -239,6 +248,10 @@ _model_instance = None
 _extractor_instance = None
 
 def load_model(device):
+    """
+    Load ResNet-50 + MoCo v2 backbone (sekali, di-cache).
+    Dipanggil pas startup dashboard, gak perlu diulang tiap upload gambar.
+    """
     global _model_instance, _extractor_instance
     if _model_instance is not None:
         return _model_instance, _extractor_instance
@@ -253,6 +266,17 @@ def load_model(device):
 
 
 def load_experiment_data(exp_name, device):
+    """
+    Load semua data yang diperlukan untuk inference dari folder experiment.
+    
+    Yang di-load:
+    - PaDiM: mean [550,3136] + cov_inv [550,550,3136] (sudah dipermute ke [3136,550,550])
+    - KNN: feature_bank [655424,550] + norm_sq [655424] (precomputed biar cepet)
+    - Dim indices [550] (channel yang dipilih pas dim reduction)
+    - Threshold PaDiM + KNN dari metrics.json
+    - Global pixel min/max untuk normalisasi map (dihitung ulang dari 83 test images)
+    - Gaussian sigma
+    """
     exp_dir = os.path.join(EXPERIMENTS_BASE, exp_name)
     _setup_paths()
     from padim import load_statistics
@@ -261,7 +285,7 @@ def load_experiment_data(exp_name, device):
     mean, cov_inv, _ = load_statistics(exp_dir)
     dim_indices = torch.load(os.path.join(exp_dir, "dim_indices.pt"), map_location="cpu")
     feature_bank = torch.load(os.path.join(exp_dir, "feature_bank.pt"), map_location="cpu")
-    feature_bank_norm_sq = (feature_bank ** 2).sum(dim=1)
+    feature_bank_norm_sq = (feature_bank ** 2).sum(dim=1)  # precompute ||b||^2
 
     with open(os.path.join(exp_dir, "metrics.json")) as f:
         metrics = json.load(f)
@@ -269,8 +293,10 @@ def load_experiment_data(exp_name, device):
     sigma = metrics.get("config", {}).get("gauss_sigma", 4)
 
     cov_inv_d = cov_inv.to(device)
-    cov_inv_p = cov_inv_d.permute(2, 0, 1).contiguous()
+    cov_inv_p = cov_inv_d.permute(2, 0, 1).contiguous()  # [3136, 550, 550]
 
+    # Hitung global min/max dari semua 83 test images
+    # (biar normalisasi konsisten antara dashboard sama experiment)
     padim_min, padim_max = None, None
     padim_map_min, padim_map_max = None, None
     test_feat_path = os.path.join(exp_dir, "test_features_padim.pt")
@@ -278,7 +304,6 @@ def load_experiment_data(exp_name, device):
         test_feat = torch.load(test_feat_path, map_location="cpu")
         mean_d = mean.to(device)
         test_feat = test_feat.to(device)
-        raw_img_scores_list = []
 
         for i in range(0, len(test_feat), 16):
             batch = test_feat[i:i+16]
@@ -289,7 +314,6 @@ def load_experiment_data(exp_name, device):
             maps = F.interpolate(maps, size=(224, 224), mode="bilinear", align_corners=False)
             kernel = _gaussian_kernel(sigma, device=device)
             maps = F.conv2d(maps, kernel, padding=kernel.shape[-1] // 2)
-            raw_img_scores_list.append(maps.view(len(batch), -1).max(dim=1)[0])
             if padim_map_min is None:
                 padim_map_min = maps.min().item()
                 padim_map_max = maps.max().item()
@@ -297,34 +321,32 @@ def load_experiment_data(exp_name, device):
                 padim_map_min = min(padim_map_min, maps.min().item())
                 padim_map_max = max(padim_map_max, maps.max().item())
 
-        raw_img_scores = torch.cat(raw_img_scores_list)
-        padim_min = raw_img_scores.min().item()
-        padim_max = raw_img_scores.max().item()
-        del test_feat, mean_d, raw_img_scores
+        del test_feat, mean_d
         if device == "cuda":
             torch.cuda.empty_cache()
 
     return {
-        "mean": mean.to(device),
-        "cov_inv": cov_inv.to(device),
-        "cov_inv_p": cov_inv_p,
-        "dim_indices": dim_indices.to(device),
-        "feature_bank": feature_bank,
-        "feature_bank_norm_sq": feature_bank_norm_sq,
+        "mean": mean.to(device),                         # [550, 3136]
+        "cov_inv": cov_inv.to(device),                    # [550, 550, 3136]
+        "cov_inv_p": cov_inv_p,                           # [3136, 550, 550]
+        "dim_indices": dim_indices.to(device),            # [550]
+        "feature_bank": feature_bank,                     # [655424, 550] (CPU)
+        "feature_bank_norm_sq": feature_bank_norm_sq,     # [655424] (CPU)
         "threshold_padim": metrics.get("padim", {}).get("threshold"),
         "threshold_knn": metrics.get("knn", {}).get("threshold"),
-        "padim_min": padim_min,
-        "padim_max": padim_max,
-        "padim_map_min": padim_map_min,
-        "padim_map_max": padim_map_max,
-        "gauss_sigma": sigma,
-        "metrics": metrics,
+        "padim_map_min": padim_map_min,                   # global pixel min
+        "padim_map_max": padim_map_max,                   # global pixel max
+        "gauss_sigma": sigma,                             # sigma utk Gaussian kernel
+        "metrics": metrics,                               # dict hasil experiment
     }
 
 
 def preprocess_and_extract(pil_image, extractor, exp_data, device):
-    """Preprocess → feature extraction → dim reduction → patches [1, P, C]."""
-    import torch.nn.functional as F
+    """
+    Proses 1 gambar dari PIL -> tensor -> feature extraction -> dim reduction -> patch embeddings.
+    
+    Output: [1, 3136, 550] = 1 gambar, 3136 patch, 550 channel per patch
+    """
     _setup_paths()
     from prepocessing.resize import get_resize_transform
     from prepocessing.normalization import get_normalize_transform
@@ -336,17 +358,26 @@ def preprocess_and_extract(pil_image, extractor, exp_data, device):
     ])(pil_image).unsqueeze(0).to(device)
 
     with torch.no_grad():
-        embedding = extractor.extract(img_tensor)
+        embedding = extractor.extract(img_tensor)  # [1, 1792, 56, 56]
 
-    dim_idx = exp_data["dim_indices"]
-    reduced = embedding[:, dim_idx, :, :].contiguous()
+    dim_idx = exp_data["dim_indices"]  # index 550 channel terpilih
+    reduced = embedding[:, dim_idx, :, :].contiguous()  # [1, 550, 56, 56]
     b, c, h, w = reduced.shape
-    patches = reduced.permute(0, 2, 3, 1).reshape(b, h * w, c)
+    patches = reduced.permute(0, 2, 3, 1).reshape(b, h * w, c)  # [1, 3136, 550]
     return patches
 
 
 def infer_padim(patches, exp_data, device):
-    """PaDiM: Mahalanobis (bmm) → upsample → Gaussian blur → score + prediction."""
+    """
+    PaDiM inference untuk 1 gambar.
+    
+    Alur:
+    - patches [1,3136,550] - mean [550,3136] = delta [1,3136,550]
+    - Mahalanobis: delta @ cov_inv_p @ delta.T -> sqrt -> [1,3136] skor
+    - Reshape [1,1,56,56] -> upsample 224x224 -> Gaussian blur sigma=4
+    - Score = max pixel map
+    - Prediksi: score_norm >= threshold_padim? ANOMALI : NORMAL
+    """
     import torch.nn.functional as F
 
     t0 = _time.perf_counter()
@@ -354,7 +385,7 @@ def infer_padim(patches, exp_data, device):
     cov_inv_p = exp_data["cov_inv_p"]
 
     with torch.no_grad():
-        delta = patches - mean.T.unsqueeze(0)
+        delta = patches - mean.T.unsqueeze(0)  # [1, 3136, 550]
         patch_scores = _batch_mahalanobis(delta, cov_inv_p)
         patch_scores = torch.sqrt(patch_scores.clamp(min=0))
 
@@ -367,6 +398,7 @@ def infer_padim(patches, exp_data, device):
 
     padim_time = _time.perf_counter() - t0
 
+    # Normalize score pake global min/max dari 83 test images
     padim_norm = None
     padim_pred = None
     if exp_data["padim_map_min"] is not None and exp_data["padim_map_max"] is not None:
@@ -386,7 +418,16 @@ def infer_padim(patches, exp_data, device):
 
 
 def infer_knn(patches, exp_data, device):
-    """KNN: chunked Euclidean → upsample → score + prediction."""
+    """
+    KNN inference untuk 1 gambar.
+    
+    Alur:
+    - patches [3136,550] -> compute_knn_anomaly_score(feature_bank [655424,550], K=5)
+      -> Euclidean ke semua 655.424 bank -> ambil 5 terkecil -> rata-rata -> [3136] skor
+    - Reshape [1,1,56,56] -> upsample 224x224
+    - Score = max pixel map
+    - Prediksi: score >= threshold_knn? ANOMALI : NORMAL
+    """
     import torch.nn.functional as F
     _setup_paths()
     from knn_baseline import compute_knn_anomaly_score

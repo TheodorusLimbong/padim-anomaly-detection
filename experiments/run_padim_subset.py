@@ -1,3 +1,8 @@
+# Cara jalankan:
+#   python experiments/run_padim_subset.py --n-train 120
+#   python experiments/run_padim_subset.py --n-train 120 --no-aug
+# Subset experiment: ambil N gambar training -> pipeline end-to-end -> simpan
+
 import sys
 import os
 import json

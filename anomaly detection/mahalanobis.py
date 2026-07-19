@@ -1,24 +1,36 @@
+# Cara jalankan: (di-import oleh inference.py)
+# compute_patch_scores: Mahalanobis via torch.bmm (batched matrix multiply)
+# Rumus: sqrt((x-mean) @ cov_inv @ (x-mean).T)
+
 import torch
 import torch.nn.functional as F
 
 
 def compute_patch_scores(embedding, mean, cov_inv):
     """
-    Compute Mahalanobis distance for each patch in a single image embedding.
-    Uses batched matrix multiplication instead of Python loop (10-50x faster).
+    Hitung Mahalanobis distance untuk tiap patch dalam 1 gambar.
+    Rumus: sqrt((x - mean) @ cov_inv @ (x - mean).T)
 
-    embedding: [P, C]  (P = H*W patches, C channels)
-    mean: [C, P]
-    cov_inv: [C, C, P]
-    returns: scores [P]  Mahalanobis distance per patch
+    embedding: [3136, 550]  = patch test
+    mean: [550, 3136]       = mean training per posisi
+    cov_inv: [550, 550, 3136] = cov_inv training per posisi
+
+    Cara:
+    1. delta = patch_test - mean_posisi_sama  [3136, 550]
+    2. cov_inv_p = permute ke [3136, 550, 550] (biar gampang di-bmm)
+    3. delta[3136,1,550] @ cov_inv_p[3136,550,550] @ delta[3136,550,1]
+       -> [3136] = 1 skor per posisi
+    4. sqrt -> Mahalanobis distance
+
+    returns: scores [3136]  Mahalanobis distance per patch
     """
-    delta = embedding - mean.T  # [P, C]
-    # [P,1,C] @ [P,C,C] @ [P,C,1] → [P]
-    cov_inv_p = cov_inv.permute(2, 0, 1)  # [P, C, C]
+    delta = embedding - mean.T  # [3136, 550]
+    cov_inv_p = cov_inv.permute(2, 0, 1)  # [3136, 550, 550]
+    # bmm: batched matrix multiply (langsung semua patch, ga pake loop)
     scores = torch.bmm(
-        torch.bmm(delta.unsqueeze(1), cov_inv_p),
-        delta.unsqueeze(2)
-    ).squeeze()
+        torch.bmm(delta.unsqueeze(1), cov_inv_p),  # [3136,1,550] @ [3136,550,550] -> [3136,1,550]
+        delta.unsqueeze(2)                          # @ [3136,550,1] -> [3136,1,1]
+    ).squeeze()                                     # -> [3136]
     return torch.sqrt(scores.clamp(min=0))
 
 

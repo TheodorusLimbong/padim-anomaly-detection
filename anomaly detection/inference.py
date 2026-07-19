@@ -1,3 +1,7 @@
+# Cara jalankan: (di-import oleh experiments/run_padim.py)
+# Test PaDiM: compute_padim_scores(Mahalanobis + upsample + Gaussian blur + normalisasi)
+# Test KNN:   compute_knn_scores(Euclidean chunked ke feature bank)
+
 import torch
 import torch.nn.functional as F
 from mahalanobis import compute_patch_scores
@@ -20,21 +24,24 @@ def compute_padim_scores(test_features, mean, cov_inv, img_size=224, sigma=4, ba
     Compute anomaly scores and maps for test set using PaDiM (optimized).
     Uses batched Mahalanobis + GPU Gaussian blur instead of scipy.
 
-    test_features: [N, P, C]
-    mean: [C, P]
-    cov_inv: [C, C, P]
-    img_size: target size for upsampled anomaly maps
-    sigma: Gaussian smoothing sigma (default 4, per PaDiM paper)
-    batch_size: images processed at once (tune based on GPU memory)
+    Alur:
+    test_features [83, 3136, 550] + mean [550, 3136] + cov_inv [550, 550, 3136]
+        -> delta = test - mean (per posisi)
+        -> Mahalanobis: delta @ cov_inv_p @ delta.T -> sqrt -> [83, 3136] skor patch
+        -> reshape ke [83, 1, 56, 56]
+        -> upsample 56->224
+        -> Gaussian blur sigma=4
+        -> global min-max normalization 0-1
+        -> max per image = image score [83]
 
     returns:
-        image_scores: [N]
-        anomaly_maps: list of [H_img, W_img]
+        image_scores: [83] (1 angka per gambar test)
+        anomaly_maps: list of [224, 224] (83 map, untuk visualisasi heatmap)
     """
     N, P, C = test_features.shape
     H = W = int(P ** 0.5)
 
-    # Auto device: use GPU if available and inputs are on CPU
+    # Auto device: pindah ke GPU kalau ada
     device = test_features.device
     if device.type == "cpu" and torch.cuda.is_available():
         device = torch.device("cuda")
@@ -42,39 +49,38 @@ def compute_padim_scores(test_features, mean, cov_inv, img_size=224, sigma=4, ba
         mean = mean.to(device)
         cov_inv = cov_inv.to(device)
 
-    cov_inv_p = cov_inv.permute(2, 0, 1).contiguous()  # [P, C, C]
-    gauss_kernel = _gaussian_kernel(sigma, device=device)
+    cov_inv_p = cov_inv.permute(2, 0, 1).contiguous()  # [P, C, C] -> [3136, 550, 550]
+    gauss_kernel = _gaussian_kernel(sigma, device=device)  # kernel 9x9 utk sigma=4
     padding = gauss_kernel.shape[-1] // 2
 
     all_maps = []
 
-    for start in range(0, N, batch_size):
+    for start in range(0, N, batch_size):  # proses per batch biar gak OOM
         batch = test_features[start:start + batch_size]
         B = batch.shape[0]
 
-        # Batched Mahalanobis via einsum: result[b,p] = delta[b,p,:] @ cov_inv_p[p,:,:] @ delta[b,p,:].T
-        # Memory-efficient: only creates [B,P,C] intermediate, NOT [B,P,C,C]
-        delta = batch - mean.T.unsqueeze(0)  # [B, P, C]
+        # Mahalanobis pakai einsum (cepat, tanpa loop)
+        # delta = patch_test - mean_posisi_sama
+        delta = batch - mean.T.unsqueeze(0)  # [B, 3136, 550]
         patch_scores = torch.einsum("bpc,pcd,bpd->bp", delta, cov_inv_p, delta)
-        patch_scores = torch.sqrt(patch_scores.clamp(min=0))  # [B, P]
+        patch_scores = torch.sqrt(patch_scores.clamp(min=0))  # [B, 3136]
 
-        # Reshape → upsample → gaussian blur → collect
-        maps = patch_scores.view(B, 1, H, W)  # [B, 1, H, W]
+        # Reshape ke grid 56x56 -> upsample ke 224x224 -> Gaussian blur
+        maps = patch_scores.view(B, 1, H, W)  # [B, 1, 56, 56]
         maps = F.interpolate(maps, size=(img_size, img_size), mode="bilinear", align_corners=False)
-        maps = F.conv2d(maps, gauss_kernel, padding=padding)
+        maps = F.conv2d(maps, gauss_kernel, padding=padding)  # blur
         all_maps.append(maps)
 
-    all_maps = torch.cat(all_maps, dim=0)  # [N, 1, H_img, W_img]
+    all_maps = torch.cat(all_maps, dim=0)  # [83, 1, 224, 224]
 
-    # Global min-max normalization (per PaDiM paper)
+    # Global min-max normalization (semua map dinormalisasi ke 0-1)
     min_val = all_maps.min()
     max_val = all_maps.max()
     all_maps = (all_maps - min_val) / (max_val - min_val + 1e-8)
 
-    # Image-level anomaly score = max of each anomaly map
+    # Image score = nilai pixel tertinggi di tiap map
     image_scores = all_maps.view(N, -1).max(dim=1)[0]
 
-    # Return CPU tensors for compatibility
     return image_scores.cpu(), list(all_maps.squeeze(1).cpu())
 
 
@@ -82,31 +88,29 @@ def compute_knn_scores(test_features, feature_bank, k=1, img_size=224):
     """
     Compute anomaly scores using KNN + Euclidean distance baseline.
 
-    test_features: [N, P, C]
-    feature_bank: [M, C]  (all training patch embeddings)
-    k: number of nearest neighbors
-    img_size: target size for upsampled anomaly maps
-
-    returns:
-        image_scores: [N]
-        anomaly_maps: list of [H_img, W_img]
+    Alur:
+    test_features [83, 3136, 550] + feature_bank [655424, 550]
+        -> tiap gambar test (loop 83x):
+            -> tiap patch (3136) banding ke 655424 bank -> ambil K=5 terkecil -> rata-rata = skor patch
+            -> 3136 skor patch -> reshape 56x56 -> upsample 224x224
+            -> skor gambar = max dari map
     """
     N, P, C = test_features.shape
     H = W = int(P ** 0.5)
     image_scores = []
     anomaly_maps = []
 
-    for i in range(N):
-        embedding = test_features[i]
-        patch_scores = compute_knn_anomaly_score(embedding, feature_bank, k)
-        a_map = patch_scores.view(H, W)
+    for i in range(N):  # loop tiap gambar test (83 gambar)
+        embedding = test_features[i]  # [3136, 550] untuk 1 gambar
+        patch_scores = compute_knn_anomaly_score(embedding, feature_bank, k)  # [3136]
+        a_map = patch_scores.view(H, W)  # grid 56x56
         a_map_up = F.interpolate(
             a_map.unsqueeze(0).unsqueeze(0),
             size=(img_size, img_size),
             mode="bilinear",
             align_corners=False
-        ).squeeze()
-        img_score = a_map.max().item()
+        ).squeeze()  # upsample ke 224x224
+        img_score = a_map.max().item()  # skor gambar = max pixel
         image_scores.append(img_score)
         anomaly_maps.append(a_map_up)
 

@@ -1,3 +1,8 @@
+# Cara jalankan: (di-import oleh run_padim.py)
+# Dataset wrapper untuk MVTec AD. Load gambar + label + ground truth mask.
+# Train transform: resize + augmentasi + normalize (dari build_transform.py)
+# Test transform: resize + normalize (tanpa augmentasi)
+
 from torch.utils.data import Dataset
 from PIL import Image
 import torch

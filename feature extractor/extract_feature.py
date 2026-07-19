@@ -1,3 +1,6 @@
+# Cara jalankan: (di-import oleh run_padim.py, jarang dipakai langsung)
+# Ekstraksi fitur multi-layer (layer1+layer2+layer3) menggunakan ResNet-50 + MoCo v2
+
 import os
 import torch
 from torch.utils.data import DataLoader

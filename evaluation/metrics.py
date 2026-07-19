@@ -1,3 +1,9 @@
+# Cara jalankan: (di-import oleh run_padim.py)
+# compute_auroc -> AUROC image-level
+# compute_pro_score -> PRO-score segmentasi
+# find_optimal_threshold -> threshold percentile (P95)
+# compute_image_level_metrics -> Precision, Recall, F1, Akurasi
+
 import torch
 import numpy as np
 from sklearn.metrics import roc_auc_score, precision_recall_fscore_support
@@ -5,10 +11,12 @@ from skimage.measure import label
 
 
 def compute_auroc(y_true, y_score):
+    """AUROC = Area Under ROC Curve. 1 = sempurna, 0.5 = random."""
     return roc_auc_score(y_true, y_score)
 
 
 def compute_precision_recall_f1(y_true, y_pred):
+    """Precision, Recall, F1-score dari prediksi vs label asli."""
     precision, recall, f1, _ = precision_recall_fscore_support(
         y_true, y_pred, average="binary", zero_division=0
     )
@@ -17,10 +25,12 @@ def compute_precision_recall_f1(y_true, y_pred):
 
 def compute_pixel_auroc(anomaly_maps, ground_truth_masks):
     """
-    Compute pixel-level AUROC.
+    Pixel-level AUROC: bandingkan tiap pixel anomaly map dengan ground truth mask.
+    Bukan 1 angka per gambar, tapi (224x224) = 50.176 pixel per gambar.
+    Semua pixel dari 83 gambar digabung -> 1 AUROC.
 
-    anomaly_maps: list of [H, W] tensor/array per test image
-    ground_truth_masks: list of [H, W] tensor/array per test image
+    anomaly_maps: list of [224, 224] per test image (heatmap)
+    ground_truth_masks: list of [224, 224] (0=normal, 1=anomaly)
     returns: pixel_auroc (float)
     """
     all_scores = []
@@ -45,11 +55,17 @@ def compute_pixel_auroc(anomaly_maps, ground_truth_masks):
 
 def find_optimal_threshold(y_true, y_scores, method="percentile", percentile=95):
     """
-    Find optimal threshold for anomaly detection.
-
-    method:
-      "percentile" — threshold = 95th percentile of normal scores (proposal 3.6.7)
-      "f1" — threshold that maximizes F1-score on validation set
+    Cari threshold optimal untuk deteksi anomali.
+    
+    method="percentile" (default):
+      - Ambil skor dari gambar NORMAL saja (label=0)
+      - Urutkan, ambil percentile ke-95
+      - Artinya: 95% gambar normal di bawah threshold ini
+      - Kalau test > threshold -> ANOMALI
+    
+    method="f1":
+      - Coba semua kemungkinan threshold
+      - Pilih yang kasih F1-score tertinggi
     """
     if method == "percentile":
         normal_scores = [s for s, l in zip(y_scores, y_true) if l == 0]
@@ -76,16 +92,22 @@ def find_optimal_threshold(y_true, y_scores, method="percentile", percentile=95)
 
 def compute_pro_score(anomaly_maps, ground_truth_masks, max_fpr=0.3, num_thresholds=500):
     """
-    Compute PRO-score (Per-Region Overlap) as described in the PaDiM paper.
+    PRO-score = Per-Region Overlap (metrik segmentasi dari PaDiM paper).
+    
+    Beda dengan Pixel AUROC:
+    - Pixel AUROC: pixel per pixel, gak peduli area mana
+    - PRO-score: tiap connected component (area cacat) dihitung recall-nya
+                 lalu dirata-rata. Jadi kalau ada 3 cacat kecil + 1 cacat besar,
+                 semua dihitung sama rata (bukan weighted by size).
+    
+    PRO-score = integral recall per region dari FPR=0 sampai FPR=0.3.
+    Makin tinggi makin bagus.
 
-    PRO is the average per-region overlap (recall per connected component),
-    integrated over FPR from 0 to max_fpr. Higher is better.
-
-    anomaly_maps: list of [H, W] tensor/array per test image
-    ground_truth_masks: list of [H, W] tensor/array per test image (0=normal, 1=anomaly)
-    max_fpr: maximum FPR for integration (default 0.3, per PaDiM paper)
-    num_thresholds: number of thresholds for evaluation (default 500)
-    returns: pro_score (float)
+    Cara:
+    1. Label connected components di ground truth masks
+    2. Coba 500 threshold (dari tinggi ke rendah)
+    3. Tiap threshold: hitung recall per component + FPR pixel-level
+    4. Plot PRO vs FPR, integral dari 0 ke 0.3
     """
     maps = []
     masks = []
@@ -108,7 +130,7 @@ def compute_pro_score(anomaly_maps, ground_truth_masks, max_fpr=0.3, num_thresho
             comps.append((img_idx, comp_mask, comp_mask.sum()))
 
     if len(comps) == 0:
-        return 1.0  # No ground-truth anomalies means perfect score
+        return 1.0
 
     # Threshold range (descending: strict -> relaxed)
     all_scores = np.concatenate([m.ravel() for m in maps])
@@ -150,9 +172,14 @@ def compute_pro_score(anomaly_maps, ground_truth_masks, max_fpr=0.3, num_thresho
 
 def compute_image_level_metrics(y_true, y_scores, threshold):
     """
-    Compute all image-level metrics: AUROC + Precision + Recall + F1.
+    Hitung semua metrik image-level:
+    - AUROC: Area Under ROC (gak perlu threshold, ukur separasi normal vs anomali)
+    - Precision: TP / (TP + FP) — dari 100 gambar yang diprediksi ANOMALI, berapa yang bener?
+    - Recall: TP / (TP + FN) — dari 100 gambar anomali, berapa yang kedeteksi?
+    - F1: harmonic mean precision & recall
+    - Akurasi: (TP + TN) / total
 
-    returns: dict with auroc, precision, recall, f1, threshold
+    Menggunakan threshold dari percentile 95 normal scores.
     """
     auroc = compute_auroc(y_true, y_scores)
     y_pred = [1 if s >= threshold else 0 for s in y_scores]

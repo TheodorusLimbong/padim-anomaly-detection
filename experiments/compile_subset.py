@@ -1,3 +1,6 @@
+# Cara jalankan: python experiments/compile_subset.py
+# Kompilasi hasil subset experiment -> tabel perbandingan PaDiM vs KNN
+
 import os, json
 base = "output/experiments/subset"
 dirs = sorted(os.listdir(base))

@@ -1,3 +1,6 @@
+# Cara jalankan: (di-import oleh experiments/run_padim.py)
+# Training PaDiM: reduce_dim(1792->550) -> compute_statistics(mean+cov per posisi) -> compute_cov_inv
+
 import torch
 import os
 
@@ -5,37 +8,46 @@ import os
 def reduce_dim(features, n_dims=100, seed=42):
     """
     Randomly select n_dims channels from feature maps (PaDiM dim reduction).
+    1792 channel -> pilih acak 550 channel.
+    Seed=1024 biar channel yang dipilih selalu sama tiap run.
 
-    features: [N, C, H, W]
+    features: [N, C, H, W]  misal [209, 1792, 56, 56]
     returns: reduced [N, n_dims, H, W], selected indices [n_dims]
+             misal [209, 550, 56, 56], index [550] (channel mana aja yang kepilih)
     """
     N, C, H, W = features.shape
     rng = torch.Generator().manual_seed(seed)
-    idx = torch.randperm(C, generator=rng)[:n_dims]
-    idx = idx.sort().values
+    idx = torch.randperm(C, generator=rng)[:n_dims]  # acak pilih 550 index dari 1792
+    idx = idx.sort().values                           # urutkan biar konsisten
     return features[:, idx, :, :].contiguous(), idx
 
 
 def compute_statistics(features, n_dims=None):
     """
-    Compute per-patch Gaussian statistics from training features.
+    Hitung Gaussian (mean + cov) per posisi patch dari training features.
+    Ini INTI dari training PaDiM.
 
-    features: [N, C, H, W]
-    n_dims: optional — if set, reduce dimensions via random selection first
-    returns: mean [C', H*W], cov [C', C', H*W], dim_indices (if n_dims given)
+    Input: [209, 550, 56, 56]
+    Step 1: reshape -> [209, 550, 3136] (56x56=3136 patch)
+    Step 2: untuk tiap posisi i (0-3135):
+        ambil [209, 550] dari semua gambar di posisi i
+        hitung mean[550] = rata-rata 209 sampel
+        hitung cov[550x550] = kovarian 209 sampel
+
+    Output: mean [550, 3136], cov [550, 550, 3136]
     """
     dim_indices = None
     if n_dims is not None and n_dims < features.shape[1]:
         features, dim_indices = reduce_dim(features, n_dims=n_dims)
 
     N, C, H, W = features.shape
-    features = features.view(N, C, -1)
+    features = features.view(N, C, -1)  # [209, 550, 3136]
 
-    mean = torch.mean(features, dim=0)
+    mean = torch.mean(features, dim=0)  # [550, 3136] = rata-rata 209 gambar per posisi
     cov = torch.zeros(C, C, H * W)
 
-    for i in range(H * W):
-        cov[:, :, i] = torch.cov(features[:, :, i].T)
+    for i in range(H * W):              # loop 3.136 posisi
+        cov[:, :, i] = torch.cov(features[:, :, i].T)  # cov dari 209 sampel [550,550]
 
     if dim_indices is not None:
         return mean, cov, dim_indices
@@ -44,18 +56,23 @@ def compute_statistics(features, n_dims=None):
 
 def compute_cov_inv(cov, reg=0.01):
     """
-    Compute regularized inverse covariance matrix.
+    Hitung kebalikan (inverse) dari matriks kovarian, dengan regularisasi.
     
-    cov: [C, C, P] where P = H*W
-    reg: small regularization constant for numerical stability
-    returns: cov_inv [C, C, P]
+    Kenapa perlu inverse? Rumus Mahalanobis: (x-mean)^T * cov_inv * (x-mean)
+    Kalau cov langsung dipakai, rumusnya kebalik.
+    
+    reg=0.01: tambah epsilon ke diagonal biar matriks bisa di-inverse
+    (mencegah "singular matrix" karena 209 sampel < 550 dimensi)
+
+    Input:  cov [550, 550, 3136]
+    Output: cov_inv [550, 550, 3136]
     """
     C, _, P = cov.shape
     cov_inv = torch.zeros_like(cov)
     eye = torch.eye(C, device=cov.device)
 
-    for i in range(P):
-        cov_reg = cov[:, :, i] + reg * eye
+    for i in range(P):  # loop 3.136 posisi
+        cov_reg = cov[:, :, i] + reg * eye  # +0.01 di diagonal
         cov_inv[:, :, i] = torch.linalg.inv(cov_reg)
 
     return cov_inv

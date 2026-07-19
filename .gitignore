@@ -7,3 +7,4 @@ src/_pycache__/
 output/
 .readme
 models/*.pth.tar
+.docs

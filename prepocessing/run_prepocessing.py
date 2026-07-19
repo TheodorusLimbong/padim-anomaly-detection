@@ -1,3 +1,6 @@
+# Cara jalankan: python prepocessing/run_prepocessing.py
+# Cek preprocessing: ukuran gambar, distribusi label, sample images
+
 from dataset_loader import get_dataloader
 from collections import Counter
 

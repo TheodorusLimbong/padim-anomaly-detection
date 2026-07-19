@@ -1,3 +1,6 @@
+# Cara jalankan: python experiments/generate_maps.py
+# Generate anomaly maps + GT masks untuk experiment run (subset)
+
 import sys, os, json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 for d in ["prepocessing", "feature extractor", "anomaly detection", "evaluation"]:

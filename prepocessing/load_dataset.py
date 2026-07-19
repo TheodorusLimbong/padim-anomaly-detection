@@ -1,3 +1,6 @@
+# Cara jalankan: (di-import oleh dataset_wrapper.py)
+# Load paths dari dataset MVTec AD: train/good, test/good, test/{defect}, ground_truth/{defect}
+
 import os
 from typing import List, Tuple, Optional
 
