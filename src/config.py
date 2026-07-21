@@ -44,6 +44,12 @@ GAUSS_SIGMA = 4       # Gaussian smoothing sigma (PaDiM paper: sigma=4 untuk sem
 KNN_K = 5             # K-NN parameter
 
 # =========================
+# OOD (OUT-OF-DISTRIBUTION) — ComboOOD
+# =========================
+COMBOOOD_THRESHOLD = 0.0   # threshold ComboOOD: score >= 0 = bottle, < 0 = non-bottle
+                           # gap: non-bottle max=-49, bottle min=+0.2 — terpisah sempurna
+
+# =========================
 # OUTPUT
 # =========================
 FEATURE_OUTPUT_PATH = "output/features"  # (tidak dipakai, pake output/experiments/)

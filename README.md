@@ -235,3 +235,23 @@ Referensi dapus BAB 1 diverifikasi dari PDF asli:
 - Notebook still refers to old experiment run
 - 209_aug folder has no artifacts (only metrics.json copied from original)
 - K=5 does not significantly change KNN results for bottle (655K patch bank is too dense)
+
+## OOD Detection — ComboOOD (Fixed 21 Jul 2026)
+
+Dashboard menggunakan **ComboOOD** (Rajasekaran et al., SIAM SDM 2024) untuk menolak gambar non-bottle — semi-parametric framework yang menggabungkan Mahalanobis + KNN distance.
+
+**Formula:** `score = -0.5 × mean(MD²) + (-√550 × log(KNN 1-NN dist))` — unweighted sum.
+
+**Threshold tetap = 0.0:** Gap antara non-bottle (max -49) dan bottle (min +0.2) sangat bersih — threshold 0 memisahkan sempurna tanpa perlu training leave-one-out. Validasi 14 kategori non-bottle MVTec AD: **100% PASS**, seluruh 83 test bottle: **100% LOLOS**.
+
+## 🔴 Bug: build_transform.py Syntax Error
+
+`prepocessing/build_transform.py:33` — dua blok `else` akibat Fase 6.1 inline comments. Pipeline original tidak bisa dijalankan. Fix: hapus `else` pertama, pertahankan `else` dengan `ToTensor`.
+
+## Augmented Dataset
+
+`dataset_augmented/` — 836 gambar (209 original + 209 flip + 209 rotation + 209 color). Ini dokumentasi visual, bukan data training. Training tetap on-the-fly augmentation.
+
+## Advisor Revision (19 Jul 2026)
+
+**"Arsitektur sistem perlu dibuat lebih detail - di luar metodologi penelitian"** — diagram arsitektur teknis terpisah dari BAB III. Blueprint: `docs/diagram_layout_blueprint.txt`. ⏳

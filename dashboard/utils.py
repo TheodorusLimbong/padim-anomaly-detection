@@ -223,6 +223,65 @@ def _batch_mahalanobis(delta, cov_inv_p):
         return torch.einsum("bpc,pcd,bpd->bp", delta, cov_inv_p, delta)
 
 
+def _nearest_neighbor_dist(x, bank, bank_norm_sq):
+    """
+    Euclidean distance ke nearest neighbor di bank.
+    x: [1, C] — embedding test
+    bank: [N, C] — N embedding reference
+    bank_norm_sq: [N] — precomputed ||b||^2
+    Returns: scalar float — jarak Euclidean minimum
+    """
+    x_norm_sq = (x ** 2).sum(dim=1, keepdim=True)
+    dots = x @ bank.T
+    dist_sq = x_norm_sq + bank_norm_sq.unsqueeze(0) - 2 * dots
+    return dist_sq.min().sqrt().item()
+
+
+def check_bottle_ood(patches, exp_data, device):
+    """
+    ComboOOD score: gabung Mahalanobis mean MD² + KNN mean emb 1-NN.
+
+    score = kc + mc
+    score >= ood_threshold -> bottle (in-distribution)
+    score < ood_threshold  -> non-bottle (OOD)
+
+    patches: [1, 3136, 550]
+    exp_data: dict dari load_experiment_data()
+    device: "cuda" atau "cpu"
+
+    Returns:
+        is_bottle: True jika combo_score >= ood_threshold
+        combo_score: kc + mc
+        threshold: batas OOD
+    """
+    import math
+
+    ood_threshold = exp_data.get("ood_threshold")
+    if ood_threshold is None:
+        return True, 0.0, None
+
+    with torch.no_grad():
+        # Mahalanobis: mean squared MD dari 3136 patch
+        delta = patches - exp_data["mean"].T.unsqueeze(0)
+        md_sq = _batch_mahalanobis(delta, exp_data["cov_inv_p"])
+        mean_md_sq = md_sq.mean().item()
+        mc = -0.5 * mean_md_sq
+
+        # KNN: mean pooled embedding -> 1-NN ke 209 training mean embeddings
+        mean_emb = patches.mean(dim=1)
+        kd = _nearest_neighbor_dist(
+            mean_emb,
+            exp_data["ood_feature_bank"],
+            exp_data["ood_feature_bank_norm_sq"],
+        )
+        kc = -math.sqrt(550) * math.log(kd + 1e-8)
+
+        combo_score = kc + mc
+
+    is_bottle = combo_score >= ood_threshold
+    return is_bottle, combo_score, ood_threshold
+
+
 def _setup_paths():
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     for d in ["prepocessing", "feature extractor", "anomaly detection"]:
@@ -299,6 +358,7 @@ def load_experiment_data(exp_name, device):
     # (biar normalisasi konsisten antara dashboard sama experiment)
     padim_min, padim_max = None, None
     padim_map_min, padim_map_max = None, None
+    ood_mean_max = None
     test_feat_path = os.path.join(exp_dir, "test_features_padim.pt")
     if os.path.exists(test_feat_path):
         test_feat = torch.load(test_feat_path, map_location="cpu")
@@ -310,6 +370,13 @@ def load_experiment_data(exp_name, device):
             delta = batch - mean_d.T.unsqueeze(0)
             scores = _batch_mahalanobis(delta, cov_inv_p)
             scores = torch.sqrt(scores.clamp(min=0))
+
+            # Track max mean patch score per image (untuk OOD threshold)
+            mean_scores = scores.mean(dim=1)
+            batch_ood_max = mean_scores.max().item()
+            if ood_mean_max is None or batch_ood_max > ood_mean_max:
+                ood_mean_max = batch_ood_max
+
             maps = scores.view(-1, 1, 56, 56)
             maps = F.interpolate(maps, size=(224, 224), mode="bilinear", align_corners=False)
             kernel = _gaussian_kernel(sigma, device=device)
@@ -325,6 +392,34 @@ def load_experiment_data(exp_name, device):
         if device == "cuda":
             torch.cuda.empty_cache()
 
+    from src.config import COMBOOOD_THRESHOLD
+
+    ood_feature_bank = None
+    ood_feature_bank_norm_sq = None
+    train_feat_path = os.path.join(exp_dir, "train_features_padim.pt")
+
+    # Auto-generate train_features_padim.pt dari train_raw.pt + dim_indices.pt
+    if not os.path.exists(train_feat_path):
+        raw_path = os.path.join(exp_dir, "train_raw.pt")
+        dim_path = os.path.join(exp_dir, "dim_indices.pt")
+        if os.path.exists(raw_path) and os.path.exists(dim_path):
+            train_raw = torch.load(raw_path, map_location="cpu")
+            dim_idx = torch.load(dim_path, map_location="cpu")
+            train_reduced = train_raw[:, dim_idx, :, :].contiguous()
+            B, C, H, W = train_reduced.shape
+            train_patches_gen = train_reduced.permute(0, 2, 3, 1).reshape(B, H * W, C)
+            torch.save(train_patches_gen, train_feat_path)
+            del train_raw, train_reduced, train_patches_gen
+
+    if os.path.exists(train_feat_path):
+        train_patches = torch.load(train_feat_path, map_location="cpu")  # [209, 3136, 550]
+        # Mean pool: [209, 3136, 550] -> [209, 550] — untuk KNN component ComboOOD
+        bank_mean = train_patches.mean(dim=1)
+        bank_norm_sq = (bank_mean ** 2).sum(dim=1)
+        ood_feature_bank = bank_mean          # [209, 550] (CPU)
+        ood_feature_bank_norm_sq = bank_norm_sq  # [209] (CPU)
+        del train_patches
+
     return {
         "mean": mean.to(device),                         # [550, 3136]
         "cov_inv": cov_inv.to(device),                    # [550, 550, 3136]
@@ -336,6 +431,9 @@ def load_experiment_data(exp_name, device):
         "threshold_knn": metrics.get("knn", {}).get("threshold"),
         "padim_map_min": padim_map_min,                   # global pixel min
         "padim_map_max": padim_map_max,                   # global pixel max
+        "ood_threshold": COMBOOOD_THRESHOLD,              # threshold tetap: 0.0
+        "ood_feature_bank": ood_feature_bank,             # [209, 550] (CPU)
+        "ood_feature_bank_norm_sq": ood_feature_bank_norm_sq,  # [209] (CPU)
         "gauss_sigma": sigma,                             # sigma utk Gaussian kernel
         "metrics": metrics,                               # dict hasil experiment
     }

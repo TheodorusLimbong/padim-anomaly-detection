@@ -24,12 +24,17 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dashboard.utils import (
     list_experiments, load_model, load_experiment_data,
     preprocess_and_extract, infer_padim, infer_knn, normalize_map,
+    check_bottle_ood,
 )
 from PIL import Image
 
 st.set_page_config(page_title="PaDiM vs KNN — Live", layout="centered")
 st.title("PaDiM vs KNN — Live Anomaly Detection")
 st.caption("MVTec AD Bottle · ResNet-50 + MoCo v2 · PaDiM vs KNN")
+
+# Session state untuk tombol hapus antrian
+if "upload_key" not in st.session_state:
+    st.session_state.upload_key = 0
 
 # Sidebar: pilih experiment sebagai sumber statistik
 experiments = list_experiments()
@@ -52,10 +57,15 @@ def get_exp_data(_name, _dev):
 model, extractor = get_model(device)
 exp_data = get_exp_data(exp_name, device)
 
-# Upload gambar (bisa multiple)
-uploaded_files = st.file_uploader("Pilih gambar (multiple)", type=["png", "jpg", "jpeg", "bmp"], accept_multiple_files=True)
+# Upload gambar (bisa multiple), key dinamis untuk tombol hapus antrian
+uploaded_files = st.file_uploader("Pilih gambar (multiple)", type=["png", "jpg", "jpeg", "bmp"], accept_multiple_files=True, key=f"upload_{st.session_state.upload_key}")
 
 if uploaded_files:
+    # Tombol hapus antrian — hanya muncul jika ada file di-upload
+    if st.button("Hapus antrian", type="secondary", use_container_width=True):
+        st.session_state.upload_key += 1
+        st.rerun()
+
     for i, uploaded in enumerate(uploaded_files):
         st.divider()
         st.subheader(f"#{i + 1}: {uploaded.name}")
@@ -63,6 +73,13 @@ if uploaded_files:
 
         with st.spinner("Feature extraction..."):
             patches = preprocess_and_extract(pil_image, extractor, exp_data, device)
+
+        # OOD Check: tolak gambar yang bukan bottle
+        is_bottle, mean_score, ood_thresh = check_bottle_ood(patches, exp_data, device)
+        if not is_bottle:
+            st.error("BUKAN BOTTLE — Model hanya dilatih pada dataset MVTec AD bottle. Silakan upload gambar bottle.")
+            st.image(pil_image, use_container_width=True)
+            continue
 
         col1, col2, col3 = st.columns(3)
 
