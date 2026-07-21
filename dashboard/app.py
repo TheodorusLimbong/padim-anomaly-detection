@@ -77,8 +77,10 @@ if uploaded_files:
         # OOD Check: tolak gambar yang bukan bottle
         is_bottle, mean_score, ood_thresh = check_bottle_ood(patches, exp_data, device)
         if not is_bottle:
-            st.error("BUKAN BOTTLE — Model hanya dilatih pada dataset MVTec AD bottle. Silakan upload gambar bottle.")
-            st.image(pil_image, use_container_width=True)
+            st.warning("BUKAN BOTTLE — Model hanya dilatih pada dataset bottle. Upload gambar bottle untuk deteksi anomali.")
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.image(pil_image, caption="Original", use_container_width=True)
             continue
 
         col1, col2, col3 = st.columns(3)

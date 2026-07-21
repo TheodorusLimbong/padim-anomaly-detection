@@ -104,6 +104,18 @@ streamlit run dashboard/app.py
 
 Semua gambar di `output/figures/` (13 file total).
 
+### Changes (22 Jul 2026)
+
+| Change | Detail |
+|--------|--------|
+| OOD threshold | P99.9 66.18 → fixed 0.0 (gap non-bottle -49 vs bottle +0.2) |
+| OOD UI | `st.warning()` full width + image col1, tanpa score/caption/emoji |
+| Hapus antrian | Tombol reset widget uploader via dynamic key |
+| Diagram blueprint | OOD block ditambahkan antara Embedding Processing dan SPLIT |
+| Narasi BAB 3 | 3.6.5 Deteksi Out-of-Distribution (ComboOOD) ✅ |
+| Narasi BAB 4 | 4.7.3 Deteksi Out-of-Distribution (ComboOOD) ✅ |
+| Batasan masalah | Poin 4: "tidak mencakup bottle di luar MVTec AD" |
+
 ### Key Takeaways
 
 | Insight | Detail |
@@ -236,7 +248,7 @@ Referensi dapus BAB 1 diverifikasi dari PDF asli:
 - 209_aug folder has no artifacts (only metrics.json copied from original)
 - K=5 does not significantly change KNN results for bottle (655K patch bank is too dense)
 
-## OOD Detection — ComboOOD (Fixed 21 Jul 2026)
+## OOD Detection — ComboOOD (Fixed 22 Jul 2026)
 
 Dashboard menggunakan **ComboOOD** (Rajasekaran et al., SIAM SDM 2024) untuk menolak gambar non-bottle — semi-parametric framework yang menggabungkan Mahalanobis + KNN distance.
 
@@ -244,9 +256,13 @@ Dashboard menggunakan **ComboOOD** (Rajasekaran et al., SIAM SDM 2024) untuk men
 
 **Threshold tetap = 0.0:** Gap antara non-bottle (max -49) dan bottle (min +0.2) sangat bersih — threshold 0 memisahkan sempurna tanpa perlu training leave-one-out. Validasi 14 kategori non-bottle MVTec AD: **100% PASS**, seluruh 83 test bottle: **100% LOLOS**.
 
+**UI Dashboard:** OOD reject menampilkan `st.warning()` full width + gambar di kolom 1 (posisi & ukuran sama dengan bottle normal). Kolom 2 & 3 kosong (tidak diproses PaDiM/KNN). Dilengkapi tombol "Hapus antrian" untuk reset widget uploader.
+
 ## 🔴 Bug: build_transform.py Syntax Error
 
 `prepocessing/build_transform.py:33` — dua blok `else` akibat Fase 6.1 inline comments. Pipeline original tidak bisa dijalankan. Fix: hapus `else` pertama, pertahankan `else` dengan `ToTensor`.
+
+Eksperimen terakhir sebelum error: `run_20260624_135445`.
 
 ## Augmented Dataset
 
@@ -255,3 +271,5 @@ Dashboard menggunakan **ComboOOD** (Rajasekaran et al., SIAM SDM 2024) untuk men
 ## Advisor Revision (19 Jul 2026)
 
 **"Arsitektur sistem perlu dibuat lebih detail - di luar metodologi penelitian"** — diagram arsitektur teknis terpisah dari BAB III. Blueprint: `docs/diagram_layout_blueprint.txt`. ⏳
+
+**Batasan masalah poin 4 (22 Jul 2026):** Ditambahkan "Penelitian ini tidak mencakup bottle di luar dataset MVTec AD." — menekankan bahwa model hanya berlaku untuk bottle dalam distribusi dataset pelatihan.
