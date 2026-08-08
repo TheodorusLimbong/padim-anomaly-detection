@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="opencode" modified="2026-07-22T12:00:00.000Z" version="24.2.5">
+  <diagram id="training" name="Fase Pelatihan">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="750" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TITLE -->
+        <mxCell id="2" value="&lt;b&gt;GAMBAR A.1 — ARSITEKTUR FASE PELATIHAN (TRAINING PHASE)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=18;fontColor=#2C3E50;" vertex="1" parent="1">
+          <mxGeometry x="0" y="10" width="2200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- MAIN CONTAINER -->
+        <mxCell id="3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8F9FA;strokeColor=#BDC3C7;dashed=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="20" y="60" width="2160" height="660" as="geometry" />
+        </mxCell>
+
+        <!-- SECTION LABEL -->
+        <mxCell id="4" value="&lt;b&gt;ALUR EKSTRAKSI &amp;amp; PENGOLAHAN FITUR&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#7F8C8D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="75" width="350" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ============ ROW 1: PIPELINE ============ -->
+
+        <!-- 1. INPUT DATASET -->
+        <mxCell id="10" value="&lt;b&gt;Input Dataset&lt;/b&gt;&lt;hr&gt;209 gambar train/good&lt;br&gt;&lt;i&gt;bottle/train/good/&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAEEF3;strokeColor=#2980B9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="130" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666;strokeWidth=2;endArrow=classic;endFill=1;exitX=1;exitY=0.5;" edge="1" parent="1" source="10" target="11">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <!-- AUGMENTASI SECTION -->
+        <mxCell id="5" value="&lt;b&gt;AUGMENTASI (On-the-Fly):&lt;/b&gt;&lt;br&gt;Flip(p=0.5) + Rotasi(±10&amp;deg;) + ColorJitter + Noise&lt;br&gt;&lt;i&gt;209 gambar asli × 4 transformasi = 836 variant&lt;/i&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#7F8C8D;" vertex="1" parent="1">
+          <mxGeometry x="285" y="98" width="310" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- 2. PREPROCESSING -->
+        <mxCell id="11" value="&lt;b&gt;Preprocessing&lt;/b&gt;&lt;hr&gt;Resize(224x224)&lt;br&gt;ToTensor + Normalize" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAEEF3;strokeColor=#2980B9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="270" y="135" width="190" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666;strokeWidth=2;endArrow=classic;endFill=1;exitX=1;exitY=0.5;" edge="1" parent="1" source="11" target="12">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 3. FEATURE EXTRACTION (taller) -->
+        <mxCell id="12" value="&lt;b&gt;Feature Extraction (Multi-Layer)&lt;/b&gt;&lt;hr&gt;ResNet-50 + MoCo v2&lt;br&gt;Layer1 = &lt;b&gt;[256, 56, 56]&lt;/b&gt;&lt;br&gt;Layer2 = &lt;b&gt;[512, 28, 28]&lt;/b&gt; di-upsample ke 56x56&lt;br&gt;Layer3 = &lt;b&gt;[1024, 14, 14]&lt;/b&gt; di-upsample ke 56x56" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAEEF3;strokeColor=#2980B9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="520" y="110" width="230" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666;strokeWidth=2;endArrow=classic;endFill=1;exitX=1;exitY=0.5;" edge="1" parent="1" source="12" target="13">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 4. KONKATENASI -->
+        <mxCell id="13" value="&lt;b&gt;Konkatenasi 3 Layer&lt;/b&gt;&lt;hr&gt;&lt;b&gt;[N, 1792, 56, 56]&lt;/b&gt;&lt;br&gt;3.136 patches&lt;br&gt;&lt;i&gt;embedding_concat()&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAEEF3;strokeColor=#2980B9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="820" y="130" width="170" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666;strokeWidth=2;endArrow=classic;endFill=1;exitX=1;exitY=0.5;" edge="1" parent="1" source="13" target="14">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5. DIMENSIONALITY REDUCTION -->
+        <mxCell id="14" value="&lt;b&gt;Dimensionality Reduction&lt;/b&gt;&lt;hr&gt;1792 channel menjadi 550 channel&lt;br&gt;&lt;b&gt;[N, 550, 56, 56]&lt;/b&gt;&lt;br&gt;&lt;i&gt;reduce_dim() — random select (seed 1024)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAEEF3;strokeColor=#2980B9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="130" width="180" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666;strokeWidth=2;endArrow=classic;endFill=1;exitX=1;exitY=0.5;" edge="1" parent="1" source="14" target="15">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 6. RESHAPE EMBEDDING -->
+        <mxCell id="15" value="&lt;b&gt;Reshape Embedding&lt;/b&gt;&lt;hr&gt;Flatten 56x56 jadi 3.136 patch&lt;br&gt;&lt;b&gt;[N, 3136, 550]&lt;/b&gt;&lt;br&gt;&lt;i&gt;reshape_embedding()&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAEEF3;strokeColor=#2980B9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="130" width="180" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow down: Reshape ke Split -->
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666;strokeWidth=2;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="15" target="16">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============ ROW 2: SPLIT ============ -->
+
+        <!-- SPLIT DIAMOND -->
+        <mxCell id="16" value="&lt;b&gt;SPLIT&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FEF9E7;strokeColor=#F1C40F;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="260" width="80" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Split ke PaDiM (left) -->
+        <mxCell id="e16l" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#8E44AD;strokeWidth=2;endArrow=classic;endFill=1;exitX=0;exitY=0.5;" edge="1" parent="1" source="16" target="17">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1100" y="285" />
+            </Array>
+            </mxGeometry>
+        </mxCell>
+
+        <!-- Split ke KNN (right) -->
+        <mxCell id="e16r" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2E86C1;strokeWidth=2;endArrow=classic;endFill=1;exitX=1;exitY=0.5;" edge="1" parent="1" source="16" target="18">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1600" y="285" />
+            </Array>
+            </mxGeometry>
+        </mxCell>
+
+        <!-- ============ ROW 3: PaDiM PATH (LEFT) ============ -->
+
+        <!-- PaDiM Section Label -->
+        <mxCell id="17label" value="&lt;b&gt;PaDiM PATH — Pemodelan Gaussian Per-Posisi&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6C3483;" vertex="1" parent="1">
+          <mxGeometry x="300" y="325" width="400" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- PaDiM Container -->
+        <mxCell id="17" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4ECF7;strokeColor=#8E44AD;dashed=1;fontSize=12;fontColor=#6C3483;" vertex="1" parent="1">
+          <mxGeometry x="300" y="340" width="500" height="170" as="geometry" />
+        </mxCell>
+
+        <mxCell id="17a" value="&lt;b&gt;1. compute_statistics() — Mean per Posisi&lt;/b&gt;&lt;hr&gt;3.136 posisi patch, masing-masing:&lt;br&gt;rata-rata 209 vektor dimensi [550]&lt;br&gt;hasil: &lt;b&gt;mean [550, 3136]&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8DAEF;strokeColor=#8E44AD;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="320" y="365" width="460" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e17a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#8E44AD;strokeWidth=1;endArrow=classic;endFill=1;" edge="1" parent="1" source="17a" target="17b">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="17b" value="&lt;b&gt;2. compute_cov_inv() — Kovarians + Invers&lt;/b&gt;&lt;hr&gt;Per posisi: covariance [550,550] + inverse + reg epsilon=0.01&lt;br&gt;hasil: &lt;b&gt;cov_inv [550, 550, 3136]&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8DAEF;strokeColor=#8E44AD;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="320" y="440" width="460" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ============ ROW 3: KNN PATH (RIGHT) ============ -->
+
+        <!-- KNN Section Label -->
+        <mxCell id="18label" value="&lt;b&gt;KNN PATH — Feature Bank for Euclidean&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#1A5276;" vertex="1" parent="1">
+          <mxGeometry x="920" y="325" width="400" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- KNN Container -->
+        <mxCell id="18" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBF5FB;strokeColor=#2E86C1;dashed=1;fontSize=12;fontColor=#1A5276;" vertex="1" parent="1">
+          <mxGeometry x="920" y="340" width="500" height="170" as="geometry" />
+        </mxCell>
+
+        <mxCell id="18a" value="&lt;b&gt;1. build_feature_bank() — Stack Semua Patch&lt;/b&gt;&lt;hr&gt;209 images x 3.136 patch = &lt;b&gt;655.424 patch&lt;/b&gt;&lt;br&gt;masing-masing vektor [550], total &lt;b&gt;[655424, 550]&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D4E6F1;strokeColor=#2E86C1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="365" width="460" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="18b" value="&lt;b&gt;2. Siap untuk Inference KNN&lt;/b&gt;&lt;hr&gt;Setiap test patch dibandingkan via Euclidean&lt;br&gt;dengan bank ini, ambil top-5 closest, rata-rata&lt;br&gt;&lt;i&gt;compute_knn_anomaly_score() chunked (22 chunks)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D4E6F1;strokeColor=#2E86C1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="440" width="460" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ============ ROW 4: OUTPUT FILES ============ -->
+
+        <!-- Arrow PaDiM ke Output -->
+        <mxCell id="e17out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#8E44AD;strokeWidth=1;endArrow=classic;endFill=1;" edge="1" parent="1" source="17" target="19">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="540" />
+            </Array>
+            </mxGeometry>
+        </mxCell>
+
+        <!-- Arrow KNN ke Output -->
+        <mxCell id="e18out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2E86C1;strokeWidth=1;endArrow=classic;endFill=1;" edge="1" parent="1" source="18" target="19">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1170" y="540" />
+            </Array>
+            </mxGeometry>
+        </mxCell>
+
+        <!-- OUTPUT FILES BOX -->
+        <mxCell id="19" value="&lt;b&gt;OUTPUT FILES — Disimpan ke Folder Eksperimen&lt;/b&gt;&lt;hr&gt;&amp;emsp; 1. &lt;b&gt;padim_stats.pt&lt;/b&gt; (mean + cov_inv)&lt;br&gt;&amp;emsp; 2. &lt;b&gt;feature_bank.pt&lt;/b&gt; (655.424 patch embeddings)&lt;br&gt;&amp;emsp; 3. &lt;b&gt;dim_indices.pt&lt;/b&gt; (indeks 550 channel terpilih)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5F5E3;strokeColor=#27AE60;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="550" y="550" width="700" height="75" as="geometry" />
+        </mxCell>
+
+      
+        <mxCell id="el10" parent="e10" value="&lt;i&gt;209 images [N, 3, 224, 224]&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#888;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+        <mxCell id="el11" parent="e11" value="&lt;i&gt;per image: [3, 224, 224]&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#888;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+        <mxCell id="el12" parent="e12" value="&lt;i&gt;256 + 512 + 1024 = 1792 channel&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#888;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+        <mxCell id="el13" parent="e13" value="&lt;i&gt;[1792, 56, 56]&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#888;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+        <mxCell id="el14" parent="e14" value="&lt;i&gt;[550, 56, 56]&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#888;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+        <mxCell id="el15" parent="e15" value="&lt;i&gt;[N, 3136, 550] per image&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#888;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+        <mxCell id="el17a" parent="e17a" value="&lt;i&gt;mean [550, 3136]&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#8E44AD;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+      
+        <mxCell id="el16l" parent="e16l" value="&lt;i&gt;patch data [3136, 550]&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#8E44AD;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+        <mxCell id="el16r" parent="e16r" value="&lt;i&gt;patch data [3136, 550]&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#2E86C1;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+        <mxCell id="el17out" parent="e17out" value="&lt;i&gt;mean + cov_inv&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#8E44AD;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+        <mxCell id="el18out" parent="e18out" value="&lt;i&gt;feature_bank [655424, 550]&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#2E86C1;" vertex="1" connectable="0" ><mxGeometry x="0.5" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

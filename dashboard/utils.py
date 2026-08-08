@@ -416,8 +416,8 @@ def load_experiment_data(exp_name, device):
         # Mean pool: [209, 3136, 550] -> [209, 550] — untuk KNN component ComboOOD
         bank_mean = train_patches.mean(dim=1)
         bank_norm_sq = (bank_mean ** 2).sum(dim=1)
-        ood_feature_bank = bank_mean          # [209, 550] (CPU)
-        ood_feature_bank_norm_sq = bank_norm_sq  # [209] (CPU)
+        ood_feature_bank = bank_mean.to(device)          # [209, 550]
+        ood_feature_bank_norm_sq = bank_norm_sq.to(device)  # [209]
         del train_patches
 
     return {

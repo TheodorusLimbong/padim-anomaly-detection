@@ -99,10 +99,23 @@ streamlit run dashboard/app.py
 | **4.5 Evaluasi Kinerja Deteksi** | **✅** | **∼1.500 kata, 5 tabel, 4 gambar** |
 | **4.6 Analisis Komparatif** | **✅** | **4.6.1 Gaussian smoothing ✅, 4.6.2 Timing benchmark ✅** |
 | 4.7 Visualisasi Dashboard | ⏳ | Belum |
-| **5.1 Kesimpulan** | **✅** | **3 paragraf, jawab 5 rumusan masalah** |
+| **5.1 Kesimpulan** | **✅** | **5 paragraf, 1:1 dengan 5 rumusan masalah** |
 | **5.2 Saran** | **✅** | **4 poin: ekspansi, SOTA, dataset riil, dashboard** |
 
 Semua gambar di `output/figures/` (13 file total).
+
+### Changes (23 Jul 2026)
+
+| Change | Detail |
+|--------|--------|
+| Diagram pelatihan ke awal BAB 4 | `arsitektur_pelatihan.drawio` jadi **Gambar 4.1** (pengantar sebelum 4.1), semua gambar BAB 4 bergeser +1 |
+| Narasi diagram pelatihan | 2 paragraf: input 209 → augmentasi (Flip 50%/Rotasi 100%/ColorJitter 70%/Noise 30%) → one-pass frozen backbone → 3 layer [1792] → concat → dim red 550 → reshape [3136,550] → split PaDiM/KNN → 3 output files |
+| Kesimpulan BAB 5 | Diperluas dari 3→5 paragraf, 1:1 menjawab 5 rumusan masalah |
+| **good_noise generated** | `scripts/gen_noise_augmented.py` (sementara, lalu dihapus) — 209 noise images → dataset_augmented sekarang **1.045 gambar** (5 folder × 209) |
+| **Tabel naming** | Tabel augmentasi = "Tabel 4.4 Rincian Augmentasi", Tabel layer = "Tabel 4.1 Spesifikasi Lapisan Ekstraksi Fitur" |
+| **"simultan" → "bersamaan"** | Keputusan ganti kata simultan jadi bersamaan di narasi BAB 4 |
+| **Hapus redundan concatenation** | Rencana hapus 2 paragraf detail tahap a dan b (sudah di-cover Tabel 4.7) |
+| build_transform.py | Masih pending — dua blok `else` syntax error, fix sudah diketahui tapi belum dieksekusi |
 
 ### Changes (22 Jul 2026)
 
@@ -130,6 +143,7 @@ Semua gambar di `output/figures/` (13 file total).
 | GAUSS_SIGMA config (24 Jun) | Sigma disimpan di config.json, dibaca dashboard — konsisten antara experiment dan dashboard |
 | CPU optimization (24 Jun) | einsum→bmm (PaDiM ~0.4-0.8s CPU), precompute bank norms, KNN chunk 30K, sequential display |
 | **Timing benchmark (1 Jul)** | **PaDiM GPU 0,016s, KNN GPU 4,837s (302×) — script dashboard-accurate `scripts/benchmark_timing.py`** |
+| **Kesimpulan 5 paragraf (23 Jul)** | **Kesimpulan BAB 5 direvisi dari 3→5 paragraf, 1:1 dengan 5 rumusan masalah** |
 
 ## Quick Start
 
@@ -258,18 +272,87 @@ Dashboard menggunakan **ComboOOD** (Rajasekaran et al., SIAM SDM 2024) untuk men
 
 **UI Dashboard:** OOD reject menampilkan `st.warning()` full width + gambar di kolom 1 (posisi & ukuran sama dengan bottle normal). Kolom 2 & 3 kosong (tidak diproses PaDiM/KNN). Dilengkapi tombol "Hapus antrian" untuk reset widget uploader.
 
-## 🔴 Bug: build_transform.py Syntax Error
+## 🔴 Bug: build_transform.py Syntax Error (Pending Fix)
 
-`prepocessing/build_transform.py:33` — dua blok `else` akibat Fase 6.1 inline comments. Pipeline original tidak bisa dijalankan. Fix: hapus `else` pertama, pertahankan `else` dengan `ToTensor`.
+`prepocessing/build_transform.py:28-38` — dua blok `else` akibat Fase 6.1 inline comments (16 Jul 2026). Telah didiskusikan 23 Jul 2026 namun belum dieksekusi.
 
-Eksperimen terakhir sebelum error: `run_20260624_135445`.
+| Baris | Masalah |
+|:-----:|---------|
+| 28-32 | Else pertama tanpa `ToTensor` — **harus dihapus** |
+| 33-38 | Else kedua dengan `ToTensor` — **dipertahankan** |
+
+**Dampak:** Semua pipeline yang import `build_transform` akan crash (original `run_padim.py`, subset, dashboard via `dataset_wrapper`).
+**Eksperimen terakhir sebelum error:** `run_20260624_135445`.
 
 ## Augmented Dataset
 
-`dataset_augmented/` — 836 gambar (209 original + 209 flip + 209 rotation + 209 color). Ini dokumentasi visual, bukan data training. Training tetap on-the-fly augmentation.
+`dataset_augmented/` — 1.045 gambar (209 original + 209 flip + 209 rotation + 209 color + 209 noise). Ini dokumentasi visual, bukan data training. Training tetap on-the-fly augmentation.
 
 ## Advisor Revision (19 Jul 2026)
 
 **"Arsitektur sistem perlu dibuat lebih detail - di luar metodologi penelitian"** — diagram arsitektur teknis terpisah dari BAB III. Blueprint: `docs/diagram_layout_blueprint.txt`. ⏳
 
-**Batasan masalah poin 4 (22 Jul 2026):** Ditambahkan "Penelitian ini tidak mencakup bottle di luar dataset MVTec AD." — menekankan bahwa model hanya berlaku untuk bottle dalam distribusi dataset pelatihan.
+**Batasan masalah poin 4 (22 Jul 2026):** Ditambahkan "Penelitian ini tidak mencakup bottle di luar dataset MVTec AD."
+
+**Penempatan diagram pelatihan (23 Jul 2026):** `arsitektur_pelatihan.drawio` ditempatkan di **awal BAB 4** sebagai diagram pengantar (Gambar 4.1 baru), bukan di LAMPIRAN. Semua nomor gambar BAB 4 bergeser +1.
+
+### Advisor Revision 2 — Perkaya Analisis Ilmiah (22 Jul 2026)
+
+Dosen meminta setiap metrik evaluasi dijelaskan WHY-nya, bukan sekedar menyebut angka. Analisis terhadap 65 paragraf metrik BAB IV: **42 analitis (64.6%)**, **23 deskriptif (35.4%)**. 10 narasi WHY telah diproduksi untuk lokasi spesifik (AUROC 0.9976 → koneksi ke per-position Gaussian + covariance + 3-layer concat; Recall gap → position-agnostic KNN; Threshold scale → Mahalanobis vs Euclidean; dll).
+
+### Dataset Augmentation Numbers (22 Jul 2026)
+
+Data training setelah augmentasi untuk dokumentasi: **1.045 citra** (209 original + 209 flip + 209 rotation + 209 color + 209 noise). Training aktual tetap on-the-fly (209 × variasi acak per epoch).
+
+### Detection Flow Diagram (22 Jul 2026)
+
+Alur deteksi dirapihkan: OOD Detection box hanya berisi formula (mc + kc), decision diamond `combo >= 0.0?` berdiri sendiri di luar box. Simetri PaDiM vs KNN sejajar dengan convergence node sebelum Global Min-Max Normalization.
+
+### Architecture Diagrams — Draw.io (23 Jul 2026)
+
+Dibuat 2 file diagram arsitektur di `docs/` dalam format draw.io uncompressed XML:
+
+| File | Label | Isi | Lokasi di skripsi |
+|:----:|:-----:|:----|:------------------:|
+| `docs/arsitektur_pelatihan.drawio` | **Gambar 4.1** (baru) | Fase Pelatihan: Input → Augmentasi → Preprocess → Feature Extract → Concat → Dim Red → Reshape → Split → PaDiM (mean + cov_inv) vs KNN (feature bank) → Output files | **BAB IV — Awal (sebagai pengantar)** |
+| `docs/arsitektur_inferensi.drawio` | **Gambar 4.14** | Fase Inferensi: Input → Preprocess → Feature Extract → Dim Red → OOD ComboOOD diamond → Split → PaDiM (Mahalanobis → Blur 56×56 → Upsample → Score) vs KNN (Euclidean → Reshape → Upsample → Score) → Convergence → Threshold → Prediction | **BAB IV 4.7.1** |
+
+**Fixes applied:**
+- Edge labels diekstrak dari nested `mxGeometry` ke root-level dengan `parent="edgeId"`, `vertex="1"`
+- 5 wrong parent ID bugs diperbaiki (label pointing ke edge yang salah)
+- Augmentation info dipisah dari preprocessing box jadi label terpisah di atas
+- PaDiM/KNN section titles dipindah dari container title ke label terpisah di atas container
+
+**Narasi 4.7.1** — 6 paragraf (46 kalimat, semuanya >=4 kalimat) berdasarkan diagram inferensi:
+| Paragraf | Isi | Kalimat |
+|:--------:|-----|:-------:|
+| P1 | Intro Streamlit + 3 tahap utama + Gambar 4.14 | 4 |
+| P2 | Preprocessing → Feature Extract → Dim Red → Reshape | 8 |
+| P3 | OOD ComboOOD (mc + kc, threshold 0.0) | 9 |
+| P4 | PaDiM path (Mahalanobis → blur 56×56 → upsample → max pool) | 9 |
+| P5 | KNN path (Euclidean K=5 → chunked → reshape → upsample) | 7 |
+| P6 | Convergence → threshold P95 → output | 9 |
+
+**Key differences from old narrative:** Blur pada 56×56 (sebelum upsample), OOD ComboOOD ditambahkan, dimensi tensor eksplisit di setiap langkah, convergence + global min-max normalization dijelaskan.
+
+### Changes (26 Jul 2026)
+
+| Change | Detail |
+|--------|--------|
+| **Kesimpulan BAB 5.1** | Ditulis ulang jadi **5 paragraf, 1:1 dengan 5 rumusan masalah** — kalimat pembuka eksplisit merujuk RM, transisi mengalir, dimensi tensor rapi |
+| **Verifikasi run_20260612_152608** | Semua angka metrik di kesimpulan diverifikasi 100% cocok dengan experiment K=5 fix (`run_20260612_152608`). Tidak ada campuran dari run lain |
+
+### Changes (28 Jul 2026)
+
+| Change | Detail |
+|--------|--------|
+| **OOD device fix** | `ood_feature_bank` [209,550] lupa di-move ke device di `load_experiment_data()` → crash CUDA/CPU di `_nearest_neighbor_dist()`. Fix: tambah `.to(device)` di `utils.py:419-420` |
+| **Dashboard OOD message** | `"BUKAN BOTTLE — ..."` → `"TIDAK SESUAI DISTRIBUSI — Gambar tidak termasuk dalam distribusi data latih (bottle). Gunakan gambar bottle yang sesuai."` |
+| **Narasi OOD skripsi** | Revisi `3.6.4`: `non-bottle`→`out-of-distribution`, `orde milidetik`→`hitungan milidetik`, klarifikasi 83 test bottle, `hanya gambar bottle`→`hanya gambar yang sesuai dengan distribusi data latih` |
+
+### Changes (08 Aug 2026)
+
+| Change | Detail |
+|--------|--------|
+| **Sembunyikan evaluasi saat semua OOD** | Footer evaluasi (PaDiM AUROC/PRO, KNN AUROC/PRO + expander Detail) di `dashboard/app.py` tidak dirender jika SEMUA gambar batch ditolak OOD. Counter `valid_count` + `if valid_count > 0:` |
+| **Keputusan batch campuran** | ≥1 gambar valid → evaluasi TETAP tampil. Tanpa pesan penjelasan (langsung kosong). Expander Detail ikut disembunyikan |

@@ -1,0 +1,4329 @@
+{
+  "headings": [
+    {
+      "idx": 17,
+      "level": "1",
+      "text": "KATA PENGANTAR"
+    },
+    {
+      "idx": 35,
+      "level": "2",
+      "text": "ABSTRAK"
+    },
+    {
+      "idx": 50,
+      "level": "2",
+      "text": "ABSTRACT"
+    },
+    {
+      "idx": 58,
+      "level": "1",
+      "text": "DAFTAR ISI"
+    },
+    {
+      "idx": 60,
+      "level": "1",
+      "text": "DAFTAR TABEL"
+    },
+    {
+      "idx": 81,
+      "level": "1",
+      "text": "DAFTAR GAMBAR"
+    },
+    {
+      "idx": 100,
+      "level": "1",
+      "text": "BAB I\nPENDAHULUAN"
+    },
+    {
+      "idx": 101,
+      "level": "2",
+      "text": "Latar Belakang Masalah"
+    },
+    {
+      "idx": 114,
+      "level": "2",
+      "text": "Rumusan Masalah"
+    },
+    {
+      "idx": 123,
+      "level": "2",
+      "text": "Batasan Masalah"
+    },
+    {
+      "idx": 132,
+      "level": "2",
+      "text": "Tujuan Penelitian"
+    },
+    {
+      "idx": 139,
+      "level": "2",
+      "text": "Manfaat"
+    },
+    {
+      "idx": 146,
+      "level": "2",
+      "text": "Sistematika Penulisan"
+    },
+    {
+      "idx": 158,
+      "level": "2",
+      "text": "Jadwal Kegiatan"
+    },
+    {
+      "idx": 163,
+      "level": "1",
+      "text": "BAB II \nLANDASAN TEORI"
+    },
+    {
+      "idx": 164,
+      "level": "2",
+      "text": "Penelitian Terdahulu"
+    },
+    {
+      "idx": 175,
+      "level": "2",
+      "text": "Inspeksi Visual pada Industri Manufaktur"
+    },
+    {
+      "idx": 177,
+      "level": "3",
+      "text": "2.2.1 Pengertian Inspeksi Visual"
+    },
+    {
+      "idx": 181,
+      "level": "3",
+      "text": "2.2.2 Inspeksi Visual Botol Industri"
+    },
+    {
+      "idx": 185,
+      "level": "3",
+      "text": "2.2.3 Jenis Cacat Visual pada Botol Industri"
+    },
+    {
+      "idx": 191,
+      "level": "3",
+      "text": "2.2.4 Tantangan Inspeksi Visual Konvensional"
+    },
+    {
+      "idx": 195,
+      "level": "2",
+      "text": "Computer Vision dalam Sistem Inspeksi Visual"
+    },
+    {
+      "idx": 198,
+      "level": "3",
+      "text": "2.3.1 Pengertian Computer Vision"
+    },
+    {
+      "idx": 200,
+      "level": "3",
+      "text": "2.3.2 Tahapan Umum Sistem Inspeksi Visual Berbasis Citra"
+    },
+    {
+      "idx": 214,
+      "level": "3",
+      "text": "2.3.3 Penerapan Computer Vision pada Quality Control Industri"
+    },
+    {
+      "idx": 220,
+      "level": "2",
+      "text": "2.4 Deteksi Anomali Visual"
+    },
+    {
+      "idx": 222,
+      "level": "3",
+      "text": "2.4.1 Konsep Dasar Deteksi Anomali"
+    },
+    {
+      "idx": 224,
+      "level": "3",
+      "text": "2.4.2 One-Class Learning dalam Deteksi Anomali"
+    },
+    {
+      "idx": 226,
+      "level": "3",
+      "text": "2.4.3 Deteksi Anomali Visual pada Produk Industri"
+    },
+    {
+      "idx": 230,
+      "level": "3",
+      "text": "2.4.4 Pendekatan Deteksi Anomali Visual"
+    },
+    {
+      "idx": 235,
+      "level": "3",
+      "text": "2.4.5 Dataset Benchmark Deteksi Anomali Industri"
+    },
+    {
+      "idx": 237,
+      "level": "2",
+      "text": "2.5 Deep Learning untuk Pengolahan Citra"
+    },
+    {
+      "idx": 239,
+      "level": "3",
+      "text": "2.5.1 Konsep Dasar Deep Learning"
+    },
+    {
+      "idx": 251,
+      "level": "3",
+      "text": "2.5.2 Convolutional Neural Network (CNN)"
+    },
+    {
+      "idx": 254,
+      "level": "3",
+      "text": "2.5.3 Residual Network (ResNet-50)"
+    },
+    {
+      "idx": 261,
+      "level": "2",
+      "text": "2.6 Self-Supervised Learning"
+    },
+    {
+      "idx": 263,
+      "level": "3",
+      "text": "2.6.1 Self-Supervised Learning pada Pengolahan Citra"
+    },
+    {
+      "idx": 266,
+      "level": "3",
+      "text": "2.6.2 Momentum Contrast (MoCo V2)"
+    },
+    {
+      "idx": 280,
+      "level": "3",
+      "text": "2.6.3 Keunggulan Self-Supervised Learning pada Inspeksi Industri"
+    },
+    {
+      "idx": 289,
+      "level": "2",
+      "text": "2.7 Patch-Based Learning pada Deteksi Anomali Visual"
+    },
+    {
+      "idx": 292,
+      "level": "3",
+      "text": "2.7.1 Patch Extraction pada Citra Botol Industri"
+    },
+    {
+      "idx": 296,
+      "level": "3",
+      "text": "2.7.2 Keunggulan Patch-Based Learning dalam Inspeksi Botol"
+    },
+    {
+      "idx": 302,
+      "level": "2",
+      "text": "2.8 Patch Distribution Modeling (PaDiM)"
+    },
+    {
+      "idx": 304,
+      "level": "3",
+      "text": "2.8.1 Pendekatan Distribution-Based Anomaly Detection"
+    },
+    {
+      "idx": 306,
+      "level": "3",
+      "text": "2.8.2 Mahalanobis Distance dalam PaDim"
+    },
+    {
+      "idx": 316,
+      "level": "3",
+      "text": "2.8.3 Pembentukan Anomaly Map"
+    },
+    {
+      "idx": 318,
+      "level": "3",
+      "text": "2.8.4 Keunggulan PaDiM dalam Deteksi Anomali Visual"
+    },
+    {
+      "idx": 321,
+      "level": "2",
+      "text": "2.9 K-Nearest Neighbor (KNN)"
+    },
+    {
+      "idx": 331,
+      "level": "2",
+      "text": "2.10 Euclidean Distance"
+    },
+    {
+      "idx": 339,
+      "level": "2",
+      "text": "2.11 Metrik Evaluasi Model"
+    },
+    {
+      "idx": 341,
+      "level": "3",
+      "text": "2.11.1 ROC Curve"
+    },
+    {
+      "idx": 352,
+      "level": "3",
+      "text": "2.11.2 AUROC"
+    },
+    {
+      "idx": 358,
+      "level": "3",
+      "text": "2.11.3 Precision"
+    },
+    {
+      "idx": 362,
+      "level": "3",
+      "text": "2.11.4 Recall"
+    },
+    {
+      "idx": 366,
+      "level": "3",
+      "text": "2.11.5 F1 Score"
+    },
+    {
+      "idx": 370,
+      "level": "2",
+      "text": "2.12 Visualisasi Hasil Inspeksi melalui Dashboard Streamlit"
+    },
+    {
+      "idx": 374,
+      "level": "1",
+      "text": "BAB III\nMETODOLOGI PENELITIAN"
+    },
+    {
+      "idx": 375,
+      "level": "2",
+      "text": "3.1    Alur Metode Penelitian"
+    },
+    {
+      "idx": 380,
+      "level": "2",
+      "text": "3.2    Data Collecting (Pengumpulan Data)"
+    },
+    {
+      "idx": 383,
+      "level": "3",
+      "text": "3.2.1 Studi Literatur"
+    },
+    {
+      "idx": 385,
+      "level": "3",
+      "text": "3.2.2 Pengumpulan Dataset"
+    },
+    {
+      "idx": 401,
+      "level": "3",
+      "text": "3.2.3 Seleksi Dataset"
+    },
+    {
+      "idx": 404,
+      "level": "3",
+      "text": "3.2.4 Verifikasi Ground Truth (Anomaly Mask)"
+    },
+    {
+      "idx": 408,
+      "level": "2",
+      "text": "3.3    Preprocessing Data"
+    },
+    {
+      "idx": 411,
+      "level": "3",
+      "text": "3.3.1 Load Dataset"
+    },
+    {
+      "idx": 414,
+      "level": "3",
+      "text": "3.3.2 Resize Citra"
+    },
+    {
+      "idx": 416,
+      "level": "3",
+      "text": "3.3.3 Normalisasi Pixel"
+    },
+    {
+      "idx": 418,
+      "level": "3",
+      "text": "3.3.4 Data Augmentation"
+    },
+    {
+      "idx": 420,
+      "level": "3",
+      "text": "3.3.5 Pembagian Dataset"
+    },
+    {
+      "idx": 426,
+      "level": "2",
+      "text": "3.4    Ekstraksi Fitur dan Representasi Visual"
+    },
+    {
+      "idx": 429,
+      "level": "3",
+      "text": "3.4.1 Load Backbone ResNet-50"
+    },
+    {
+      "idx": 437,
+      "level": "3",
+      "text": "3.4.2 Konfigurasi Self-Supervised Learning"
+    },
+    {
+      "idx": 447,
+      "level": "3",
+      "text": "3.4.3 Parameter Model"
+    },
+    {
+      "idx": 455,
+      "level": "3",
+      "text": "3.4.4 Backbone Self-Supervised Pretrained"
+    },
+    {
+      "idx": 466,
+      "level": "3",
+      "text": "3.4.5 Ekstraksi Feature Map"
+    },
+    {
+      "idx": 468,
+      "level": "3",
+      "text": "3.4.6 Patch-Based Feature Extraction"
+    },
+    {
+      "idx": 476,
+      "level": "3",
+      "text": "3.4.7 Dimensionality Reduction"
+    },
+    {
+      "idx": 480,
+      "level": "3",
+      "text": "3.4.8 Pembentukan Patch Embedding Vector"
+    },
+    {
+      "idx": 489,
+      "level": "3",
+      "text": "3.4.9 SSL Tanpa PaDiM (KNN-Euclidean)"
+    },
+    {
+      "idx": 498,
+      "level": "3",
+      "text": "3.4.10 SSL dengan Patch Distribution Modeling (PaDiM)"
+    },
+    {
+      "idx": 504,
+      "level": "3",
+      "text": "3.4.11 Perhitungan Mahalanobis Distance"
+    },
+    {
+      "idx": 515,
+      "level": "3",
+      "text": "3.4.12 Pembentukan Anomaly Map"
+    },
+    {
+      "idx": 519,
+      "level": "2",
+      "text": "3.5    Evaluasi dan Perbandingan Kinerja"
+    },
+    {
+      "idx": 521,
+      "level": "3",
+      "text": "3.5.1 ROC Curve dan AUROC"
+    },
+    {
+      "idx": 523,
+      "level": "3",
+      "text": "3.5.2 Precision"
+    },
+    {
+      "idx": 525,
+      "level": "3",
+      "text": "3.5.3 Recall"
+    },
+    {
+      "idx": 527,
+      "level": "3",
+      "text": "3.5.4 F1-Score"
+    },
+    {
+      "idx": 529,
+      "level": "3",
+      "text": "3.5.5 Evaluasi Image-Level dan Pixel-Level"
+    },
+    {
+      "idx": 540,
+      "level": "3",
+      "text": "3.5.6 Analisis Perbandingan Metode"
+    },
+    {
+      "idx": 551,
+      "level": "3",
+      "text": "3.5.7 Penentuan Threshold Anomali"
+    },
+    {
+      "idx": 554,
+      "level": "2",
+      "text": "3.6    Implementasi Sistem"
+    },
+    {
+      "idx": 556,
+      "level": "3",
+      "text": "3.6.1 Perancangan Dashboard Streamlit"
+    },
+    {
+      "idx": 569,
+      "level": "3",
+      "text": "3.6.2 Integrasi Model ke Sistem"
+    },
+    {
+      "idx": 571,
+      "level": "3",
+      "text": "3.6.3 Visualisasi Anomaly Map dan Heatmap Overlay"
+    },
+    {
+      "idx": 573,
+      "level": "3",
+      "text": "3.6.4 Gaussian Smoothing Anomaly Map"
+    },
+    {
+      "idx": 590,
+      "level": "3",
+      "text": "3.6.4 Deteksi Out-of-Distribution"
+    },
+    {
+      "idx": 594,
+      "level": "2",
+      "text": "3.7 Pengujian Sistem"
+    },
+    {
+      "idx": 596,
+      "level": "3",
+      "text": "3.7.1 Pengujian Konsistensi Deteksi"
+    },
+    {
+      "idx": 598,
+      "level": "3",
+      "text": "3.7.2 Pengujian Performa Sistem"
+    },
+    {
+      "idx": 600,
+      "level": "3",
+      "text": "3.7.3 Validasi Hasil terhadap Ground Truth"
+    },
+    {
+      "idx": 602,
+      "level": "1",
+      "text": "BAB IV\nHASIL DAN PEMBAHASAN"
+    },
+    {
+      "idx": 603,
+      "level": "2",
+      "text": "4.1 Karakteristik Dataset"
+    },
+    {
+      "idx": 604,
+      "level": "3",
+      "text": "4.1.1 Distribusi Data Train dan Test"
+    },
+    {
+      "idx": 610,
+      "level": "3",
+      "text": "4.1.2 Sampel Citra dan Ground Truth Mask"
+    },
+    {
+      "idx": 618,
+      "level": "2",
+      "text": "4.2 Hasil Preprocessing"
+    },
+    {
+      "idx": 619,
+      "level": "3",
+      "text": "4.2.1 Visualisasi Citra Setelah Resize dan Normalisasi"
+    },
+    {
+      "idx": 628,
+      "level": "3",
+      "text": "4.2.2 Augmentasi yang Diterapkan"
+    },
+    {
+      "idx": 642,
+      "level": "3",
+      "text": "4.2.3 Dataset Final Setelah Preprocessing"
+    },
+    {
+      "idx": 646,
+      "level": "2",
+      "text": "4.3 Hasil Ekstraksi Fitur"
+    },
+    {
+      "idx": 647,
+      "level": "3",
+      "text": "4.3.1 Feature Map Multi-Layer"
+    },
+    {
+      "idx": 651,
+      "level": "3",
+      "text": "4.3.2 Embedding Concatenation"
+    },
+    {
+      "idx": 661,
+      "level": "3",
+      "text": "4.3.3 Dimensionality Reduction"
+    },
+    {
+      "idx": 666,
+      "level": "3",
+      "text": "4.3.4 Distribusi Patch Embedding"
+    },
+    {
+      "idx": 668,
+      "level": "2",
+      "text": "4.4 Hasil Deteksi Anomali"
+    },
+    {
+      "idx": 669,
+      "level": "3",
+      "text": "4.4.1 Distribusi Skor Anomali PaDiM"
+    },
+    {
+      "idx": 679,
+      "level": "3",
+      "text": "4.4.2 Distribusi Skor Anomali KNN"
+    },
+    {
+      "idx": 689,
+      "level": "3",
+      "text": "4.4.3 Perbandingan Score Separation"
+    },
+    {
+      "idx": 701,
+      "level": "2",
+      "text": "4.5 Evaluasi Kinerja Deteksi"
+    },
+    {
+      "idx": 702,
+      "level": "3",
+      "text": "4.5.1 Evaluasi Image-Level (AUROC, F1, Recall, Precision)"
+    },
+    {
+      "idx": 716,
+      "level": "3",
+      "text": "4.5.2 Evaluasi Pixel-Level (Pixel AUROC, PRO-score)"
+    },
+    {
+      "idx": 726,
+      "level": "3",
+      "text": "4.5.3 Analisis Threshold"
+    },
+    {
+      "idx": 736,
+      "level": "2",
+      "text": "4.6 Analisis Komparatif"
+    },
+    {
+      "idx": 737,
+      "level": "3",
+      "text": "4.6.1 Pengaruh Heatmap"
+    },
+    {
+      "idx": 742,
+      "level": "3",
+      "text": "4.6.2 Pengaruh Waktu Inferensi"
+    },
+    {
+      "idx": 749,
+      "level": "2",
+      "text": "4.7 Visualisasi Dashboard Streamlit"
+    },
+    {
+      "idx": 750,
+      "level": "3",
+      "text": "4.7.1 Arsitektur Sistem dan Integrasi Model"
+    },
+    {
+      "idx": 757,
+      "level": "3",
+      "text": "4.7.2 Tampilan Antarmuka Dashboard"
+    },
+    {
+      "idx": 763,
+      "level": "3",
+      "text": "4.7.2 Deteksi Out-of-Distribution (ComboOOD)"
+    },
+    {
+      "idx": 773,
+      "level": "1",
+      "text": "BAB V\nKESIMPULAN DAN SARAN"
+    },
+    {
+      "idx": 775,
+      "level": "2",
+      "text": "5.1 Kesimpulan"
+    },
+    {
+      "idx": 780,
+      "level": "2",
+      "text": "5.2 Saran"
+    },
+    {
+      "idx": 787,
+      "level": "1",
+      "text": "DAFTAR PUSTAKA"
+    },
+    {
+      "idx": 853,
+      "level": "1",
+      "text": "LAMPIRAN"
+    }
+  ],
+  "total_paragraphs": 856,
+  "total_tables": 21,
+  "keyword_matches": [
+    {
+      "idx": 1,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "OPTIMALISASI SELF-SUPERVISED LEARNING MELALUI PEMODELAN PATCH DISTRIBUTION (PaDiM) UNTUK DETEKSI ANOMALI BOTOL INDUSTRI"
+    },
+    {
+      "idx": 7,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "223020503095"
+    },
+    {
+      "idx": 15,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "2026"
+    },
+    {
+      "idx": 19,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Puji dan syukur penulis panjatkan ke hadirat Tuhan Yang Maha Esa atas segala rahmat dan karunia-Nya sehingga penulis dapat menyusun proposal skripsi yang berjudul “OPTIMALISASI SELF-SUPERVISED LEARNIN"
+    },
+    {
+      "idx": 25,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Palangka Raya, 16 Juli 2026"
+    },
+    {
+      "idx": 28,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "OPTIMALISASI SELF-SUPERVISED LEARNING MELALUI PEMODELAN PATCH DISTRIBUTION (PaDiM) UNTUK DETEKSI ANOMALI BOTOL INDUSTRI"
+    },
+    {
+      "idx": 29,
+      "style": "Body Text",
+      "kw": "20",
+      "preview": "Theodorus Limbong (223020503095)"
+    },
+    {
+      "idx": 36,
+      "style": "Body Text",
+      "kw": "20",
+      "preview": "Inspeksi visual manual pada industri botol kaca masih mendominasi praktik quality control meskipun memiliki keterbatasan signifikan. Data industri menunjukkan tingkat defect produksi botol kaca mencap"
+    },
+    {
+      "idx": 37,
+      "style": "Body Text",
+      "kw": "209",
+      "preview": "Evaluasi pada dataset MVTec AD kategori bottle (209 citra training normal, 83 citra test dengan tiga kelas cacat) menunjukkan PaDiM unggul secara komprehensif di seluruh metrik dengan AUROC 0,9976, F1"
+    },
+    {
+      "idx": 39,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Kata kunci: deteksi anomali, self-supervised learning, MoCo v2, PaDiM, KNN, MVTec AD"
+    },
+    {
+      "idx": 43,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "OPTIMALISASI SELF-SUPERVISED LEARNING MELALUI PEMODELAN PATCH DISTRIBUTION (PaDiM) UNTUK DETEKSI ANOMALI BOTOL INDUSTRI"
+    },
+    {
+      "idx": 44,
+      "style": "Body Text",
+      "kw": "20",
+      "preview": "Theodorus Limbong (223020503095)"
+    },
+    {
+      "idx": 51,
+      "style": "Body Text",
+      "kw": "20",
+      "preview": "Manual visual inspection in the glass bottle industry still dominates quality control practices despite significant limitations. Industry data indicates glass bottle defect rates of 2–4%, with manual "
+    },
+    {
+      "idx": 52,
+      "style": "Body Text",
+      "kw": "209",
+      "preview": "Evaluation on the MVTec AD bottle dataset (209 normal training images, 83 test images with three defect classes) shows PaDiM comprehensively outperforms KNN across all metrics with AUROC 0.9976, F1 0."
+    },
+    {
+      "idx": 63,
+      "style": "table of figures",
+      "kw": "dataset",
+      "preview": "Tabel 3.1 Karakteristik Utama Dataset\t59"
+    },
+    {
+      "idx": 64,
+      "style": "table of figures",
+      "kw": "dataset",
+      "preview": "Tabel 3.2 Pembagian Dataset\t65"
+    },
+    {
+      "idx": 66,
+      "style": "table of figures",
+      "kw": "distribusi",
+      "preview": "Tabel 4.1 Distribusi Ground Truth Mask\t89"
+    },
+    {
+      "idx": 69,
+      "style": "table of figures",
+      "kw": "dataset",
+      "preview": "Tabel 4.4 Ringkasan dataset final setelah preprocessing\t93"
+    },
+    {
+      "idx": 84,
+      "style": "table of figures",
+      "kw": "distribusi",
+      "preview": "Gambar 4.1 Distribusi Dataset\t88"
+    },
+    {
+      "idx": 85,
+      "style": "table of figures",
+      "kw": "dataset",
+      "preview": "Gambar 4.2 Sampel citra dataset MVTec AD kategori bottle\t89"
+    },
+    {
+      "idx": 90,
+      "style": "table of figures",
+      "kw": "distribusi",
+      "preview": "Gambar 4.7 Distribusi Frekuensi Skor PaDiM\t98"
+    },
+    {
+      "idx": 91,
+      "style": "table of figures",
+      "kw": "distribusi",
+      "preview": "Gambar 4.8 Distribusi Frekuensi Skor KNN\t99"
+    },
+    {
+      "idx": 92,
+      "style": "table of figures",
+      "kw": "distribusi",
+      "preview": "Gambar 4.9 visualisasi perbandingan distribusi skor anomali\t102"
+    },
+    {
+      "idx": 103,
+      "style": "List Paragraph",
+      "kw": "63",
+      "preview": "Tingkat cacat pada produksi botol kaca masih menjadi permasalahan signifikan di berbagai sektor industri. Studi pada pabrik AMDK menunjukkan bahwa dari 374.400 gelas plastik yang diproduksi dalam satu"
+    },
+    {
+      "idx": 104,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Studi dari (Kondapaka, 2022) menunjukkan bahwa inspeksi visual manual masih mendominasi praktik industri meskipun memiliki keterbatasan dari sisi konsistensi, kecepatan, dan akurasi akibat faktor kele"
+    },
+    {
+      "idx": 105,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Besarnya risiko kegagalan inspeksi manual telah terukur dalam berbagai studi. Penelitian oleh (Wijayanti et al., 2025) menunjukkan bahwa sekitar 70–90% defect kualitas pada proses produksi dipengaruhi"
+    },
+    {
+      "idx": 106,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Selain keterbatasan inspeksi manual, karakteristik cacat pada produk industri juga menjadi tantangan tersendiri dalam proses quality control. Sebagian besar cacat pada produk manufaktur bersifat rare "
+    },
+    {
+      "idx": 107,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Di sisi lain, dampak ekonomi dari kegagalan inspeksi kualitas sangatlah nyata dan terukur. Di Amerika Serikat, FDA (Food and Drug Administration) mencatat 506 recall produk makanan pada tahun 2023 ter"
+    },
+    {
+      "idx": 108,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Untuk mengatasi permasalahan tersebut, perkembangan Computer Vision dan Deep Learning menawarkan solusi untuk otomatisasi inspeksi visual industri. Akan tetapi, mayoritas pendekatan supervised learnin"
+    },
+    {
+      "idx": 109,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Untuk mengatasi keterbatasan tersebut, pendekatan unsupervised anomaly detection mulai banyak digunakan dengan memodelkan distribusi data normal tanpa memerlukan anotasi data cacat. Namun demikian, pe"
+    },
+    {
+      "idx": 110,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Dalam beberapa tahun terakhir, Self-Supervised Learning (SSL) menjadi salah satu pendekatan yang banyak diadopsi dalam visual anomaly detection modern karena kemampuannya membangun feature embedding t"
+    },
+    {
+      "idx": 111,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Salah satu metode patch-based anomaly detection yang banyak digunakan adalah Patch Distribution Modeling (PaDiM) yang diperkenalkan oleh (Defard et al., 2021). Metode ini memodelkan distribusi Gaussia"
+    },
+    {
+      "idx": 112,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Sebagai contoh, penelitian CutPaste oleh (C. L. Li et al., 2021) menunjukkan peningkatan performa anomaly detection melalui pendekatan self-supervised learning berbasis augmentasi patch, namun evaluas"
+    },
+    {
+      "idx": 113,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Berdasarkan permasalahan dan kesenjangan penelitian tersebut, penelitian ini bertujuan untuk mengevaluasi dan mengoptimalkan representasi Self-Supervised Learning melalui integrasi Patch Distribution "
+    },
+    {
+      "idx": 116,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Bagaimana penerapan Self-Supervised Learning (SSL) dalam membentuk representasi fitur pada citra botol industri untuk deteksi anomali berbasis one-class learning?"
+    },
+    {
+      "idx": 118,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Bagaimana perbandingan kinerja deteksi anomali antara pendekatan Self-Supervised Learning (SSL) tanpa pemodelan distribusi dan pendekatan SSL yang diintegrasikan dengan Patch Distribution Modeling (Pa"
+    },
+    {
+      "idx": 119,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Bagaimana pengaruh penentuan threshold terhadap pemisahan citra normal dan citra anomali?"
+    },
+    {
+      "idx": 124,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Objek penelitian dibatasi pada citra botol industri dengan jenis anomali visual berupa cacat permukaan seperti retakan, goresan, deformasi, serta ketidakteraturan tekstur lainnya."
+    },
+    {
+      "idx": 125,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Pendekatan yang digunakan adalah patch-based anomaly detection berbasis Self-Supervised Learning (SSL) dengan pemodelan distribusi fitur normal menggunakan Gaussian multivariat melalui metode Patch Di"
+    },
+    {
+      "idx": 126,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Model menggunakan skema one-class learning, yaitu hanya memanfaatkan citra botol normal tanpa menggunakan data anomali berlabel dalam proses pemodelan."
+    },
+    {
+      "idx": 127,
+      "style": "List Paragraph",
+      "kw": "dataset",
+      "preview": "Dataset yang digunakan adalah dataset publik MVTec AD pada kategori bottle, sehingga penelitian difokuskan pada skenario benchmark dan tidak mencakup dataset industri secara langsung."
+    },
+    {
+      "idx": 128,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Dataset yang digunakan adalah dataset publik MVTec AD pada kategori bottle yang memiliki standarisasi resolusi, pencahayaan, dan sudut pengambilan gambar. Penelitian ini difokuskan pada skenario bench"
+    },
+    {
+      "idx": 130,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Evaluasi kinerja sistem difokuskan pada analisis komparatif antara pendekatan SSL tanpa pemodelan distribusi dan SSL yang diintegrasikan dengan PaDiM, menggunakan metrik AUROC, Precision, Recall, dan "
+    },
+    {
+      "idx": 135,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Menganalisis proses dan pengaruh pendekatan patch-based anomaly detection berbasis Self-Supervised Learning (SSL) dalam dua skenario, yaitu pendekatan tanpa pemodelan distribusi menggunakan KNN berbas"
+    },
+    {
+      "idx": 136,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Membandingkan kinerja deteksi anomali antara pendekatan SSL tanpa pemodelan distribusi dan SSL yang diintegrasikan dengan PaDiM berdasarkan metrik AUROC, Precision, Recall, dan F1-score."
+    },
+    {
+      "idx": 137,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Menganalisis pengaruh mekanisme penentuan threshold terhadap stabilitas pemisahan citra normal dan anomali."
+    },
+    {
+      "idx": 141,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Memberikan kontribusi dalam pengembangan kajian deteksi anomali visual industri melalui analisis integrasi Self-Supervised Learning (SSL) dengan Patch Distribution Modeling (PaDiM) dalam kerangka one-"
+    },
+    {
+      "idx": 142,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Memberikan pemahaman empiris mengenai peran representasi fitur hasil Self-Supervised Learning dalam membentuk distribusi Gaussian multivariat serta pengaruhnya terhadap stabilitas estimasi kovarians d"
+    },
+    {
+      "idx": 143,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Menyajikan analisis komparatif yang mengukur kontribusi pemodelan distribusi probabilistik berbasis patch terhadap peningkatan kemampuan sistem dalam memisahkan citra normal dan anomali secara lebih s"
+    },
+    {
+      "idx": 144,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Menghasilkan prototipe sistem inspeksi visual otomatis yang mampu mendeteksi cacat permukaan botol tanpa memerlukan data anomali berlabel, serta dilengkapi dengan dashboard berbasis web untuk memvisua"
+    },
+    {
+      "idx": 145,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Menjadi referensi bagi penelitian selanjutnya dalam pengembangan sistem deteksi anomali visual yang adaptif, efisien, serta dapat diintegrasikan ke dalam aplikasi ataupun perangkat keras pada inspeksi"
+    },
+    {
+      "idx": 165,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Penelitian mengenai deteksi anomali visual pada produk industri telah banyak dilakukan dengan berbagai pendekatan, mulai dari metode konvensional hingga pemanfaatan teknik pembelajaran mendalam (Deep "
+    },
+    {
+      "idx": 168,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Berdasarkan tinjauan pada Tabel 2.1, terlihat adanya perkembangan signifikan dalam penelitian deteksi anomali visual pada produk industri, khususnya melalui pemanfaatan self-supervised learning (SSL) "
+    },
+    {
+      "idx": 169,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Penelitian oleh (Pei et al., 2023) menunjukkan bahwa simulasi anomali dalam kerangka self-supervised learning berbasis patch dan convolutional neural network (CNN) mampu menghasilkan performa deteksi "
+    },
+    {
+      "idx": 170,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Selanjutnya, (Wu & Wang, 2024) mengusulkan mekanisme feature enhancement dan multi-scale representation dalam kerangka self-supervised learning untuk meningkatkan kualitas embedding yang dihasilkan mo"
+    },
+    {
+      "idx": 171,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Pendekatan self-supervised pre-training seperti yang dikembangkan oleh (Zou et al., 2022) melalui metode contrastive learning juga menunjukkan bahwa kualitas representasi fitur memiliki peran penting "
+    },
+    {
+      "idx": 172,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Di sisi lain, (Defard et al., 2021) memperkenalkan metode Patch Distribution Modeling (PaDiM) yang memodelkan distribusi fitur patch menggunakan Gaussian multivariat dan mengukur tingkat penyimpangan "
+    },
+    {
+      "idx": 173,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Secara umum, berbagai penelitian tersebut menunjukkan bahwa self-supervised learning mampu menghasilkan representasi fitur yang kuat untuk mendukung deteksi anomali visual. Namun demikian, masih terda"
+    },
+    {
+      "idx": 174,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Berdasarkan analisis penelitian terdahulu, meskipun self-supervised learning (SSL) mampu menghasilkan representasi fitur yang diskriminatif, sebagian besar penelitian belum mengkaji pemanfaatan repres"
+    },
+    {
+      "idx": 176,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Inspeksi visual merupakan salah satu tahapan penting dalam sistem pengendalian kualitas (quality control) pada industri manufaktur yang bertujuan memastikan bahwa produk yang dihasilkan memenuhi stand"
+    },
+    {
+      "idx": 178,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Inspeksi visual merupakan proses pemeriksaan kualitas produk yang dilakukan dengan mengamati karakteristik fisik dan permukaan suatu objek untuk mendeteksi adanya cacat atau ketidaksesuaian terhadap s"
+    },
+    {
+      "idx": 180,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Perkembangan teknologi digital mendorong transformasi inspeksi visual menuju sistem otomatis berbasis machine vision dan deep learning. Sistem ini mengintegrasikan kamera industri, sistem pencahayaan "
+    },
+    {
+      "idx": 182,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Inspeksi visual botol industri merupakan proses pengendalian mutu yang secara khusus dirancang untuk mendeteksi cacat pada botol yang diproduksi dalam lini manufaktur sebelum botol tersebut digunakan "
+    },
+    {
+      "idx": 183,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Dalam studi tentang sistem inspeksi botol plastik, peneliti mengembangkan machine vision berbasis algoritma pembelajaran mendalam untuk otomatisasi inspeksi permukaan botol. Sistem tersebut dirancang "
+    },
+    {
+      "idx": 184,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Penerapan machine learning untuk deteksi cacat botol di lingkungan pabrik nyata telah dilaporkan oleh (Tomita & Bao, 2025) pada industri botol kaca kosmetik. Studi ini menggunakan pencitraan inframera"
+    },
+    {
+      "idx": 186,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Dalam penelitian ini, jenis cacat visual pada botol industri mengacu pada kategori cacat yang terdapat dalam dataset MVTec Anomaly Detection (Bergmann et al., 2021). Berdasarkan Tabel 8 pada dataset t"
+    },
+    {
+      "idx": 187,
+      "style": "Normal",
+      "kw": "broken",
+      "preview": "a. Broken large – cacat berupa kerusakan besar pada struktur botol, seperti bagian yang pecah atau hilang dalam skala signifikan. Cacat ini termasuk anomali struktural yang mudah terlihat karena menye"
+    },
+    {
+      "idx": 188,
+      "style": "Normal",
+      "kw": "broken",
+      "preview": "b. Broken small – kerusakan dalam skala kecil pada permukaan atau bagian tertentu botol, seperti retakan kecil atau pecahan minor. Meskipun ukurannya lebih kecil, cacat ini tetap penting karena dapat "
+    },
+    {
+      "idx": 189,
+      "style": "Normal",
+      "kw": "contamination",
+      "preview": "c. Contamination – adanya benda asing atau kotoran pada permukaan botol yang menyebabkan perbedaan visual dibandingkan kondisi normal. Cacat ini termasuk anomali permukaan dengan karakteristik tekstur"
+    },
+    {
+      "idx": 190,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Ketiga jenis cacat tersebut memiliki karakteristik sebagai anomali lokal (localized anomalies) yang muncul pada area tertentu dari botol dan dapat memiliki ukuran serta bentuk yang bervariasi. Variasi"
+    },
+    {
+      "idx": 194,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Menurut (Khan et al., 2024) dalam penelitian mereka tentang deteksi cacat permukaan menggunakan deep learning, metode inspeksi manual tradisional sulit memenuhi kebutuhan industri karena memiliki akur"
+    },
+    {
+      "idx": 196,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Computer Vision merupakan cabang dari kecerdasan buatan (Artificial Intelligence) yang berfokus pada kemampuan sistem komputer untuk memperoleh, memproses, dan memahami informasi visual dari citra dig"
+    },
+    {
+      "idx": 197,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Secara umum, sistem inspeksi visual berbasis computer vision terdiri dari beberapa tahapan utama yang saling terintegrasi, yaitu akuisisi citra, prapemrosesan citra, ekstraksi fitur, deteksi cacat, se"
+    },
+    {
+      "idx": 199,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Computer vision adalah bidang ilmu di dalam kecerdasan buatan (artificial intelligence) yang berfokus pada kemampuan komputer untuk menginterpretasikan dan memahami informasi dari gambar atau citra di"
+    },
+    {
+      "idx": 203,
+      "style": "List Paragraph",
+      "kw": "normal",
+      "preview": "Setelah citra diperoleh, tahap berikutnya adalah pra-pemrosesan (preprocessing). Tujuan tahapan ini adalah membersihkan citra dari gangguan seperti noise, variasi pencahayaan, serta meningkatkan kontr"
+    },
+    {
+      "idx": 216,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Salah satu peran penting computer vision dalam quality control adalah deteksi cacat visual pada permukaan produk. Sistem otomatis ini mampu memproses citra dengan resolusi tinggi dan menggunakan algor"
+    },
+    {
+      "idx": 217,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Menurut survei komprehensif oleh (Diers & Pigorsch, 2023), computer vision telah digunakan secara luas untuk tugas quality control berbasis citra, termasuk deteksi anomali dan cacat pada produk manufa"
+    },
+    {
+      "idx": 220,
+      "style": "Heading 2",
+      "kw": "anomali",
+      "preview": "2.4 Deteksi Anomali Visual"
+    },
+    {
+      "idx": 221,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Deteksi anomali (anomaly detection) adalah proses identifikasi pola, observasi, atau fenomena dalam data yang menyimpang secara signifikan dari pola mayoritas atau distribusi data normal. Dalam kontek"
+    },
+    {
+      "idx": 222,
+      "style": "Heading 3",
+      "kw": "anomali",
+      "preview": "2.4.1 Konsep Dasar Deteksi Anomali"
+    },
+    {
+      "idx": 223,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Menurut survei komprehensif oleh (Cao et al., 2024), deteksi anomali visual merupakan bagian dari bidang Visual Anomaly Detection (VAD) yang bertujuan menemukan deviasi dari konsep normalitas dalam da"
+    },
+    {
+      "idx": 224,
+      "style": "Heading 3",
+      "kw": "anomali",
+      "preview": "2.4.2 One-Class Learning dalam Deteksi Anomali"
+    },
+    {
+      "idx": 225,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "One-class learning adalah pendekatan pembelajaran mesin yang dibangun untuk menangani masalah deteksi anomali ketika hanya data dari kelas normal tersedia pada tahap pelatihan atau tahap pemodelan, se"
+    },
+    {
+      "idx": 226,
+      "style": "Heading 3",
+      "kw": "anomali",
+      "preview": "2.4.3 Deteksi Anomali Visual pada Produk Industri"
+    },
+    {
+      "idx": 227,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Deteksi anomali visual pada produk industri adalah teknik computer vision yang digunakan untuk secara otomatis mengenali penyimpangan visual atau cacat pada citra produk yang dihasilkan oleh proses ma"
+    },
+    {
+      "idx": 228,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Salah satu pendekatan mutakhir dalam deteksi anomali visual industri menggunakan metode unsupervised learning berbasis Vision Transformer (ViT). Dalam studi oleh (Yang & Guo, 2024), model Vision Trans"
+    },
+    {
+      "idx": 229,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Selain pendekatan Vision Transformer, survei lain oleh (Lin et al., 2025) meninjau perkembangan unsupervised industrial anomaly detection (UIAD) pada berbagai modal data, termasuk RGB, 3D, dan multimo"
+    },
+    {
+      "idx": 230,
+      "style": "Heading 3",
+      "kw": "anomali",
+      "preview": "2.4.4 Pendekatan Deteksi Anomali Visual"
+    },
+    {
+      "idx": 231,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Pendekatan deteksi anomali visual adalah teknik-teknik yang dikembangkan untuk mendeteksi penyimpangan (anomali) pada citra produk industri secara otomatis. Di lingkungan manufaktur modern, deteksi an"
+    },
+    {
+      "idx": 232,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Salah satu pendekatan terbaru adalah penggunaan kombinasi null subspace PCA dengan strategi deteksi bertingkat (cascaded decision) yang memaksimalkan sensitivitas terhadap penyimpangan visual sekaligu"
+    },
+    {
+      "idx": 233,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Pendekatan lain dalam deteksi anomali visual menggunakan kombinasi knowledge distillation dan feature mask fusion untuk meningkatkan akurasi deteksi dan localization area anomali pada citra industri. "
+    },
+    {
+      "idx": 234,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Selain itu penelitian yang dilakukan oleh (Yang & Guo, 2024) dengan menggunakan Vision Transformer (ViT) menunjukkan bahwa menggabungkan arsitektur transformer dengan mekanisme perhatian (attention) d"
+    },
+    {
+      "idx": 235,
+      "style": "Heading 3",
+      "kw": "dataset",
+      "preview": "2.4.5 Dataset Benchmark Deteksi Anomali Industri"
+    },
+    {
+      "idx": 236,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Dalam penelitian deteksi anomali visual industri, MVTec Anomaly Detection (MVTec AD) telah menjadi salah satu dataset benchmark paling komprehensif dan banyak digunakan untuk evaluasi metode unsupervi"
+    },
+    {
+      "idx": 238,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Deep Learning merupakan salah satu pendekatan dalam kecerdasan buatan yang menggunakan jaringan saraf tiruan berlapis (deep neural networks) untuk mempelajari representasi data secara otomatis dari se"
+    },
+    {
+      "idx": 240,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Deep Learning merupakan cabang dari machine learning yang menggunakan jaringan saraf tiruan berlapis banyak (deep neural networks) untuk mempelajari representasi data secara otomatis dari data mentah."
+    },
+    {
+      "idx": 241,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Secara arsitektural, deep learning terdiri atas beberapa lapisan (layers) yang bekerja secara hierarkis, di mana setiap lapisan mentransformasikan input menjadi representasi yang semakin abstrak. Lapi"
+    },
+    {
+      "idx": 249,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Dalam konteks computer vision, deep learning telah merevolusi berbagai tugas seperti klasifikasi citra, deteksi objek, segmentasi, dan deteksi anomali visual. Penelitian oleh (Lv et al., 2025) yang di"
+    },
+    {
+      "idx": 250,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Selain keunggulan tersebut, deep learning juga memiliki karakteristik penting yang menjadikannya sangat relevan untuk sistem inspeksi visual industri. Pertama, kemampuan automatic feature learning mem"
+    },
+    {
+      "idx": 252,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Convolutional Neural Network (CNN) adalah arsitektur Deep Learning yang secara khusus dikembangkan untuk menangani data visual, seperti citra dan video. CNN bekerja dengan menggunakan operasi konvolus"
+    },
+    {
+      "idx": 253,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Selain struktur dasar, perkembangan CNN modern mencakup berbagai teknik konvolusi seperti depthwise separable convolution, dilated convolution, dan varian lain yang dirancang untuk meningkatkan efisie"
+    },
+    {
+      "idx": 255,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "ResNet-50 merupakan salah satu arsitektur Residual Network yang banyak digunakan sebagai backbone dalam berbagai tugas computer vision modern, termasuk klasifikasi citra, deteksi objek, dan deteksi an"
+    },
+    {
+      "idx": 259,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Pengembangan dari metode ini menunjukkan bahwa pendekatan contrastive self-supervised learning seperti MoCo dapat menghasilkan representasi visual yang sangat efektif untuk berbagai tugas downstream, "
+    },
+    {
+      "idx": 260,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Selain itu, beberapa studi dari juga menunjukkan bahwa metode MoCo-v2 dengan backbone ResNet-50 mampu menghasilkan representasi fitur yang stabil dan generalizable pada berbagai tugas computer vision,"
+    },
+    {
+      "idx": 262,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Self-Supervised Learning (SSL) adalah pendekatan pembelajaran mesin yang bertujuan untuk mempelajari representasi data tanpa memerlukan label manual. Dalam SSL, model dilatih melalui tugas pendahuluan"
+    },
+    {
+      "idx": 265,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Pendekatan SSL juga semakin digunakan untuk mengatasi keterbatasan label dalam domain citra medis dan industri, di mana seringkali data normal jauh lebih banyak dibanding data cacat atau anomali. Misa"
+    },
+    {
+      "idx": 267,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Momentum Contrast (MoCo) merupakan salah satu metode self-supervised learning berbasis contrastive learning yang dirancang untuk mempelajari representasi visual dari data citra tanpa memerlukan label "
+    },
+    {
+      "idx": 268,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Secara arsitektural, MoCo menggunakan dua encoder utama, yaitu query encoder dan key encoder. Query encoder digunakan untuk menghasilkan representasi fitur dari citra input, sedangkan key encoder digu"
+    },
+    {
+      "idx": 275,
+      "style": "Normal",
+      "kw": "jumlah",
+      "preview": ": jumlah sampel negatif dalam queue"
+    },
+    {
+      "idx": 277,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Selain itu, berbagai penelitian terbaru menunjukkan bahwa metode contrastive self-supervised learning seperti MoCo mampu menghasilkan representasi fitur yang kompetitif bahkan dibandingkan dengan meto"
+    },
+    {
+      "idx": 278,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "MoCo v2 dipilih dalam penelitian ini karena merupakan pengembangan dari pendekatan MoCo yang menghadirkan beberapa peningkatan penting, di antaranya penambahan multilayer perceptron (MLP) pada project"
+    },
+    {
+      "idx": 279,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Selain itu, meskipun telah dikembangkan versi yang lebih baru yaitu MoCo v3, tetapi didalam penelitian ini menggunakan MoCo v2 karena metode tersebut dirancang untuk bekerja secara optimal dengan arsi"
+    },
+    {
+      "idx": 283,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Industri sering menghadapi keterbatasan data berlabel, terutama untuk kasus kelainan atau cacat. SSL memungkinkan model dipelajari dari data normal tak berlabel, sehingga biaya pelabelan dapat ditekan"
+    },
+    {
+      "idx": 285,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Dengan belajar melalui pretext task, model mampu mengekstrak fitur yang lebih umum dan transferrable dari citra, yang terbukti bermanfaat ketika tugas inspektif nyata memiliki kondisi visual yang bera"
+    },
+    {
+      "idx": 286,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Kemampuan Deteksi Anomali"
+    },
+    {
+      "idx": 287,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Banyak teknik SSL dirancang untuk mengenali pola normal secara efektif. Ketika pola normal ini dikuasai, model dapat mendeteksi penyimpangan atau cacat dengan lebih baik karena setiap anomali akan ber"
+    },
+    {
+      "idx": 289,
+      "style": "Heading 2",
+      "kw": "anomali",
+      "preview": "2.7 Patch-Based Learning pada Deteksi Anomali Visual"
+    },
+    {
+      "idx": 290,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Patch-Based Learning adalah pendekatan dalam deteksi anomali visual yang menekankan analisis bagian-bagian kecil dari citra, atau patch, alih-alih memproses seluruh citra sekaligus. Konsep ini memungk"
+    },
+    {
+      "idx": 291,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Dalam konteks inspeksi visual botol industri, patch extraction dilakukan dengan membagi citra botol menjadi patch yang menutupi area kritis seperti tutup botol, label, atau permukaan kaca. Patch dapat"
+    },
+    {
+      "idx": 293,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Patch extraction adalah proses pemotongan citra utuh menjadi bagian-bagian kecil (patch) sehingga setiap area lokal dapat dianalisis secara independen untuk mendeteksi anomali yang halus seperti retak"
+    },
+    {
+      "idx": 294,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Selain itu, beberapa pendekatan anomaly detection mensintesis atau memodifikasi patch dari citra training normal untuk mensimulasikan anomali. Misalnya, teknik yang mengekstraksi patch lalu menempelka"
+    },
+    {
+      "idx": 298,
+      "style": "List Paragraph",
+      "kw": "normal",
+      "preview": "Pertama, patch-based learning memungkinkan model fokus pada fitur lokal yang halus dan detail micro-cacat yang sering terlewat oleh metode global, terutama pada permukaan kaca botol yang reflektif ata"
+    },
+    {
+      "idx": 299,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Kedua, patch-based learning meningkatkan pelokalan cacat karena setiap patch diproses secara independen, sehingga area abnormal dapat diidentifikasi dengan presisi tinggi berdasarkan skor anomali loka"
+    },
+    {
+      "idx": 300,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Ketiga, pendekatan ini mengoptimalkan komputasi karena analisis dilakukan pada patch dengan ukuran yang lebih kecil dibandingkan seluruh citra resolusi tinggi, sehingga mempercepat proses inferensi ta"
+    },
+    {
+      "idx": 301,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Keunggulan lainnya adalah fleksibilitas integrasi dengan berbagai arsitektur model modern, seperti pembelajaran kontrastif atau memory-bank-based methods, yang memungkinkan representasi fitur lokal ya"
+    },
+    {
+      "idx": 303,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Patch Distribution Modeling (PaDiM) adalah metode deteksi anomali berbasis patch yang memanfaatkan statistik dari fitur-fitur lokal untuk mengenali penyimpangan pada gambar. Pendekatan ini bekerja dal"
+    },
+    {
+      "idx": 305,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Pendekatan distribution-based anomaly detection merupakan salah satu kategori metodologis dalam deteksi anomali yang menekankan pemodelan statistik dari distribusi fitur normal untuk kemudian mengukur"
+    },
+    {
+      "idx": 307,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Mahalanobis Distance adalah ukuran statistik yang digunakan untuk mengukur seberapa jauh sebuah titik data multivariat berada dari pusat distribusi normal dengan mempertimbangkan kovarians antar fitur"
+    },
+    {
+      "idx": 311,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "= vektor fitur observasi uji yang ingin dinilai sebagai normal atau anomali."
+    },
+    {
+      "idx": 312,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "= vektor mean (rata-rata) dari distribusi fitur normal, yaitu rata-rata setiap dimensi fitur di data pelatihan."
+    },
+    {
+      "idx": 313,
+      "style": "List Paragraph",
+      "kw": "normal",
+      "preview": "= matriks kovarians dari fitur-fitur normal, yang mengukur variabilitas dan korelasi antar dimensi fitur."
+    },
+    {
+      "idx": 315,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Interpretasi rumus ini adalah bahwa Mahalanobis Distance menyatakan “berapa banyak standar deviasi multivariat” sebuah observasi terpisah dari pusat distribusi normal setelah fitur-fitur dikorelasikan"
+    },
+    {
+      "idx": 317,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Mahalanobis Distance dihitung untuk setiap elemen fitur lokal—misalnya patch atau piksel—nilai-nilai ini dapat dipetakan secara spasial untuk menghasilkan anomaly map, yaitu peta intensitas yang menun"
+    },
+    {
+      "idx": 318,
+      "style": "Heading 3",
+      "kw": "anomali",
+      "preview": "2.8.4 Keunggulan PaDiM dalam Deteksi Anomali Visual"
+    },
+    {
+      "idx": 319,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Patch Distribution Modeling (PaDiM) merupakan metode deteksi anomali visual yang dirancang untuk memodelkan distribusi fitur citra normal pada tingkat patch menggunakan pendekatan statistik. Metode in"
+    },
+    {
+      "idx": 320,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Selain itu, PaDiM memiliki kemampuan yang baik dalam mendeteksi anomali secara lokal melalui analisis fitur patch dari citra. Setiap patch pada citra dimodelkan berdasarkan parameter distribusi yang d"
+    },
+    {
+      "idx": 322,
+      "style": "Normal",
+      "kw": "jumlah",
+      "preview": "K-Nearest Neighbor (KNN) merupakan salah satu metode pembelajaran berbasis instance (instance-based learning) yang bekerja dengan mengukur kedekatan suatu data terhadap data lainnya dalam ruang fitur."
+    },
+    {
+      "idx": 323,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Dalam konteks deteksi anomali, KNN termasuk dalam kategori distance-based anomaly detection, di mana suatu sampel dianggap anomali apabila memiliki jarak yang relatif lebih jauh dibandingkan dengan di"
+    },
+    {
+      "idx": 324,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Secara umum, mekanisme KNN dalam deteksi anomali dapat dijelaskan sebagai berikut:"
+    },
+    {
+      "idx": 326,
+      "style": "Normal",
+      "kw": "jumlah",
+      "preview": "Dipilih sejumlah k tetangga terdekat berdasarkan jarak tersebut."
+    },
+    {
+      "idx": 327,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Nilai anomali (anomaly score) dihitung berdasarkan rata-rata atau total jarak terhadap tetangga tersebut."
+    },
+    {
+      "idx": 328,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Semakin besar jarak rata-rata, maka semakin besar kemungkinan data tersebut merupakan anomali."
+    },
+    {
+      "idx": 329,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Metode KNN juga digunakan dalam kombinasi dengan representasi fitur dari deep learning, di mana embedding fitur yang dihasilkan oleh model seperti Convolutional Neural Network (CNN) atau Self-Supervis"
+    },
+    {
+      "idx": 330,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Dalam penelitian ini, KNN digunakan sebagai pendekatan pembanding terhadap metode Patch Distribution Modeling (PaDiM). KNN merepresentasikan pendekatan berbasis jarak (distance-based) tanpa pemodelan "
+    },
+    {
+      "idx": 335,
+      "style": "Normal",
+      "kw": "jumlah",
+      "preview": "Euclidean Distance merupakan ukuran jarak geometris antara dua titik dalam ruang berdimensi . Pada persamaan tersebut,  dan  merepresentasikan nilai pada dimensi ke- dari masing-masing vektor fitur  d"
+    },
+    {
+      "idx": 336,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Dalam konteks pembelajaran mesin, khususnya pada metode berbasis jarak seperti K-Nearest Neighbor (KNN), Euclidean Distance digunakan untuk mengukur tingkat kemiripan antar data dalam ruang fitur. Nil"
+    },
+    {
+      "idx": 337,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Studi oleh (Yusran et al., 2025) menunjukkan bahwa Euclidean Distance sering digunakan sebagai baseline dalam evaluasi berbagai metrik jarak lainnya, karena memiliki interpretasi yang intuitif serta s"
+    },
+    {
+      "idx": 338,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Dalam penelitian ini, Euclidean Distance digunakan sebagai metrik utama dalam metode KNN untuk menghitung kedekatan antar fitur hasil ekstraksi Self-Supervised Learning. Penggunaan Euclidean Distance "
+    },
+    {
+      "idx": 340,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Metrik evaluasi model digunakan untuk mengukur kinerja sistem dalam mendeteksi anomali pada citra. Dalam penelitian ini, evaluasi dilakukan untuk menilai kemampuan model dalam membedakan antara data n"
+    },
+    {
+      "idx": 342,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "ROC Curve (Receiver Operating Characteristic Curve) merupakan grafik yang digunakan untuk mengevaluasi kinerja model dalam membedakan antara data normal dan anomali dengan memvisualisasikan hubungan a"
+    },
+    {
+      "idx": 347,
+      "style": "List Paragraph",
+      "kw": "jumlah",
+      "preview": "TP (True Positive): jumlah data anomali yang terdeteksi dengan benar."
+    },
+    {
+      "idx": 348,
+      "style": "List Paragraph",
+      "kw": "jumlah",
+      "preview": "FP (False Positive): jumlah data normal yang salah terdeteksi sebagai anomaly."
+    },
+    {
+      "idx": 349,
+      "style": "List Paragraph",
+      "kw": "jumlah",
+      "preview": "TN (True Negative): jumlah data normal yang terdeteksi dengan benar."
+    },
+    {
+      "idx": 350,
+      "style": "List Paragraph",
+      "kw": "jumlah",
+      "preview": "FN (False Negative): jumlah data anomali yang tidak terdeteksi."
+    },
+    {
+      "idx": 351,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "ROC Curve memberikan gambaran menyeluruh mengenai performa model pada berbagai nilai threshold, sehingga sangat relevan dalam permasalahan deteksi anomali yang tidak memiliki batas keputusan tetap."
+    },
+    {
+      "idx": 353,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "AUROC (Area Under the ROC Curve) merupakan ukuran kuantitatif yang menyatakan luas area di bawah kurva ROC. Nilai AUROC digunakan untuk merangkum performa model dalam satu nilai numerik yang menggamba"
+    },
+    {
+      "idx": 357,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Dalam konteks deteksi anomali, AUROC memiliki keunggulan karena tidak bergantung pada satu nilai threshold tertentu, melainkan mengevaluasi performa model pada seluruh kemungkinan threshold. Hal ini m"
+    },
+    {
+      "idx": 359,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Precision mengukur proporsi prediksi anomali yang benar-benar merupakan anomali."
+    },
+    {
+      "idx": 361,
+      "style": "Normal",
+      "kw": "normal",
+      "preview": "Precision penting dalam konteks inspeksi industri karena false positive dapat menyebabkan produk normal ditolak (over-rejection), yang berdampak pada efisiensi produksi."
+    },
+    {
+      "idx": 363,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Recall (Sensitivity) mengukur kemampuan model dalam mendeteksi seluruh anomali yang benar-benar ada."
+    },
+    {
+      "idx": 371,
+      "style": "List Paragraph",
+      "kw": "anomali",
+      "preview": "Visualisasi hasil inspeksi melalui dashboard merupakan bagian penting dari sistem deteksi anomali karena membantu pengguna dalam memahami dan menganalisis keluaran model secara intuitif dan interaktif"
+    },
+    {
+      "idx": 372,
+      "style": "List Paragraph",
+      "kw": "20",
+      "preview": "Penggunaan Streamlit dalam konteks visualisasi data dan inspeksi model terbukti maksimal dalam beberapa penelitian karena kemampuannya menyajikan grafik, peta panas (heatmap), dan diagram dinamika sec"
+    },
+    {
+      "idx": 379,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Alur metode penelitian ini menjelaskan tahapan optimalisasi self-supervised learning menggunakan backbone ResNet-50 melalui integrasi Patch Distribution Modeling (PaDiM) untuk deteksi anomali botol in"
+    },
+    {
+      "idx": 381,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Tahap pengumpulan data merupakan langkah awal dalam penelitian ini yang bertujuan untuk memperoleh dataset citra yang relevan, representatif, dan berkualitas tinggi sebagai dasar dalam pengembangan si"
+    },
+    {
+      "idx": 382,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Pada penelitian ini, proses pengumpulan data dilakukan melalui beberapa tahapan utama, yaitu studi literatur, pengumpulan dataset, seleksi dataset, serta verifikasi ground truth berupa anomaly mask. R"
+    },
+    {
+      "idx": 384,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Studi literatur dilakukan sebagai langkah awal untuk memahami konsep teoritis, metode, serta perkembangan terbaru dalam bidang deteksi anomali visual industri, khususnya pendekatan self-supervised lea"
+    },
+    {
+      "idx": 385,
+      "style": "Heading 3",
+      "kw": "dataset",
+      "preview": "3.2.2 Pengumpulan Dataset"
+    },
+    {
+      "idx": 386,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Dataset yang digunakan dalam penelitian ini berasal dari MVTec AD (MVTec Anomaly Detection), yaitu dataset publik yang dikembangkan untuk evaluasi metode deteksi anomali visual pada proses inspeksi in"
+    },
+    {
+      "idx": 387,
+      "style": "Normal",
+      "kw": "normal",
+      "preview": "Penelitian ini secara khusus menggunakan kategori bottle, yang berisi citra botol industri berbahan kaca dengan kondisi normal maupun cacat. Kategori ini dipilih karena memiliki karakteristik permukaa"
+    },
+    {
+      "idx": 388,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Dataset kategori bottle terdiri dari data pelatihan (training set) dan data pengujian (test set). Data pelatihan hanya berisi citra normal tanpa cacat yang digunakan untuk membangun representasi fitur"
+    },
+    {
+      "idx": 389,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Secara rinci, kategori bottle pada dataset MVTec AD terdiri dari:"
+    },
+    {
+      "idx": 390,
+      "style": "Normal",
+      "kw": "209",
+      "preview": "209 citra normal pada data pelatihan,"
+    },
+    {
+      "idx": 391,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "83 citra pada data pengujian,"
+    },
+    {
+      "idx": 392,
+      "style": "Normal",
+      "kw": "broken",
+      "preview": "3 jenis kategori anomali utama, yaitu broken large, broken small, dan contamination."
+    },
+    {
+      "idx": 393,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Seluruh citra pada dataset memiliki resolusi 900 × 900 piksel dengan format file .png. Data berupa citra RGB tiga kanal yang merepresentasikan informasi warna objek. Variabel utama yang digunakan dala"
+    },
+    {
+      "idx": 394,
+      "style": "Normal",
+      "kw": "normal",
+      "preview": "citra input normal,"
+    },
+    {
+      "idx": 395,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "citra anomali,"
+    },
+    {
+      "idx": 398,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "nilai jarak anomali (Mahalanobis distance),"
+    },
+    {
+      "idx": 400,
+      "style": "Caption",
+      "kw": "dataset",
+      "preview": "Tabel 3.1 Karakteristik Utama Dataset"
+    },
+    {
+      "idx": 401,
+      "style": "Heading 3",
+      "kw": "dataset",
+      "preview": "3.2.3 Seleksi Dataset"
+    },
+    {
+      "idx": 402,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Tahap seleksi dataset bertujuan memastikan bahwa seluruh citra yang digunakan dalam penelitian memiliki kualitas visual yang baik dan relevan dengan tujuan deteksi anomali botol industri. Seleksi dila"
+    },
+    {
+      "idx": 403,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Proses seleksi dataset juga penting untuk menjaga konsistensi distribusi data normal yang akan dimodelkan oleh sistem. Pendekatan feature adaptation pada penelitian (Lee et al., 2022) menekankan bahwa"
+    },
+    {
+      "idx": 405,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Tahap verifikasi ground truth dilakukan untuk memastikan bahwa anotasi pixel-level berupa anomaly mask pada dataset telah sesuai dengan lokasi cacat yang sebenarnya. Ground truth anomaly mask berfungs"
+    },
+    {
+      "idx": 406,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Verifikasi dilakukan dengan memeriksa kesesuaian antara citra anomali dan mask yang tersedia, serta memastikan bahwa area cacat yang dilabeli benar-benar merepresentasikan penyimpangan visual pada obj"
+    },
+    {
+      "idx": 409,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Tahap preprocessing data merupakan proses penting dalam penelitian deteksi anomali visual berbasis deep learning dan self-supervised learning karena bertujuan menyiapkan citra agar memiliki kualitas, "
+    },
+    {
+      "idx": 410,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Pada penelitian ini, preprocessing dilakukan terhadap dataset MVTec AD kategori bottle melalui beberapa tahapan utama, yaitu pemuatan dataset, penyesuaian ukuran citra, normalisasi piksel, data augmen"
+    },
+    {
+      "idx": 411,
+      "style": "Heading 3",
+      "kw": "dataset",
+      "preview": "3.3.1 Load Dataset"
+    },
+    {
+      "idx": 412,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Tahap Load Dataset merupakan proses awal yang bertujuan membaca seluruh citra dataset MVTec AD kategori bottle ke dalam lingkungan pemrograman penelitian. Pada tahap ini dilakukan identifikasi struktu"
+    },
+    {
+      "idx": 413,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Proses pemuatan dataset dilakukan menggunakan library pemrosesan citra seperti OpenCV atau PIL yang memungkinkan pembacaan citra RGB serta konversi ke tensor untuk diproses oleh model deep learning. S"
+    },
+    {
+      "idx": 415,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Tahap resize citra bertujuan menyesuaikan ukuran citra agar seragam sesuai kebutuhan input backbone ResNet-50. Konsistensi ukuran input sangat penting dalam CNN karena operasi konvolusi mengasumsikan "
+    },
+    {
+      "idx": 416,
+      "style": "Heading 3",
+      "kw": "normal",
+      "preview": "3.3.3 Normalisasi Pixel"
+    },
+    {
+      "idx": 417,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Normalisasi pixel dilakukan untuk menyesuaikan distribusi intensitas citra dengan distribusi input backbone pretrained. Proses ini biasanya dilakukan dengan mengubah nilai piksel dari rentang [0,255] "
+    },
+    {
+      "idx": 420,
+      "style": "Heading 3",
+      "kw": "dataset",
+      "preview": "3.3.5 Pembagian Dataset"
+    },
+    {
+      "idx": 421,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Dataset dibagi menjadi dua bagian utama, yaitu data pelatihan (training set) dan data pengujian (test set). Pada skema one-class learning yang digunakan dalam penelitian ini, data pelatihan hanya terd"
+    },
+    {
+      "idx": 422,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Training set: seluruh citra normal digunakan untuk membangun representasi fitur dan distribusi normal"
+    },
+    {
+      "idx": 423,
+      "style": "Normal",
+      "kw": "test",
+      "preview": "Test set: terdiri dari citra normal dan anomali untuk evaluasi performa model"
+    },
+    {
+      "idx": 425,
+      "style": "Caption",
+      "kw": "dataset",
+      "preview": "Tabel 3.2 Pembagian Dataset"
+    },
+    {
+      "idx": 427,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Tahap membangun model merupakan inti dari penelitian ini, yaitu mengembangkan kerangka deteksi anomali visual berbasis Self-Supervised Learning (SSL) dengan backbone ResNet-50, kemudian membentuk repr"
+    },
+    {
+      "idx": 428,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Tahapan membangun model dalam penelitian ini meliputi pemuatan backbone ResNet-50, konfigurasi self-supervised learning berbasis contrastive framework (MoCo v2), proses pretraining, ekstraksi feature "
+    },
+    {
+      "idx": 431,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Dalam konteks anomaly detection industri, backbone CNN seperti ResNet sering digunakan sebagai feature extractor karena mampu menghasilkan representasi fitur hierarkis dari level tekstur hingga strukt"
+    },
+    {
+      "idx": 434,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Stabil dalam proses pretraining SSL."
+    },
+    {
+      "idx": 438,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Pendekatan self-supervised learning yang digunakan dalam penelitian ini mengacu pada framework Momentum Contrast (MoCo v2) yang telah dilatih sebelumnya pada dataset berskala besar. MoCo merupakan met"
+    },
+    {
+      "idx": 439,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Dalam penelitian ini, model MoCo v2 tidak dilatih ulang, melainkan digunakan sebagai feature extractor dalam kerangka transfer learning. Seluruh parameter pada backbone dibekukan (freeze), sehingga mo"
+    },
+    {
+      "idx": 446,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Framework ini memungkinkan model mempelajari representasi visual dengan memaksimalkan kesamaan antara pasangan citra positif (augmentasi dari citra yang sama) dan meminimalkan kesamaan dengan citra ne"
+    },
+    {
+      "idx": 448,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Parameter model merupakan konfigurasi yang digunakan untuk mengatur proses ekstraksi fitur serta representasi visual pada model yang digunakan dalam penelitian ini. Pengaturan parameter ini bertujuan "
+    },
+    {
+      "idx": 449,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Dalam penelitian ini, citra input dari dataset MVTec AD kategori bottle terlebih dahulu disesuaikan dengan kebutuhan arsitektur jaringan yang digunakan. Seluruh citra diubah ukurannya menjadi 224 × 22"
+    },
+    {
+      "idx": 450,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Model MoCo v2 yang digunakan telah mempelajari representasi visual melalui mekanisme contrastive learning, sehingga mampu menghasilkan embedding fitur yang bersifat diskriminatif tanpa memerlukan labe"
+    },
+    {
+      "idx": 451,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Feature map yang dihasilkan kemudian dibagi menjadi beberapa bagian kecil (patch) untuk membentuk patch embedding vector yang merepresentasikan karakteristik lokal dari setiap bagian citra. Representa"
+    },
+    {
+      "idx": 453,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Pemilihan parameter pada Tabel 3.3 didasarkan pada justifikasi berikut. Dataset MVTec AD kategori bottle dipilih sebagai objek penelitian dengan mengacu pada (Roth et al., 2022), yang menggunakan data"
+    },
+    {
+      "idx": 454,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Parameter-parameter tersebut digunakan untuk memastikan bahwa proses ekstraksi fitur dan pemodelan distribusi fitur normal dapat berjalan secara konsisten, sehingga mampu menghasilkan anomaly score ya"
+    },
+    {
+      "idx": 455,
+      "style": "Heading 3",
+      "kw": "train",
+      "preview": "3.4.4 Backbone Self-Supervised Pretrained"
+    },
+    {
+      "idx": 456,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Backbone ResNet-50 yang digunakan dalam penelitian ini merupakan model yang telah melalui proses self-supervised pretraining menggunakan metode MoCo v2 pada dataset skala besar. Pada penelitian ini, m"
+    },
+    {
+      "idx": 467,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Backbone ResNet-50 yang digunakan dalam penelitian ini merupakan model yang telah melalui proses self-supervised pretraining menggunakan metode MoCo v2. Pada tahap implementasi, projection head dihapu"
+    },
+    {
+      "idx": 470,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Pendekatan ini penting dalam konteks deteksi anomali visual pada botol industri, karena sebagian besar cacat bersifat lokal, seperti retakan mikro, goresan, atau ketidakteraturan tekstur permukaan. De"
+    },
+    {
+      "idx": 475,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Menghasilkan kumpulan patch embedding vector yang merepresentasikan distribusi fitur lokal dari citra."
+    },
+    {
+      "idx": 477,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Feature map hasil concatenation memiliki dimensi [1792, 56, 56] dengan total 1.792 channel. Jumlah channel yang besar ini mengandung informasi yang redundan antar channel sehingga perlu direduksi untu"
+    },
+    {
+      "idx": 479,
+      "style": "Normal",
+      "kw": "jumlah",
+      "preview": "Hasil reduksi dimensi berupa feature map [550, 56, 56] kemudian diubah menjadi representasi patch embedding melalui operasi permute dari [550, 56, 56] menjadi [56, 56, 550], lalu reshape menjadi [3136"
+    },
+    {
+      "idx": 481,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Patch embedding menjadi input utama dalam dua pendekatan deteksi anomali, yaitu metode berbasis distance (SSL tanpa PaDiM) dan metode berbasis distribusi (PaDiM). Setiap patch feature yang diperoleh d"
+    },
+    {
+      "idx": 486,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Kumpulan patch embedding vector dari seluruh citra normal membentuk representasi distribusi fitur dalam ruang embedding, yang selanjutnya digunakan dalam dua pendekatan deteksi anomali pada penelitian"
+    },
+    {
+      "idx": 488,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Pendekatan berbasis distribution modeling (PaDiM), di mana patch embedding dari data normal digunakan untuk membangun distribusi Gaussian multivariat pada setiap posisi spasial melalui estimasi parame"
+    },
+    {
+      "idx": 490,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Metode pertama dalam penelitian ini adalah deteksi anomali berbasis Self-Supervised Learning tanpa pemodelan distribusi probabilistik eksplisit. Pada pendekatan ini, representasi fitur berupa patch em"
+    },
+    {
+      "idx": 491,
+      "style": "Normal",
+      "kw": "209",
+      "preview": "Proses deteksi dimulai dengan pembentukan feature bank yang terdiri dari kumpulan patch embedding yang diekstraksi dari citra normal pada data pelatihan. Feature bank yang terbentuk memiliki dimensi ["
+    },
+    {
+      "idx": 492,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Selanjutnya, patch anomaly score pada setiap lokasi spasial diagregasi untuk membentuk anomaly map serta image-level anomaly score. Proses agregasi dilakukan menggunakan operasi max pooling untuk mena"
+    },
+    {
+      "idx": 493,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Pendekatan berbasis distance pada patch embedding ini efektif ketika representasi fitur memiliki kemampuan diskriminatif yang tinggi. Representasi yang dihasilkan oleh metode contrastive self-supervis"
+    },
+    {
+      "idx": 494,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Dalam penelitian ini, K-Nearest Neighbor (KNN) digunakan sebagai pendekatan baseline dalam skema deteksi anomali berbasis representasi Self-Supervised Learning. Pemilihan KNN didasarkan pada karakteri"
+    },
+    {
+      "idx": 495,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Selain itu, penggunaan metrik jarak Euclidean pada KNN memungkinkan pengukuran kedekatan antar representasi fitur secara langsung dalam ruang embedding. Dengan demikian, KNN digunakan sebagai pembandi"
+    },
+    {
+      "idx": 496,
+      "style": "Normal",
+      "kw": "209",
+      "preview": "Pemilihan nilai K=5 pada K-Nearest Neighbor didasarkan pada hasil eksperimen perbandingan terhadap nilai K=1 pada dataset bottle MVTec AD. Berdasarkan eksperimen terhadap 209 citra training dengan fea"
+    },
+    {
+      "idx": 497,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Namun demikian, pendekatan ini memiliki keterbatasan karena tidak mempertimbangkan struktur distribusi fitur multivariat secara eksplisit. Tidak adanya pemodelan kovarians menyebabkan metode ini hanya"
+    },
+    {
+      "idx": 499,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Metode kedua dalam penelitian ini mengintegrasikan representasi fitur hasil Self-Supervised Learning dengan Patch Distribution Modeling (PaDiM) untuk membangun pemodelan distribusi probabilistik dari "
+    },
+    {
+      "idx": 500,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Pada tahap pembentukan model, patch embedding yang diperoleh dari backbone ResNet-50 berbasis MoCo v2 digunakan untuk menghitung parameter distribusi normal pada setiap lokasi patch, yaitu vektor mean"
+    },
+    {
+      "idx": 501,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Pada tahap pengujian, setiap patch embedding dari citra uji dibandingkan terhadap distribusi Gaussian multivariat normal menggunakan Mahalanobis Distance. Jarak ini mempertimbangkan kovarians fitur, s"
+    },
+    {
+      "idx": 502,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Hasil perhitungan Mahalanobis Distance kemudian dipetakan kembali ke struktur spasial untuk membentuk anomaly map yang merepresentasikan lokasi anomali pada citra. Selanjutnya, anomaly map diagregasi "
+    },
+    {
+      "idx": 503,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Pendekatan PaDiM memberikan keunggulan dalam menangkap struktur distribusi fitur multivariat yang tidak dapat diakomodasi oleh metode berbasis jarak langsung. Dengan memodelkan mean dan kovarians pada"
+    },
+    {
+      "idx": 505,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Setelah distribusi fitur normal dibentuk menggunakan pendekatan Patch Distribution Modeling (PaDiM), tahap berikutnya adalah menghitung tingkat penyimpangan setiap patch fitur terhadap distribusi norm"
+    },
+    {
+      "idx": 506,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Mahalanobis Distance dipilih karena mampu mempertimbangkan hubungan korelasi antar dimensi fitur pada embedding berdimensi tinggi yang dihasilkan oleh backbone ResNet-50. Berbeda dengan Euclidean Dist"
+    },
+    {
+      "idx": 512,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": ": mean vector distribusi fitur normal"
+    },
+    {
+      "idx": 513,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": ": invers matriks kovarians distribusi normal"
+    },
+    {
+      "idx": 516,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Tahap pembentukan anomaly map dilakukan setelah diperoleh patch anomaly score dari hasil perhitungan Mahalanobis Distance pada setiap lokasi patch citra. Anomaly map digunakan untuk memvisualisasikan "
+    },
+    {
+      "idx": 517,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Nilai anomaly score yang lebih tinggi menunjukkan bahwa patch tersebut memiliki karakteristik fitur yang berbeda secara signifikan dibandingkan distribusi data normal. Sebaliknya, patch dengan nilai a"
+    },
+    {
+      "idx": 518,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Karena ukuran feature map yang dihasilkan backbone CNN lebih kecil dibandingkan ukuran citra asli akibat proses downsampling, anomaly map yang terbentuk selanjutnya dilakukan proses interpolasi atau u"
+    },
+    {
+      "idx": 520,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Tahap evaluasi dan perbandingan kinerja bertujuan untuk mengukur performa dua pendekatan deteksi anomali yang digunakan dalam penelitian ini, yaitu metode Self-Supervised Learning (SSL) tanpa Patch Di"
+    },
+    {
+      "idx": 522,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "ROC Curve digunakan untuk mengevaluasi kemampuan model dalam membedakan antara data normal dan anomali dengan melihat hubungan antara tingkat deteksi yang benar terhadap tingkat kesalahan pada berbaga"
+    },
+    {
+      "idx": 524,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Precision merupakan metrik yang digunakan untuk mengukur tingkat ketepatan model dalam mendeteksi anomali. Metrik ini menunjukkan seberapa banyak hasil deteksi anomali yang benar-benar merupakan anoma"
+    },
+    {
+      "idx": 526,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Recall digunakan untuk mengukur kemampuan model dalam mendeteksi seluruh data anomali yang ada. Metrik ini menunjukkan seberapa banyak anomali yang berhasil terdeteksi dibandingkan dengan seluruh anom"
+    },
+    {
+      "idx": 528,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "F1-Score merupakan metrik yang menggabungkan precision dan recall untuk memberikan gambaran performa model secara seimbang. Metrik ini digunakan ketika terdapat kebutuhan untuk mempertimbangkan antara"
+    },
+    {
+      "idx": 531,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Evaluasi ini digunakan untuk mengukur kemampuan model dalam mengklasifikasikan suatu citra secara keseluruhan sebagai normal atau anomali berdasarkan image-level anomaly score. Nilai skor global diper"
+    },
+    {
+      "idx": 544,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "PaDiM menggunakan distribusi Gaussian multivariat dan Mahalanobis Distance, yang secara teoritis menghasilkan anomaly score yang lebih stabil karena mempertimbangkan kovarians fitur. Stabilitas ini di"
+    },
+    {
+      "idx": 546,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Botol industri memiliki permukaan homogen, sehingga deteksi cacat kecil menjadi tantangan utama. Analisis dilakukan untuk menilai apakah pemodelan distribusi multivariat meningkatkan sensitivitas terh"
+    },
+    {
+      "idx": 547,
+      "style": "List Paragraph",
+      "kw": "distribusi",
+      "preview": "Struktur Distribusi Fitur"
+    },
+    {
+      "idx": 551,
+      "style": "Heading 3",
+      "kw": "anomali",
+      "preview": "3.5.7 Penentuan Threshold Anomali"
+    },
+    {
+      "idx": 552,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Threshold anomali merupakan nilai batas yang digunakan untuk menentukan apakah suatu data diklasifikasikan sebagai normal atau anomali berdasarkan nilai anomaly score yang dihasilkan oleh model. Dalam"
+    },
+    {
+      "idx": 553,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Penentuan threshold dilakukan berdasarkan distribusi nilai anomaly score pada data normal dalam skema one-class learning. Pendekatan yang digunakan adalah dengan menentukan threshold berdasarkan nilai"
+    },
+    {
+      "idx": 555,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Tahap implementasi sistem bertujuan untuk menerjemahkan model deteksi anomali yang telah dibangun menjadi sebuah aplikasi yang dapat digunakan untuk proses inspeksi visual secara interaktif. Implement"
+    },
+    {
+      "idx": 562,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Setelah citra diunggah, dashboard memanggil model deteksi anomali untuk melakukan inferensi. Proses ini mencakup preprocessing citra, ekstraksi fitur, serta perhitungan anomaly score menggunakan metod"
+    },
+    {
+      "idx": 567,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "klasifikasi normal/anomali"
+    },
+    {
+      "idx": 570,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Integrasi model merupakan proses menghubungkan pipeline deteksi anomali ke dalam aplikasi dashboard sehingga model dapat digunakan secara real-time. Pada penelitian ini, integrasi dilakukan melalui ba"
+    },
+    {
+      "idx": 572,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Visualisasi anomaly map merupakan bagian penting dalam interpretasi hasil deteksi anomali karena memberikan informasi spasial mengenai lokasi cacat pada citra. Pada penelitian ini, anomaly map dihasil"
+    },
+    {
+      "idx": 575,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Untuk mengatasi artefak grid tersebut, anomaly map dihaluskan menggunakan Gaussian smoothing dengan parameter σ = 4 sesuai rekomendasi paper PaDiM (Defard et al., 2021). Gaussian smoothing bekerja den"
+    },
+    {
+      "idx": 586,
+      "style": "Normal",
+      "kw": "normal",
+      "preview": "Urutan operasi pada pipeline pembentukan anomaly map adalah sebagai berikut: (1) perhitungan Mahalanobis Distance pada setiap patch menghasilkan matriks skor 56×56, (2) reshaping ke dimensi spasial 56"
+    },
+    {
+      "idx": 589,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Setelah smoothing, langkah terakhir adalah global min-max normalization yang merentangkan skala anomaly map ke rentang 0, 1 berdasarkan nilai minimum dan maksimum dari seluruh citra uji. Normalisasi i"
+    },
+    {
+      "idx": 591,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Model PaDiM dan KNN yang digunakan dalam penelitian ini hanya dilatih menggunakan data normal dari satu kategori MVTec AD, yaitu bottle. Apabila pengguna mengunggah gambar dari kategori lain seperti c"
+    },
+    {
+      "idx": 592,
+      "style": "Normal",
+      "kw": "209",
+      "preview": "Cara kerja ComboOOD adalah sebagai berikut. Pertama, setiap gambar yang diunggah akan melalui proses ekstraksi fitur menggunakan backbone ResNet-50 dengan pretrained MoCo v2 dan dimensionality reducti"
+    },
+    {
+      "idx": 593,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Keputusan akhir didasarkan pada threshold tetap. Apabila skor komposit bernilai positif, gambar diterima sebagai bottle dan proses deteksi anomali dilanjutkan ke inferensi PaDiM dan KNN. Apabila skor "
+    },
+    {
+      "idx": 595,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Tahap pengujian sistem dilakukan untuk memastikan bahwa sistem deteksi anomali visual yang dikembangkan mampu bekerja secara konsisten, memiliki performa yang baik, serta menghasilkan prediksi yang se"
+    },
+    {
+      "idx": 599,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Pengujian performa sistem dilakukan untuk mengukur kemampuan model dalam mendeteksi anomali secara kuantitatif. Evaluasi dilakukan menggunakan metrik image-level dan pixel-level yang umum digunakan pa"
+    },
+    {
+      "idx": 601,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Validasi terhadap ground truth bertujuan untuk memastikan bahwa hasil deteksi anomali yang dihasilkan sistem sesuai dengan anotasi dataset. Pada penelitian ini, ground truth berupa anomaly mask yang t"
+    },
+    {
+      "idx": 603,
+      "style": "Heading 2",
+      "kw": "dataset",
+      "preview": "4.1 Karakteristik Dataset"
+    },
+    {
+      "idx": 604,
+      "style": "Heading 3",
+      "kw": "train",
+      "preview": "4.1.1 Distribusi Data Train dan Test"
+    },
+    {
+      "idx": 605,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Dataset yang digunakan dalam penelitian ini adalah MVTec Anomaly Detection (MVTec AD) pada kategori bottle (Bergmann et al., 2021). Dataset ini terdiri dari citra botol industri dengan resolusi asli 9"
+    },
+    {
+      "idx": 606,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Dataset dibagi menjadi data train dan data test dengan skema one-class learning, yaitu hanya citra normal (good) yang digunakan pada proses pelatihan. Distribusi data ditunjukkan pada gambar 4.1 dibaw"
+    },
+    {
+      "idx": 607,
+      "style": "Caption",
+      "kw": "distribusi",
+      "preview": "Gambar 4.1 Distribusi Dataset"
+    },
+    {
+      "idx": 609,
+      "style": "Normal",
+      "kw": "209",
+      "preview": "Berdasarkan gambar 4.1, data train terdiri dari 209 citra botol normal, sedangkan data test terdiri dari 83 citra yang mencakup 20 citra normal dan 63 citra anomali dari tiga kelas cacat. Model hanya "
+    },
+    {
+      "idx": 611,
+      "style": "Normal",
+      "kw": "test",
+      "preview": "Dataset MVTec AD menyediakan ground truth mask untuk setiap citra anomali pada data test dalam bentuk citra biner (hitam-putih) dengan resolusi yang sama dengan citra asli. Mask ini menunjukkan region"
+    },
+    {
+      "idx": 612,
+      "style": "Caption",
+      "kw": "distribusi",
+      "preview": "Tabel 4.1 Distribusi Ground Truth Mask"
+    },
+    {
+      "idx": 614,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Contoh sampel citra normal dan anomali beserta ground truth mask-nya dapat dilihat pada Gambar 4.1."
+    },
+    {
+      "idx": 615,
+      "style": "Caption",
+      "kw": "dataset",
+      "preview": "Gambar 4.2 Sampel citra dataset MVTec AD kategori bottle"
+    },
+    {
+      "idx": 617,
+      "style": "Normal",
+      "kw": "broken",
+      "preview": "Berdasarkan Gambar 4.1, setiap jenis cacat memiliki karakteristik visual yang berbeda. Cacat broken large menampilkan kerusakan struktur botol dalam skala besar, broken small berupa retakan atau pecah"
+    },
+    {
+      "idx": 619,
+      "style": "Heading 3",
+      "kw": "normal",
+      "preview": "4.2.1 Visualisasi Citra Setelah Resize dan Normalisasi"
+    },
+    {
+      "idx": 620,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Tahap preprocessing merupakan langkah awal yang bertujuan mengubah citra mentah (raw image) menjadi representasi tensor yang siap diproses oleh model deep learning. Dataset MVTec AD kategori bottle me"
+    },
+    {
+      "idx": 621,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Proses resize mengubah dimensi citra dari 900×900 menjadi 224×224 piksel menggunakan interpolasi bilinear. Resolusi 224×224 dipilih karena merupakan ukuran input standar untuk arsitektur ResNet-50 yan"
+    },
+    {
+      "idx": 627,
+      "style": "Normal",
+      "kw": "normal",
+      "preview": "Berdasarkan Gambar 4.3, proses resize mempertahankan proporsi visual utama botol meskipun mengalami reduksi resolusi yang signifikan. Setelah normalisasi, citra tampak lebih gelap karena nilai piksel "
+    },
+    {
+      "idx": 629,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Data augmentasi diterapkan secara khusus pada data train untuk meningkatkan variasi data normal dan mengurangi risiko overfitting. Augmentasi tidak diterapkan pada data test agar evaluasi performa mod"
+    },
+    {
+      "idx": 642,
+      "style": "Heading 3",
+      "kw": "dataset",
+      "preview": "4.2.3 Dataset Final Setelah Preprocessing"
+    },
+    {
+      "idx": 643,
+      "style": "Normal",
+      "kw": "209",
+      "preview": "Setelah melalui seluruh tahap preprocessing, dataset siap digunakan sebagai input model. Setiap citra direpresentasikan sebagai tensor berdimensi [3, 224, 224] dengan rentang nilai hasil normalisasi I"
+    },
+    {
+      "idx": 644,
+      "style": "Caption",
+      "kw": "dataset",
+      "preview": "Tabel 4.4 Ringkasan dataset final setelah preprocessing"
+    },
+    {
+      "idx": 649,
+      "style": "Normal",
+      "kw": "jumlah",
+      "preview": "Setiap lapisan menghasilkan feature map dengan resolusi spasial dan kedalaman channel yang berbeda. Layer1 menghasilkan feature map dengan dimensi [256, 56, 56], di mana 256 merupakan jumlah channel d"
+    },
+    {
+      "idx": 656,
+      "style": "Normal",
+      "kw": "jumlah",
+      "preview": "Total channel hasil concatenation adalah 1792, yang merupakan penjumlahan dari seluruh kanal ketiga lapisan (256 + 512 + 1024 = 1792). Resolusi spasial akhir adalah 56×56, sesuai dengan resolusi layer"
+    },
+    {
+      "idx": 662,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Feature map hasil concatenation memiliki dimensi [1792, 56, 56] dengan total 1792 channel. Jumlah channel yang besar ini mengandung informasi yang redundan antar channel, sehingga perlu direduksi untu"
+    },
+    {
+      "idx": 666,
+      "style": "Heading 3",
+      "kw": "distribusi",
+      "preview": "4.3.4 Distribusi Patch Embedding"
+    },
+    {
+      "idx": 667,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Setelah reduksi dimensi, feature map [550, 56, 56] diubah menjadi representasi patch embedding yang siap digunakan untuk pemodelan distribusi maupun perhitungan jarak. Proses ini dilakukan dengan meng"
+    },
+    {
+      "idx": 668,
+      "style": "Heading 2",
+      "kw": "anomali",
+      "preview": "4.4 Hasil Deteksi Anomali"
+    },
+    {
+      "idx": 669,
+      "style": "Heading 3",
+      "kw": "distribusi",
+      "preview": "4.4.1 Distribusi Skor Anomali PaDiM"
+    },
+    {
+      "idx": 670,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "PaDiM menghitung jarak Mahalanobis setiap patch gambar test terhadap distribusi Gaussian multivariate yang dimodelkan dari patch gambar training. Jarak ini merepresentasikan seberapa berbeda suatu pat"
+    },
+    {
+      "idx": 672,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Berdasarkan Tabel 4.6, rerata skor anomali PaDiM untuk gambar normal adalah 0,397, sedangkan rerata skor untuk gambar anomali adalah 0,774 yang menghasilkan gap sebesar 0,376 poin. Seluruh gambar norm"
+    },
+    {
+      "idx": 673,
+      "style": "Normal",
+      "kw": "209",
+      "preview": "Rendahnya jarak Mahalanobis pada gambar normal bukanlah kebetulan melainkan konsekuensi dari pemodelan per-posisi (per-position Gaussian). PaDiM membangun 3.136 distribusi Gaussian multivariate terpis"
+    },
+    {
+      "idx": 674,
+      "style": "Normal",
+      "kw": "broken",
+      "preview": "Distribusi skor antar kelas cacat menunjukkan pola yang berbeda-beda. Broken Large dan Broken Small memiliki rerata skor yang hampir identik (0,811 vs 0,804) dan seluruh sampel terkonsentrasi di atas "
+    },
+    {
+      "idx": 675,
+      "style": "Normal",
+      "kw": "broken",
+      "preview": "Varians skor contamination (std=0,167) yang jauh lebih besar dibanding broken large dan broken small (std≈0,05) disebabkan oleh sifat fisika cacat itu sendiri. Broken large dan broken small adalah cac"
+    },
+    {
+      "idx": 676,
+      "style": "Caption",
+      "kw": "distribusi",
+      "preview": "Gambar 4.7 Distribusi Frekuensi Skor PaDiM"
+    },
+    {
+      "idx": 678,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Gambar 4.7 memperlihatkan pemisahan yang sangat jelas antara distribusi normal dan anomali. Sebanyak 19 dari 20 gambar normal (95%) berada di bawah threshold 0,471, sementara 62 dari 63 gambar anomali"
+    },
+    {
+      "idx": 679,
+      "style": "Heading 3",
+      "kw": "distribusi",
+      "preview": "4.4.2 Distribusi Skor Anomali KNN"
+    },
+    {
+      "idx": 680,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Metode KNN menghitung jarak Euclidean setiap patch gambar test terhadap patch terdekat dalam feature bank training (655.424 patch). Skor anomali per gambar diperoleh dari nilai maksimum jarak Euclidea"
+    },
+    {
+      "idx": 682,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Skor KNN menunjukkan pola yang serupa dengan PaDiM secara kualitatif, namun dengan karakteristik yang berbeda. Rerata skor normal adalah 1,322 dan rerata skor anomali adalah 1,784, menghasilkan gap ab"
+    },
+    {
+      "idx": 683,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Namun demikian, gap absolut 0,462 tidak dapat langsung dibandingkan secara numerik dengan gap PaDiM (0,376) karena kedua metode berada pada skala yang berbeda. Mahalanobis distance secara inheren tela"
+    },
+    {
+      "idx": 684,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Distribusi antar kelas cacat menunjukkan broken large dan broken small memiliki rerata yang sangat berdekatan (1,827 vs 1,833). Contamination kembali menjadi kelas paling bervariasi (std=0,339) dengan"
+    },
+    {
+      "idx": 685,
+      "style": "Normal",
+      "kw": "test",
+      "preview": "Dualitas perilaku KNN pada contamination defect sangat sensitif terhadap noda mencolok (skor tertinggi 2,741) namun gagal pada noda ringan (23,8% FN) merupakan konsekuensi langsung dari sifat position"
+    },
+    {
+      "idx": 686,
+      "style": "Caption",
+      "kw": "distribusi",
+      "preview": "Gambar 4.8 Distribusi Frekuensi Skor KNN"
+    },
+    {
+      "idx": 688,
+      "style": "Normal",
+      "kw": "63",
+      "preview": "Gambar 4.8 menunjukkan distribusi yang lebih menyebar dibanding PaDiM. Sebanyak 19 dari 20 gambar normal (95%) berada di bawah threshold 1,471. Namun di sisi anomali, 5 dari 63 gambar (7,9%) juga bera"
+    },
+    {
+      "idx": 693,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Pertama, meskipun gap KNN (0,462) lebih besar dari PaDiM (0,376), rasio rerata anomali terhadap normal justru lebih tinggi pada PaDiM.. Secara relatif, PaDiM memberikan pemisahan yang hampir dua kali "
+    },
+    {
+      "idx": 694,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Kedua, lebar overlap region menjadi indikator paling diskriminatif. Overlap PaDiM hanya 0,049 poin (setara 4,9% dari rentang normal, atau nyaris tidak ada), sedangkan overlap KNN mencapai 0,273 poin ("
+    },
+    {
+      "idx": 695,
+      "style": "Normal",
+      "kw": "21",
+      "preview": "Ketiga, contamination menjadi kelas tersulit bagi kedua metode. Pada PaDiM, hanya 1 dari 21 gambar contamination yang salah klasifikasi (FNR 4,8%). Sedangkan pada KNN, 5 dari 21 gambar salah klasifika"
+    },
+    {
+      "idx": 696,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Keempat, kedua metode memiliki false positive rate yang identik (1 dari 20, atau 5%), sesuai dengan desain threshold percentile-95 yang secara eksplisit mengizinkan 5% FPR. Ini menunjukkan bahwa thres"
+    },
+    {
+      "idx": 697,
+      "style": "Normal",
+      "kw": "broken",
+      "preview": "Secara keseluruhan, distribusi skor anomali mengonfirmasi bahwa PaDiM unggul dalam memisahkan gambar normal dari anomali pada dataset bottle, terutama untuk kelas contamination yang membutuhkan sensit"
+    },
+    {
+      "idx": 699,
+      "style": "Caption",
+      "kw": "distribusi",
+      "preview": "Gambar 4.9 visualisasi perbandingan distribusi skor anomali"
+    },
+    {
+      "idx": 703,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Evaluasi image-level mengukur kemampuan metode dalam membedakan gambar normal dari gambar anomali berdasarkan skor anomali per gambar. AUROC (Area Under the Receiver Operating Characteristic curve) me"
+    },
+    {
+      "idx": 707,
+      "style": "Normal",
+      "kw": "21",
+      "preview": "Berdasarkan Tabel 4.9, PaDiM unggul di seluruh metrik image-level. AUROC PaDiM mencapai 0,9976 yang berarti probabilitas PaDiM memberikan skor lebih tinggi pada gambar anomali dibandingkan gambar norm"
+    },
+    {
+      "idx": 708,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "AUROC PaDiM sebesar 0,9976 mendekati nilai sempurna 1,0 dan mencerminkan tiga faktor utama. Pertama, pemodelan per-posisi Gaussian (3.136 distribusi, masing-masing 550 dimensi) menangkap distribusi no"
+    },
+    {
+      "idx": 709,
+      "style": "Normal",
+      "kw": "63",
+      "preview": "Gap paling signifikan adalah Recall. PaDiM mencapai recall 98,41% (hanya 1 false negative dari 63 anomali), sedangkan KNN 92,06% (5 false negative). Precision hampir identik dengan masing-masing 1 fal"
+    },
+    {
+      "idx": 710,
+      "style": "Normal",
+      "kw": "contamination",
+      "preview": "Perbedaan recall sebesar 6,35 poin persentase ini berakar pada pendekatan pemodelan yang berbeda. Kelima false negative KNN semuanya berasal dari contamination intensitas rendah di mana Euclidean dist"
+    },
+    {
+      "idx": 715,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Kedua metode mencapai akurasi 100% pada Broken Large dan Broken Small seluruh 42 gambar cacat struktural terdeteksi tanpa kesalahan. Perbedaan muncul pada Contamination, PaDiM mendeteksi 20/21 (95%), "
+    },
+    {
+      "idx": 719,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Kedua metode menunjukkan performa pixel-level sangat baik. PaDiM mencapai Pixel AUROC 0,9838 dan PRO-score 0,9525, sedangkan KNN memperoleh Pixel AUROC 0,9755 dan PRO-score 0,9386. PaDiM unggul pada k"
+    },
+    {
+      "idx": 721,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Kedua, pemodelan per-posisi Gaussian pada PaDiM memungkinkan deteksi variasi lokal halus. Setiap patch memiliki distribusi Gaussian sendiri dari patch training di posisi sama. Penyimpangan kecil pada "
+    },
+    {
+      "idx": 723,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Gap PRO-score (0,0139) yang lebih besar dari gap Pixel AUROC (0,0083) memiliki makna statistik yang penting. Pixel AUROC menghitung kontribusi setiap piksel secara independen sehingga tepi defect yang"
+    },
+    {
+      "idx": 727,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Threshold merupakan garis batas yang diperlukan karena model deteksi anomali hanya menghasilkan skor berupa angka, bukan keputusan langsung. Angka tersebut tidak dapat diartikan tanpa adanya pembandin"
+    },
+    {
+      "idx": 728,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Penentuan threshold dalam penelitian ini menggunakan metode persentil ke-95 dari distribusi skor gambar normal. Seluruh skor gambar normal diurutkan dari yang terkecil hingga terbesar, kemudian nilai "
+    },
+    {
+      "idx": 733,
+      "style": "Normal",
+      "kw": "63",
+      "preview": "Pada FPR 10% (P90), PaDiM mendeteksi seluruh 63 gambar anomali tanpa terkecuali atau 100% TPR, dengan konsekuensi 2 false positive dari 20 gambar normal. Hal ini menunjukkan bahwa pemisahan distribusi"
+    },
+    {
+      "idx": 734,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Stabilitas PaDiM terhadap perubahan threshold merupakan konsekuensi langsung dari distribusi skor yang rapat dan terpisah (overlap hanya 0,049 poin). Distribusi normal yang sempit (95% di bawah 0,471)"
+    },
+    {
+      "idx": 738,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Heatmap atau anomaly map merupakan output visual yang menunjukkan lokasi cacat pada tingkat piksel. Kualitas heatmap sangat menentukan kemampuan sistem dalam melokalisasi anomali secara presisi. Perbe"
+    },
+    {
+      "idx": 741,
+      "style": "Normal",
+      "kw": "broken",
+      "preview": "Gambar 4.12 memperlihatkan perbandingan heatmap sebelum dan sesudah Gaussian smoothing pada empat kelas sampel. Pada kelas normal, sebelum smoothing terlihat variasi warna yang menyebar akibat normali"
+    },
+    {
+      "idx": 743,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Perbedaan kecepatan inferensi antara PaDiM dan KNN diukur menggunakan seluruh 83 gambar test pada GPU NVIDIA RTX 3060 Laptop dan CPU AMD Ryzen 7 5800H. PaDiM menyelesaikan Mahalanobis distance dalam 0"
+    },
+    {
+      "idx": 744,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Perbedaan kecepatan 302× pada GPU dan 40× pada CPU bukan sekadar perbedaan implementasi, melainkan perbedaan fundamental kompleksitas algoritmik. Mahalanobis distance pada PaDiM untuk seluruh 3.136 pa"
+    },
+    {
+      "idx": 745,
+      "style": "Normal",
+      "kw": "test",
+      "preview": "Perbedaan ini berasal dari karakteristik algoritmik kedua metode. PaDiM menghitung Mahalanobis distance sebagai satu operasi batch matrix multiplication pada GPU memanfaatkan tensor core, pada CPU tet"
+    },
+    {
+      "idx": 752,
+      "style": "Normal",
+      "kw": "train",
+      "preview": "Integrasi model mencakup tiga komponen utama. Pertama, backbone ResNet-50 dengan bobot pretrained MoCo v2 dimuat sebagai feature extractor tanpa fine-tuning (freeze). Kedua, data eksperimen yang dipil"
+    },
+    {
+      "idx": 753,
+      "style": "Normal",
+      "kw": "normal",
+      "preview": "Alur inferensi pada setiap gambar yang diunggah mengikuti proses yang divisualisasikan pada bagan alur di bawah ini. Gambar input melalui tahap preprocessing yang meliputi resize ke ukuran 224×224 pik"
+    },
+    {
+      "idx": 754,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Pada jalur PaDiM, patch embedding dihitung jarak Mahalanobis-nya terhadap distribusi Gaussian multivariat menggunakan operasi torch.bmm yang dioptimasi untuk CPU. Hasil perhitungan berupa anomaly map "
+    },
+    {
+      "idx": 764,
+      "style": "Normal",
+      "kw": "normal",
+      "preview": "Dashboard dilengkapi mekanisme Out-of-Distribution detection yang berfungsi sebagai filter untuk memastikan bahwa hanya gambar bottle yang dapat diproses lebih lanjut. Pendekatan yang digunakan adalah"
+    },
+    {
+      "idx": 772,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Pengujian dilakukan pada seluruh 83 gambar test bottle dan menunjukkan bahwa mekanisme ini tidak pernah menolak gambar bottle secara keliru. Seluruh gambar bottle, baik yang normal maupun yang mengand"
+    },
+    {
+      "idx": 776,
+      "style": "Normal",
+      "kw": "distribusi",
+      "preview": "Representasi fitur Self-Supervised Learning menggunakan arsitektur MoCo v2 dengan backbone ResNet-50 berhasil mengekstraksi fitur visual dari citra botol industri melalui tiga lapisan konvolusi yang m"
+    },
+    {
+      "idx": 777,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Hasil perbandingan kinerja menunjukkan bahwa PaDiM unggul secara komprehensif dibandingkan KNN pada seluruh metrik evaluasi. PaDiM mencapai AUROC 0,9976, F1-score 0,9841, Pixel AUROC 0,9838, dan PRO-s"
+    },
+    {
+      "idx": 778,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Dashboard inspeksi visual berbasis Streamlit berhasil diimplementasikan untuk memvisualisasikan hasil deteksi secara interaktif. Dashboard menampilkan anomaly map, anomaly score, serta prediksi anomal"
+    },
+    {
+      "idx": 781,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Cakupan penelitian ini masih terbatas pada satu kategori objek, yaitu bottle. Ke depannya, metode yang sama dapat dicoba pada seluruh 16 kategori dataset MVTec AD. Mengingat setiap kategori memiliki k"
+    },
+    {
+      "idx": 782,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Selain pengujian pada dataset benchmark lain, penelitian ini perlu diuji coba pada data dari lini produksi botol sungguhan. Kondisi lapangan dengan pencahayaan yang tidak menentu, latar belakang yang "
+    },
+    {
+      "idx": 785,
+      "style": "Normal",
+      "kw": "anomali",
+      "preview": "Terakhir, dashboard yang sudah dibangun masih bisa dikembangkan lagi. Beberapa fitur yang dapat ditambahkan antara lain visualisasi kontribusi fitur terhadap skor anomali agar hasil deteksi lebih muda"
+    },
+    {
+      "idx": 788,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Behrendt, F., Bhattacharya, D., Mieling, R., Maack, L., Krüer, J., Opfer, R., & Schlaefer, A. (2024). Leveraging the Mahalanobis Distance to Enhance Unsupervised Brain MRI Anomaly Detection. Lecture N"
+    },
+    {
+      "idx": 789,
+      "style": "Normal",
+      "kw": "63",
+      "preview": "Bergmann, P., Batzner, K., Fauser, M., Sattlegger, D., & Steger, C. (2021). The MVTec Anomaly Detection Dataset: A Comprehensive Real-World Dataset for Unsupervised Anomaly Detection. International Jo"
+    },
+    {
+      "idx": 790,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Bertoldo, J. P. C., & Arrustico, D. (2023). Visualization for Multivariate Gaussian Anomaly Detection in Images. 2023 12th International Conference on Image Processing Theory, Tools and Applications, "
+    },
+    {
+      "idx": 791,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Bilal, M., & Hanif, M. S. (2025). Fast Anomaly Detection for Vision-Based Industrial Inspection Using Cascades of Null Subspace PCA Detectors. Sensors, 25(15), 1–27. https://doi.org/10.3390/s25154853"
+    },
+    {
+      "idx": 792,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Cai, Y., Yang, H., Ma, Y., & Hang, H. (2025). Bagged Regularized k-Distances for Anomaly Detection. Journal of Machine Learning Research, 26, 1–59."
+    },
+    {
+      "idx": 793,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Cao, Y., Xu, X., Zhang, J., Cheng, Y., Huang, X., Pang, G., & Shen, W. (2024). A Survey on Visual Anomaly Detection: Challenge, Approach, and Prospect. http://arxiv.org/abs/2401.16402"
+    },
+    {
+      "idx": 794,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Chen, X., Xie, S., & He, K. (2021). An Empirical Study of Training Self-Supervised Vision Transformers. Proceedings of the IEEE International Conference on Computer Vision, 9620–9629. https://doi.org/"
+    },
+    {
+      "idx": 795,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Chen, Y., Tian, Y., Pang, G., & Carneiro, G. (2022). Deep One-Class Classification via Interpolated Gaussian Descriptor. Proceedings of the 36th AAAI Conference on Artificial Intelligence, AAAI 2022, "
+    },
+    {
+      "idx": 796,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Defard, T., Setkov, A., Loesch, A., & Audigier, R. (2021). PaDiM: A Patch Distribution Modeling Framework for Anomaly Detection and Localization. Lecture Notes in Computer Science (Including Subseries"
+    },
+    {
+      "idx": 797,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Degadwala, D. S., & Vyas, D. (2024). Systematic Analysis of Deep Learning Models vs. Machine Learning. International Journal of Scientific Research in Computer Science, Engineering and Information Tec"
+    },
+    {
+      "idx": 798,
+      "style": "Normal",
+      "kw": "63",
+      "preview": "Diers, J., & Pigorsch, C. (2023). A Survey of Methods for Automated Quality Control Based on Images. International Journal of Computer Vision, 131(10), 2553–2581. https://doi.org/10.1007/s11263-023-01"
+    },
+    {
+      "idx": 799,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Dini, A., & Rahtu, E. (2025). Deep Local Feature Matching Image Anomaly Detection with Patch Adaptive Average Pooling Technique. Proceedings of the International Joint Conference on Computer Vision, I"
+    },
+    {
+      "idx": 800,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Ergin, O., Emre, G., Ilhan, A., & Erhan, A. (2026). Enhancing PatchCore with Dynamic Scaling and Vision – Language Models for Explainable Industrial Defect Inspection."
+    },
+    {
+      "idx": 801,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Gao, Y., Li, X., Wang, X. V., Wang, L., & Gao, L. (2022). A Review on Recent Advances in Vision-based Defect Recognition towards Industrial Intelligence. Journal of Manufacturing Systems, 62(May), 753"
+    },
+    {
+      "idx": 802,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Gudovskiy, D., Ishizaka, S., & Kozuka, K. (2022). CFLOW-AD: Real-Time Unsupervised Anomaly Detection with Localization via Conditional Normalizing Flows. Proceedings - 2022 IEEE/CVF Winter Conference "
+    },
+    {
+      "idx": 803,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Gui, J., Chen, T., Zhang, J., Cao, Q., Sun, Z., Luo, H., & Tao, D. (2024). A Survey on Self-Supervised Learning: Algorithms, Applications, and Future Trends. IEEE Transactions on Pattern Analysis and "
+    },
+    {
+      "idx": 804,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Heckler, L., König, R., & Bergmann, P. (2023). Exploring the Importance of Pretrained Feature Extractors for Unsupervised Anomaly Detection and Localization. IEEE Computer Society Conference on Comput"
+    },
+    {
+      "idx": 805,
+      "style": "Normal",
+      "kw": "63",
+      "preview": "Huang, C., Kang, Z., & Wu, H. (2024). A Prototype-Based Neural Network for Image Anomaly Detection and Localization. Neural Processing Letters, 56(4). https://doi.org/10.1007/s11063-024-11466-7"
+    },
+    {
+      "idx": 806,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Hyun, J., Kim, S., Jeon, G., Kim, S. H., Bae, K., & Kang, B. J. (2024). ReConPatch : Contrastive Patch Representation Learning for Industrial Anomaly Detection. Proceedings - 2024 IEEE Winter Conferen"
+    },
+    {
+      "idx": 807,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Imaroh, T. S., & Mustofa, A. (2022). DEFECT REDUCTION ANALYSIS TO IMPROVE GLASS BOTTLE PACKAGING PRODUCTS QUALITY USING STATISTICAL PROCESS CONTROL ( SPC ) AT PT . MULIAGLASS CONTAINER ( MGC ). 3."
+    },
+    {
+      "idx": 808,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Jing, M., Zhu, Y., Zang, T., & Wang, K. E. (2023). Contrastive Self-supervised Learning in Recommender Systems: A Survey. 37(4)."
+    },
+    {
+      "idx": 809,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Kazmi, M., Hafeez, B., Khan, H. R., & Qazi, S. A. (2022). Machine-Vision-Based Plastic Bottle Inspection for Quality Assurance. Engineering Proceedings, 20(1), 1–5. https://doi.org/10.3390/engproc2022"
+    },
+    {
+      "idx": 810,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Khadem, N., Nashir, A., & Rahmatyar, S. (2025). The Role of Deep Learning in Advancing Computer Vision Applications: A Comprehensive Systematic Review. Journal of Advanced Computer Knowledge and Algor"
+    },
+    {
+      "idx": 811,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Khan, I. U., Aslam, N., Aboulnour, M., Bashamakh, A., Alghool, F., Alsuwayan, N., Alturaif, R., Gull, H., Iqbal, S. Z., & Hussain, T. (2024). Deep Learning-Based Surface Defect Detection in Steel Prod"
+    },
+    {
+      "idx": 812,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Kondapaka, K. K. (2022). Deep Learning for Automated Visual Inspection in Manufacturing: Enhancing Accuracy and Speed. Procedia CIRP, 121(1), 312–319."
+    },
+    {
+      "idx": 813,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Lee, S., Lee, S., & Song, B. C. (2022). CFA: Coupled-Hypersphere-Based Feature Adaptation for Target-Oriented Anomaly Localization. IEEE Access, 10, 78446–78454. https://doi.org/10.1109/ACCESS.2022.31"
+    },
+    {
+      "idx": 814,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Li, C. L., Sohn, K., Yoon, J., & Pfister, T. (2021). CutPaste: Self-Supervised Learning for Anomaly Detection and Localization. Proceedings of the IEEE Computer Society Conference on Computer Vision a"
+    },
+    {
+      "idx": 815,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Li, N., Jiang, K., Ma, Z., Wei, X., Hong, X., & Gong, Y. (2021). Anomaly Detection Via Self-Organizing Map. Proceedings - International Conference on Image Processing, ICIP, 2021-Septe, 974–978. https"
+    },
+    {
+      "idx": 816,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Li, Z., Yan, Y., Wang, X., Ge, Y., & Meng, L. (2025). A survey of deep learning for industrial visual anomaly detection. Artificial Intelligence Review, 58(9). https://doi.org/10.1007/s10462-025-11287"
+    },
+    {
+      "idx": 817,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Lin, Y., Chang, Y., Tong, X., Yu, J., Liotta, A., Huang, G., Song, W., Zeng, D., Wu, Z., Wang, Y., & Zhang, W. (2025). A survey on RGB, 3D, and multimodal approaches for unsupervised industrial image "
+    },
+    {
+      "idx": 818,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Lv, M., Xu, Y. X., Miao, Y. H., & Su, W. H. (2025). A Comprehensive Review of Deep Learning in Computer Vision for Monitoring Apple Tree Growth and Fruit Production. Sensors, 25(8), 1–27. https://doi."
+    },
+    {
+      "idx": 819,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Ma, Y., Yin, J., Huang, F., & Li, Q. (2024). Surface defect inspection of industrial products with object detection deep networks: a systematic review. In Artificial Intelligence Review (Vol. 57, Issu"
+    },
+    {
+      "idx": 820,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Nizan, O., & Tal, A. (2024). k-NNN: Nearest Neighbors of Neighbors for Anomaly Detection. Proceedings - 2024 IEEE Winter Conference on Applications of Computer Vision Workshops, WACVW 2024, 1005–1014."
+    },
+    {
+      "idx": 821,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Ogidi, F. C., Eramian, M. G., & Stavness, I. (2023). Benchmarking Self-Supervised Contrastive Learning Methods for Image-Based Plant Phenotyping. Plant Phenomics, 5. https://doi.org/10.34133/plantphen"
+    },
+    {
+      "idx": 822,
+      "style": "Normal",
+      "kw": "63",
+      "preview": "Oktaviarini, K. N., Wahyuni, E. D., & Sari, R. P. (2024). Transformasi Data Statistik Menjadi Visual Interaktif Menggunakan Streamlit: Studi Kasus BPS Kota Mojokerto. Jurnal Kridatama Sains Dan Teknol"
+    },
+    {
+      "idx": 823,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Paolini, D., Dini, P., Soldaini, E., & Saponara, S. (2025). One-Class Anomaly Detection for Industrial Applications: A Comparative Survey and Experimental Study. Computers, 14(7), 1–46. https://doi.or"
+    },
+    {
+      "idx": 824,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Pei, M., Liu, N., Zhao, B., & Sun, H. (2023). Self-Supervised Learning for Industrial Image Anomaly Detection by Simulating Anomalous Samples. International Journal of Computational Intelligence Syste"
+    },
+    {
+      "idx": 825,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Prasetyowati, E., Matsaini, Bary, S., & Fajar, M. (2026). Quality Control of Glass Bottle Drinking Water Products Using the Six Sigma Method. Tibuana : Journal of Applied Industrial Engineering, 8(2 S"
+    },
+    {
+      "idx": 826,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Qi, P., Chai, L., & Ye, X. (2024). Unsupervised Industrial Anomaly Detection Based on Feature Mask Generation and Reverse Distillation. Chinese Journal of Information Fusion, 1(2), 160–174. https://do"
+    },
+    {
+      "idx": 827,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Rajasekaran, M., Sajol, M. S. I., Berglind, F., Mukhopadhyay, S., & Das, K. (2024). COMBOOD: A Semiparametric Approach for Detecting Out-of-distribution Data for Image Classification. Proceedings of t"
+    },
+    {
+      "idx": 828,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Ramesh, S., Srivastav, V., Alapatt, D., Yu, T., Murali, A., Sestini, L., Nwoye, C. I., Hamoud, I., Sharma, S., Fleurentin, A., Exarchakis, G., Karargyris, A., & Padoy, N. (2023). Dissecting self-super"
+    },
+    {
+      "idx": 829,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Roth, K., Pemula, L., Zepeda, J., Scholkopf, B., Brox, T., & Gehler, P. (2022). Towards Total Recall in Industrial Anomaly Detection. Proceedings of the IEEE Computer Society Conference on Computer Vi"
+    },
+    {
+      "idx": 830,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "RQA Group. (2025). Product Recall Report."
+    },
+    {
+      "idx": 831,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Ruff, L., Kauffmann, J. R., Vandermeulen, R. A., Montavon, G., Samek, W., Kloft, M., Dietterich, T. G., & Muller, K. R. (2021). A Unifying Review of Deep and Shallow Anomaly Detection. Proceedings of "
+    },
+    {
+      "idx": 832,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Salehi, M., Sadjadi, N., Baselizadeh, S., Rohban, M. H., & Rabiee, H. R. (2021). Multiresolution knowledge distillation for anomaly detection. Proceedings of the IEEE Computer Society Conference on Co"
+    },
+    {
+      "idx": 833,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Sedgwick. (2024). U.S. product recalls surge 11% in 2023 to hit seven-year high. https://www.sedgwick.com/press-release/us-product-recalls-surge-in-2023-to-hit-seven-year-high/"
+    },
+    {
+      "idx": 834,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Shafiq, M., & Gu, Z. (2022). Deep Residual Learning for Image Recognition: A Survey. Applied Sciences (Switzerland), 12(18), 1–43. https://doi.org/10.3390/app12188972"
+    },
+    {
+      "idx": 835,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Song, J., Kong, K., Park, Y.-I., Kim, S.-G., & Kang, S.-J. (2021). AnoSeg: Anomaly Segmentation Network Using Self-Supervised Learning. 1, 1–22. http://arxiv.org/abs/2110.03396"
+    },
+    {
+      "idx": 836,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Sun, Y., Ming, Y., Zhu, X., & Li, Y. (2022). Out-of-Distribution Detection with Deep Nearest Neighbors. Proceedings of Machine Learning Research, 162, 20827–20840."
+    },
+    {
+      "idx": 837,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Tao, X., Gong, X., Zhang, X., Yan, S., & Adak, C. (2022). Deep Learning for Unsupervised Anomaly Localization in Industrial Images: A Survey. IEEE Transactions on Instrumentation and Measurement, 71. "
+    },
+    {
+      "idx": 838,
+      "style": "Normal",
+      "kw": "83",
+      "preview": "Tegegn, B. (2026). An Article Review on Self Supervised Learning. https://doi.org/10.13140/RG.2.2.30583.89767"
+    },
+    {
+      "idx": 839,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Tisovský, T., Komák, M., & Lang, J. (2026). Unsupervised Detection of Visual Anomalies in Industrial Images Using Convolutional Autoencoders. 2026 IEEE 24th World Symposium on Applied Machine Intellig"
+    },
+    {
+      "idx": 840,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Tomita, D., & Bao, Y. (2025). Inspection of Defective Glass Bottle Mouths Using Machine Learning. 1–19."
+    },
+    {
+      "idx": 841,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Uelwer, T., Robine, J., Wagner, S. S., Höftmann, M., Upschulte, E., Konietzny, S., Behrendt, M., & Harmeling, S. (2025). A survey on self-supervised methods for visual representation learning. In Mach"
+    },
+    {
+      "idx": 842,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Wang, X. (2025). Applications and Developments of Deep Learning in Image Processing. Icdse, 277–284. https://doi.org/10.5220/0013687900004670"
+    },
+    {
+      "idx": 843,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Wijayanti, W., Nasution, H., & Huda, L. N. (2025). Jurnal Sistem Teknik Industri The Role of Human Error in Production Process Failures : A Systematic Literature Review. 27(3), 137–144."
+    },
+    {
+      "idx": 844,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Wilmet, V., Verma, S., Redl, T., Sandaker, H., & Li, Z. (2021). A Comparison of Supervised and Unsupervised Deep Learning Methods for Anomaly Detection in Images. In Proceedings of ACM Conference (Con"
+    },
+    {
+      "idx": 845,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Wu, B., & Wang, X. (2024). Industrial Image Anomaly Detection via Self-Supervised Learning with Feature Enhancement Assistance. Applied Sciences (Switzerland), 14(16). https://doi.org/10.3390/app14167"
+    },
+    {
+      "idx": 846,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Yang, Q., & Guo, R. (2024). An Unsupervised Method for Industrial Image Anomaly Detection with Vision Transformer-Based Autoencoder. Sensors, 24(8). https://doi.org/10.3390/s24082440"
+    },
+    {
+      "idx": 847,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Younesi, A., Ansari, M., Fazli, M., Ejlali, A., Shafique, M., & Henkel, J. (2024). A Comprehensive Survey of Convolutions in Deep Learning: Applications, Challenges, and Future Trends. IEEE Access, 12"
+    },
+    {
+      "idx": 848,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Yusran, M., Sadik, K., Soleh, A. M., & Suhaeni, C. (2025). Effect of Feature Normalization and Distance Metrics on K-Nearest Neighbors Performance for Diabetes Disease Classification. Journal of Mathe"
+    },
+    {
+      "idx": 849,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Zhang, J., Yang, L., Sajjadi Mohammadabadi, S. M., & Yan, F. (2025). A survey on self-supervised learning: Recent advances and open problems. Neurocomputing, 655, 131409. https://doi.org/https://doi.o"
+    },
+    {
+      "idx": 850,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Zhao, X., Wang, L., Zhang, Y., Han, X., Deveci, M., & Parmar, M. (2024). A review of convolutional neural networks in computer vision. In Artificial Intelligence Review (Vol. 57, Issue 4). Springer Ne"
+    },
+    {
+      "idx": 851,
+      "style": "Normal",
+      "kw": "20",
+      "preview": "Zou, Y., Jeong, J., Pemula, L., Zhang, D., & Dabeer, O. (2022). SPot-the-Difference Self-supervised Pre-training for Anomaly Detection and Segmentation. Lecture Notes in Computer Science (Including Su"
+    },
+    {
+      "idx": 855,
+      "style": "Normal",
+      "kw": "dataset",
+      "preview": "Lampiran 1 Dataset kategori Bottle pada dataset MVTec AD yang bisa diakses pada tautan berikut: https://www.mvtec.com/research-teaching/datasets/mvtec-ad."
+    }
+  ],
+  "section_41": [
+    {
+      "idx": 222,
+      "style": "Heading 3",
+      "text": "=== START SECTION: 2.4.1 Konsep Dasar Deteksi Anomali ==="
+    },
+    {
+      "idx": 223,
+      "style": "Normal",
+      "text": "Menurut survei komprehensif oleh (Cao et al., 2024), deteksi anomali visual merupakan bagian dari bidang Visual Anomaly Detection (VAD) yang bertujuan menemukan deviasi dari konsep normalitas dalam data visual. Deteksi anomali dimulai dengan memahami apa yang normal dalam konteks data visual dan kem"
+    }
+  ],
+  "tables": [
+    {
+      "table_idx": 0,
+      "num_rows": 10,
+      "num_cols": 26,
+      "rows": [
+        [
+          "No",
+          "Kegiatan",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu",
+          "Bulan dan Minggu"
+        ],
+        [
+          "No",
+          "Kegiatan",
+          "Januari",
+          "Januari",
+          "Januari",
+          "Januari",
+          "Februari",
+          "Februari",
+          "Februari",
+          "Februari",
+          "Maret",
+          "Maret",
+          "Maret",
+          "Maret",
+          "April",
+          "April",
+          "April",
+          "April",
+          "Mei",
+          "Mei",
+          "Mei",
+          "Mei",
+          "Juni",
+          "Juni",
+          "Juni",
+          "Juni"
+        ],
+        [
+          "No",
+          "Kegiatan",
+          "1",
+          "2",
+          "3",
+          "4",
+          "1",
+          "2",
+          "3",
+          "4",
+          "1",
+          "2",
+          "3",
+          "4",
+          "1",
+          "2",
+          "3",
+          "4",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "1.",
+          "Pengajuan Judul dan Dosen Pembimbing",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "2.",
+          "Penyusunan dan Seminar Proposal",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "3",
+          "Pengumpulan Dataset",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "4.",
+          "Coding dan Pengerjaan",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "5.",
+          "Penyusunan Laporan",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "6.",
+          "Seminar Hasil",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "7.",
+          "Seminar Tugas Akhir",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "table_idx": 1,
+      "num_rows": 6,
+      "num_cols": 6,
+      "rows": [
+        [
+          "No.",
+          "Penulis (Tahun)",
+          "Judul Penelitian",
+          "Metode / Algoritma",
+          "Hasil Penelitian",
+          "Celah Penelitian (Research Gap)"
+        ],
+        [
+          "1.",
+          "(Pei et al., 2023)",
+          "Self-Supervised Learning for Industrial Image Anomaly Detection by Simulating Anomalous Samples",
+          "Self-supervised learning, patch-based augmentation (simulated anomalies), CNN",
+          "Mampu mendeteksi anomali visual industri tanpa data cacat berlabel dengan performa tinggi pada datas",
+          "Penelitian ini menunjukkan bahwa SSL dapat meningkatkan performa deteksi. Namun, fokusnya pada strat"
+        ],
+        [
+          "2.",
+          "(Wu & Wang, 2024)",
+          "Industrial Image Anomaly Detection via Self-Supervised Learning with Feature Enhancement Assistance",
+          "Self-supervised learning, feature enhancement, multi-scale representation",
+          "Peningkatan akurasi deteksi anomali dibanding metode baseline self-supervised.",
+          "Studi ini memperkuat kualitas representasi melalui feature enhancement dan multi-scale learning. Nam"
+        ],
+        [
+          "3.",
+          "(Zou et al., 2022)",
+          "SPot-the-Difference Self-Supervised Pre-training for Anomaly Detection and Segmentation",
+          "Self-supervised pre-training, contrastive learning",
+          "Representasi fitur yang lebih kuat untuk deteksi dan segmentasi anomali",
+          "Penelitian ini menekankan pentingnya pretraining SSL dalam membangun representasi fitur yang kuat. A"
+        ],
+        [
+          "4.",
+          "(Song et al., 2021)",
+          "AnoSeg: Anomaly Segmentation Network Using Self-Supervised Learning",
+          "Self-supervised learning, anomaly segmentation network",
+          "Mampu melakukan segmentasi area anomali secara detail",
+          "Pendekatan Self Supervised Learning ini berorientasi pada segmentasi berbasis jaringan kompleks. Fok"
+        ],
+        [
+          "5.",
+          "(Defard et al., 2021)",
+          "PaDiM: A Patch Distribution Modeling Framework for Anomaly Detection and Localization",
+          "Patch-based anomaly detection menggunakan CNN pretrained (ResNet), multivariate Gaussian, dan Mahala",
+          "Mengungguli state-of-the-art pada dataset MVTec AD dalam deteksi dan lokalisasi anomali dengan kompl",
+          "PaDiM memperkenalkan distribution modeling berbasis patch yang efektif. Namun, backbone yang digunak"
+        ]
+      ]
+    },
+    {
+      "table_idx": 2,
+      "num_rows": 17,
+      "num_cols": 5,
+      "rows": [
+        [
+          "No",
+          "Kelompok\nKarakteristik",
+          "Karakteristik",
+          "Detail Dataset",
+          ""
+        ],
+        [
+          "1.",
+          "Informasi Dataset",
+          "Nama Dataset",
+          "",
+          "Dataset benchmark untuk deteksi anomali visual industri"
+        ],
+        [
+          "1.",
+          "Informasi Dataset",
+          "",
+          "MVTec Software GmbH",
+          ""
+        ],
+        [
+          "1.",
+          "Informasi Dataset",
+          "",
+          "Bottle",
+          "Difokuskan pada inspeksi visual botol industri"
+        ],
+        [
+          "2.",
+          "Karakteristik Data",
+          "Jenis Data",
+          "Citra RGB",
+          ""
+        ],
+        [
+          "2.",
+          "Karakteristik Data",
+          "Format Data",
+          "PNG",
+          "Disertai ground truth anomaly mask"
+        ],
+        [
+          "2.",
+          "Karakteristik Data",
+          "Resolusi Citra",
+          "900 x 900 piksel",
+          "Resolusi asli citra dataset"
+        ],
+        [
+          "2.",
+          "Karakteristik Data",
+          "",
+          "Botol industri",
+          "Memiliki karakteristik permukaan reflektif"
+        ],
+        [
+          "3.",
+          "Pembagian Data",
+          "Data Training",
+          "209 citra normal",
+          "Digunakan untuk pembelajaran pola normal"
+        ],
+        [
+          "3.",
+          "Pembagian Data",
+          "Data Testing Normal",
+          "20 citra normal",
+          "Digunakan dalam evaluasi performa model"
+        ],
+        [
+          "3.",
+          "Pembagian Data",
+          "Data Testing Anomali",
+          "63 citra anomali",
+          "Digunakan untuk pengujian deteksi cacat"
+        ],
+        [
+          "4.",
+          "Karakteristik Anomali",
+          "Karakteristik Anomali",
+          "Broken large",
+          "Kerusakan besar pada struktur botol"
+        ],
+        [
+          "4.",
+          "Karakteristik Anomali",
+          "Karakteristik Anomali",
+          "Broken small",
+          "Retakan atau kerusakan kecil pada permukaan"
+        ],
+        [
+          "4.",
+          "Karakteristik Anomali",
+          "Karakteristik Anomali",
+          "Contamination",
+          "Kontaminasi atau benda asing pada permukaan botol"
+        ],
+        [
+          "5.",
+          "Ground Truth",
+          "Jenis Ground Truth",
+          "Pixel-level anomaly mask",
+          "Digunakan untuk validasi segmentasi area cacat"
+        ],
+        [
+          "6.",
+          "Metode Penelitian",
+          "Skema Pembelajaran",
+          "One-class learning",
+          "Model dilatih hanya menggunakan citra normal"
+        ],
+        [
+          "6.",
+          "Metode Penelitian",
+          "Variabel Penelitian",
+          "Feature embedding, anomaly score, anomaly map",
+          "Digunakan pada proses deteksi dan evaluasi anomali"
+        ]
+      ]
+    },
+    {
+      "table_idx": 3,
+      "num_rows": 4,
+      "num_cols": 2,
+      "rows": [
+        [
+          "Komponen",
+          "Jumlah Data"
+        ],
+        [
+          "Training set",
+          "209"
+        ],
+        [
+          "Test normal",
+          "20"
+        ],
+        [
+          "Test anomali",
+          "63"
+        ]
+      ]
+    },
+    {
+      "table_idx": 4,
+      "num_rows": 11,
+      "num_cols": 2,
+      "rows": [
+        [
+          "Parameter",
+          "Nilai / Konfigurasi"
+        ],
+        [
+          "Dataset",
+          "MVTec AD (kategori bottle)"
+        ],
+        [
+          "Input image size",
+          "224 × 224"
+        ],
+        [
+          "Backbone network",
+          "ResNet-50 (MoCo v2 pretrained)"
+        ],
+        [
+          "Feature extraction",
+          "Transfer learning (tanpa fine-tuning, freeze layer)"
+        ],
+        [
+          "Learning paradigm",
+          "One-class learning"
+        ],
+        [
+          "Feature representation",
+          "Patch embedding vector"
+        ],
+        [
+          "Anomaly detection method",
+          "SSL tanpa PaDiM dan SSL dengan PaDiM"
+        ],
+        [
+          "Anomaly scoring",
+          "Mahalanobis Distance dan Euclidean distance"
+        ],
+        [
+          "KNN parameter",
+          "K = 5"
+        ],
+        [
+          "Thresholding",
+          "Persentil (95% dari data normal)"
+        ]
+      ]
+    },
+    {
+      "table_idx": 5,
+      "num_rows": 5,
+      "num_cols": 2,
+      "rows": [
+        [
+          "Kelas Cacat",
+          "Jumlah Mask"
+        ],
+        [
+          "Broken Large",
+          "20"
+        ],
+        [
+          "Broken Small",
+          "22"
+        ],
+        [
+          "Contamination",
+          "21"
+        ],
+        [
+          "Total",
+          "63"
+        ]
+      ]
+    },
+    {
+      "table_idx": 6,
+      "num_rows": 3,
+      "num_cols": 4,
+      "rows": [
+        [
+          "Good",
+          "Broken Large",
+          "Broken Small",
+          "Contamination"
+        ],
+        [
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "-",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "table_idx": 7,
+      "num_rows": 6,
+      "num_cols": 2,
+      "rows": [
+        [
+          "Parameter",
+          "Nilai"
+        ],
+        [
+          "Resolusi asli",
+          "900 × 900 piksel"
+        ],
+        [
+          "Resolusi output",
+          "224 × 224 piksel"
+        ],
+        [
+          "Interpolasi",
+          "BILINEAR"
+        ],
+        [
+          "Mean normalisasi",
+          "[0,485; 0,456; 0,406]"
+        ],
+        [
+          "Std normalisasi",
+          "[0,229; 0,224; 0,225]"
+        ]
+      ]
+    },
+    {
+      "table_idx": 8,
+      "num_rows": 5,
+      "num_cols": 3,
+      "rows": [
+        [
+          "Augmentasi",
+          "Parameter",
+          "Probabilitas"
+        ],
+        [
+          "RandomHorizontalFlip",
+          "—",
+          "0,5"
+        ],
+        [
+          "RandomRotation",
+          "±10°",
+          "1,0"
+        ],
+        [
+          "ColorJitter",
+          "brightness=0,2; contrast=0,2; saturation=0,2; hue=0,05",
+          "0,7"
+        ],
+        [
+          "AddGaussianNoise",
+          "mean=0,0; std=0,01",
+          "0,3"
+        ]
+      ]
+    },
+    {
+      "table_idx": 9,
+      "num_rows": 7,
+      "num_cols": 2,
+      "rows": [
+        [
+          "Aspek",
+          "Detail"
+        ],
+        [
+          "Dimensi tensor input",
+          "[3, 224, 224]"
+        ],
+        [
+          "Rentang nilai",
+          "Tergantung normalisasi ImageNet"
+        ],
+        [
+          "Jumlah data train",
+          "209 (good, dengan augmentasi)"
+        ],
+        [
+          "Jumlah data test",
+          "83 (20 good + 63 anomali)"
+        ],
+        [
+          "Dimensi mask",
+          "[1, 224, 224] (test only)"
+        ],
+        [
+          "Interpolasi mask",
+          "NEAREST"
+        ]
+      ]
+    },
+    {
+      "table_idx": 10,
+      "num_rows": 4,
+      "num_cols": 4,
+      "rows": [
+        [
+          "Lapisan",
+          "Dimensi Kanal",
+          "Resolusi Spasial",
+          "Stride"
+        ],
+        [
+          "Layer1",
+          "256",
+          "56 × 56",
+          "1"
+        ],
+        [
+          "Layer2",
+          "512",
+          "28 × 28",
+          "2"
+        ],
+        [
+          "Layer3",
+          "1024",
+          "14 × 14",
+          "2"
+        ]
+      ]
+    },
+    {
+      "table_idx": 11,
+      "num_rows": 3,
+      "num_cols": 4,
+      "rows": [
+        [
+          "Tahap",
+          "Input",
+          "Output",
+          "Rasio Unfold"
+        ],
+        [
+          "1",
+          "Layer1 [256,56,56] + Layer2 [512,28,28]",
+          "[768,56,56]",
+          "2"
+        ],
+        [
+          "2",
+          "Hasil [768,56,56] + Layer3 [1024,14,14]",
+          "[1792,56,56]",
+          "4"
+        ]
+      ]
+    },
+    {
+      "table_idx": 12,
+      "num_rows": 6,
+      "num_cols": 6,
+      "rows": [
+        [
+          "Kelas",
+          "n",
+          "Rerata",
+          "Std. Deviasi",
+          "Minimum",
+          "Maksimum"
+        ],
+        [
+          "Normal (good)",
+          "20",
+          "0,397",
+          "0,049",
+          "0,312",
+          "0,516"
+        ],
+        [
+          "Broken Large",
+          "20",
+          "0,811",
+          "0,071",
+          "0,693",
+          "0,920"
+        ],
+        [
+          "Broken Small",
+          "22",
+          "0,804",
+          "0,069",
+          "0,667",
+          "0,896"
+        ],
+        [
+          "Contamination",
+          "21",
+          "0,707",
+          "0,167",
+          "0,467",
+          "1,000"
+        ],
+        [
+          "Anomali (gabungan)",
+          "63",
+          "0,774",
+          "0,120",
+          "0,467",
+          "1,000"
+        ]
+      ]
+    },
+    {
+      "table_idx": 13,
+      "num_rows": 6,
+      "num_cols": 6,
+      "rows": [
+        [
+          "Kelas",
+          "n",
+          "Rerata",
+          "Std. Deviasi",
+          "Minimum",
+          "Maksimum"
+        ],
+        [
+          "Normal (good)",
+          "20",
+          "1,322",
+          "0,105",
+          "1,167",
+          "1,585"
+        ],
+        [
+          "Broken Large",
+          "20",
+          "1,827",
+          "0,147",
+          "1,588",
+          "2,068"
+        ],
+        [
+          "Broken Small",
+          "22",
+          "1,833",
+          "0,136",
+          "1,588",
+          "2,038"
+        ],
+        [
+          "Contamination",
+          "21",
+          "1,693",
+          "0,339",
+          "1,312",
+          "2,741"
+        ],
+        [
+          "Anomali (gabungan)",
+          "63",
+          "1,784",
+          "0,233",
+          "1,312",
+          "2,741"
+        ]
+      ]
+    },
+    {
+      "table_idx": 14,
+      "num_rows": 14,
+      "num_cols": 3,
+      "rows": [
+        [
+          "Aspek",
+          "PaDiM",
+          "KNN"
+        ],
+        [
+          "Threshold (P95 normal)",
+          "0,471",
+          "1,471"
+        ],
+        [
+          "Rerata Skor Normal",
+          "0,397",
+          "1,322"
+        ],
+        [
+          "Rerata Skor Anomali",
+          "0,774",
+          "1,784"
+        ],
+        [
+          "Gap Rerata (Anomali – Normal)",
+          "0,376",
+          "0,462"
+        ],
+        [
+          "Rasio Rerata (Anomali / Normal)",
+          "1,95×",
+          "1,35×"
+        ],
+        [
+          "Lebar Overlap Region",
+          "0,049",
+          "0,273"
+        ],
+        [
+          "Akurasi Threshold (overall)",
+          "97,6%",
+          "92,8%"
+        ],
+        [
+          "Akurasi Broken Large",
+          "100%",
+          "100%"
+        ],
+        [
+          "Akurasi Broken Small",
+          "100%",
+          "100%"
+        ],
+        [
+          "Akurasi Contamination",
+          "95,2%",
+          "76,2%"
+        ],
+        [
+          "Akurasi Normal (good)",
+          "95,0%",
+          "95,0%"
+        ],
+        [
+          "False Positive (FP)",
+          "1",
+          "1"
+        ],
+        [
+          "False Negative (FN)",
+          "1",
+          "5"
+        ]
+      ]
+    },
+    {
+      "table_idx": 15,
+      "num_rows": 9,
+      "num_cols": 3,
+      "rows": [
+        [
+          "Metrik",
+          "PaDiM",
+          "KNN"
+        ],
+        [
+          "AUROC",
+          "0,9976",
+          "0,9762"
+        ],
+        [
+          "F1-Score",
+          "0,9841",
+          "0,9508"
+        ],
+        [
+          "Precision",
+          "0,9841",
+          "0,9831"
+        ],
+        [
+          "Recall",
+          "0,9841",
+          "0,9206"
+        ],
+        [
+          "True Positive (TP)",
+          "62",
+          "58"
+        ],
+        [
+          "False Positive (FP)",
+          "1",
+          "1"
+        ],
+        [
+          "False Negative (FN)",
+          "1",
+          "5"
+        ],
+        [
+          "True Negative (TN)",
+          "19",
+          "19"
+        ]
+      ]
+    },
+    {
+      "table_idx": 16,
+      "num_rows": 5,
+      "num_cols": 4,
+      "rows": [
+        [
+          "Kelas Cacat",
+          "n",
+          "PaDiM Akurasi",
+          "PaDiM FN"
+        ],
+        [
+          "Broken Large",
+          "20",
+          "100% (20/20)",
+          "0"
+        ],
+        [
+          "Broken Small",
+          "22",
+          "100% (22/22)",
+          "0"
+        ],
+        [
+          "Contamination",
+          "21",
+          "95% (20/21)",
+          "1"
+        ],
+        [
+          "Normal (good)",
+          "20",
+          "95% (19/20)",
+          "1 FP"
+        ]
+      ]
+    },
+    {
+      "table_idx": 17,
+      "num_rows": 5,
+      "num_cols": 4,
+      "rows": [
+        [
+          "Kelas Cacat",
+          "n",
+          "KNN Akurasi",
+          "KNN FN"
+        ],
+        [
+          "Broken Large",
+          "20",
+          "100% (20/20)",
+          "0"
+        ],
+        [
+          "Broken Small",
+          "22",
+          "100% (22/22)",
+          "0"
+        ],
+        [
+          "Contamination",
+          "21",
+          "76% (16/21)",
+          "5"
+        ],
+        [
+          "Normal (good)",
+          "20",
+          "95% (19/20)",
+          "1 FP"
+        ]
+      ]
+    },
+    {
+      "table_idx": 18,
+      "num_rows": 3,
+      "num_cols": 4,
+      "rows": [
+        [
+          "Metrik",
+          "PaDiM",
+          "KNN",
+          "Gap"
+        ],
+        [
+          "Pixel AUROC",
+          "0,9838",
+          "0,9755",
+          "0,0083"
+        ],
+        [
+          "PRO-score",
+          "0,9525",
+          "0,9386",
+          "0,0139"
+        ]
+      ]
+    },
+    {
+      "table_idx": 19,
+      "num_rows": 5,
+      "num_cols": 8,
+      "rows": [
+        [
+          "Persentil",
+          "Threshold",
+          "TPR",
+          "FPR",
+          "TP",
+          "FP",
+          "FN",
+          "TN"
+        ],
+        [
+          "P90",
+          "0,463",
+          "100%",
+          "10%",
+          "63",
+          "2",
+          "0",
+          "18"
+        ],
+        [
+          "P95",
+          "0,471",
+          "98,4%",
+          "5%",
+          "62",
+          "1",
+          "1",
+          "19"
+        ],
+        [
+          "P97",
+          "0,489",
+          "96,8%",
+          "5%",
+          "61",
+          "1",
+          "2",
+          "19"
+        ],
+        [
+          "P99",
+          "0,507",
+          "96,8%",
+          "5%",
+          "61",
+          "1",
+          "2",
+          "19"
+        ]
+      ]
+    },
+    {
+      "table_idx": 20,
+      "num_rows": 5,
+      "num_cols": 8,
+      "rows": [
+        [
+          "Persentil",
+          "Threshold",
+          "TPR",
+          "FPR",
+          "TP",
+          "FP",
+          "FN",
+          "TN"
+        ],
+        [
+          "P90",
+          "1,440",
+          "95,2%",
+          "10%",
+          "60",
+          "2",
+          "3",
+          "18"
+        ],
+        [
+          "P95",
+          "1,471",
+          "92,1%",
+          "5%",
+          "58",
+          "1",
+          "5",
+          "19"
+        ],
+        [
+          "P97",
+          "1,517",
+          "85,7%",
+          "5%",
+          "54",
+          "1",
+          "9",
+          "19"
+        ],
+        [
+          "P99",
+          "1,562",
+          "84,1%",
+          "5%",
+          "53",
+          "1",
+          "10",
+          "19"
+        ]
+      ]
+    }
+  ]
+}

@@ -66,6 +66,9 @@ if uploaded_files:
         st.session_state.upload_key += 1
         st.rerun()
 
+    # Counter gambar yang lolos OOD check — footer evaluasi hanya tampil jika >= 1 gambar valid
+    valid_count = 0
+
     for i, uploaded in enumerate(uploaded_files):
         st.divider()
         st.subheader(f"#{i + 1}: {uploaded.name}")
@@ -77,11 +80,13 @@ if uploaded_files:
         # OOD Check: tolak gambar yang bukan bottle
         is_bottle, mean_score, ood_thresh = check_bottle_ood(patches, exp_data, device)
         if not is_bottle:
-            st.warning("BUKAN BOTTLE — Model hanya dilatih pada dataset bottle. Upload gambar bottle untuk deteksi anomali.")
+            st.warning("TIDAK SESUAI DISTRIBUSI — Gambar tidak termasuk dalam distribusi data latih (bottle). Gunakan gambar bottle yang sesuai.")
             col1, col2, col3 = st.columns(3)
             with col1:
                 st.image(pil_image, caption="Original", use_container_width=True)
             continue
+
+        valid_count += 1
 
         col1, col2, col3 = st.columns(3)
 
@@ -137,21 +142,22 @@ if uploaded_files:
                 st.markdown(f'<p style="background:#757575;color:white;text-align:center;padding:4px;border-radius:4px">Score: {knn["score"]:.4f}</p>', unsafe_allow_html=True)
             st.caption(f"Time: {knn['time']:.3f}s")
 
-    # Footer: metrics dari experiment
-    st.divider()
-    m = exp_data["metrics"]
-    cols = st.columns(4)
-    cols[0].metric("PaDiM AUROC", f'{m["padim"]["auroc"]:.4f}')
-    cols[1].metric("PaDiM PRO", f'{m["padim"]["pro_score"]:.4f}')
-    cols[2].metric("KNN AUROC", f'{m["knn"]["auroc"]:.4f}')
-    cols[3].metric("KNN PRO", f'{m["knn"]["pro_score"]:.4f}')
+    # Footer: metrics dari experiment — hanya dirender jika ada >= 1 gambar yang lolos OOD
+    if valid_count > 0:
+        st.divider()
+        m = exp_data["metrics"]
+        cols = st.columns(4)
+        cols[0].metric("PaDiM AUROC", f'{m["padim"]["auroc"]:.4f}')
+        cols[1].metric("PaDiM PRO", f'{m["padim"]["pro_score"]:.4f}')
+        cols[2].metric("KNN AUROC", f'{m["knn"]["auroc"]:.4f}')
+        cols[3].metric("KNN PRO", f'{m["knn"]["pro_score"]:.4f}')
 
-    with st.expander("Detail"):
-        st.json({
-            "experiment": exp_name,
-            "n_train": m["padim"]["n_train"],
-            "PaDiM threshold": exp_data["threshold_padim"],
-            "KNN threshold": exp_data["threshold_knn"],
-        })
+        with st.expander("Detail"):
+            st.json({
+                "experiment": exp_name,
+                "n_train": m["padim"]["n_train"],
+                "PaDiM threshold": exp_data["threshold_padim"],
+                "KNN threshold": exp_data["threshold_knn"],
+            })
 else:
     st.info("Upload satu atau lebih gambar untuk deteksi anomali.")
