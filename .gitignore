@@ -1,23 +1,11 @@
 dataset/mvtec_anomaly_detection/
 dataset_augmented/
-dataset/test_dataset.ipynb
-.opencode/
-.vscode/
 output/
 models/*.pth.tar
+
+.vscode/
 
 __pycache__/
 *.pyc
 *.pyo
 *.ipynb_checkpoints/
-
-_analyze_docx.py
-find_metrics_temp.py
-docx_analysis.json
-docx_full_analysis.json
-metrics_analysis_results.txt
-
-agents.md
-.readme
-.docs
-src_code
