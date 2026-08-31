@@ -119,11 +119,3 @@ Streamlit-based live inference dashboard supporting:
 ## Dataset
 
 MVTec AD bottle category: 209 training images (normal only), 83 test images across 4 classes (good, broken large, broken small, contamination).
-
-## Known Issues
-
-- Preprocessing uses `Resize(224)` instead of paper's `Resize(256) -> CenterCrop(224)`
-- Data augmentation is active during training (not in original PaDiM paper for standard MVTec AD)
-- Gaussian smoothing applied only to PaDiM, not KNN
-- Gaussian blur applied after bilinear upsample (224px) instead of before (56px)
-- Only the `bottle` category is configured
